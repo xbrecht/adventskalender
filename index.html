@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Bytes Adventskalender</title>
+  <meta name="description" content="24 Türchen voller AI-Wissen zum Ausprobieren.">
+  <meta name="theme-color" content="#173a2f">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎄</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="snow" aria-hidden="true"></canvas>
+
+  <header class="hero">
+    <p class="kicker">AI Bytes Adventskalender</p>
+    <h1 id="motto">Bytes unterm Tannenbaum</h1>
+    <p class="subtitle" id="subtitle"></p>
+    <p class="greeting" id="greeting"></p>
+  </header>
+
+  <section class="status" aria-live="polite">
+    <p id="statusText"></p>
+    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="24" id="progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </section>
+
+  <main>
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <footer>
+    <p>Mit ❤️ gemacht · Jeden Tag ein Byte Wissen</p>
+    <button class="admin" id="adminBtn" type="button"></button>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="modal" aria-labelledby="mTitle">
+    <article class="card">
+      <button class="close" id="mClose" aria-label="Schließen">×</button>
+      <div class="card-head">
+        <span class="daybadge" id="mDay"></span>
+        <span class="kind" id="mKind"></span>
+      </div>
+      <h2 id="mTitle"></h2>
+      <p class="teaser" id="mTeaser"></p>
+      <div id="mLesson" class="lesson"></div>
+      <div class="box prompt-box" id="mPromptBox">
+        <div class="box-head">
+          <strong>✨ Prompt zum Ausprobieren</strong>
+          <button class="copy" id="mCopy" type="button">Kopieren</button>
+        </div>
+        <pre id="mPrompt"></pre>
+      </div>
+      <div class="box tip-box" id="mTipBox"><strong>💡 Profi-Tipp</strong><p id="mTip"></p></div>
+      <div class="box challenge-box" id="mChallengeBox"><strong>🎯 Deine Challenge</strong><p id="mChallenge"></p></div>
+      <div class="box final-box" id="mFinalBox"><strong>🎄 Ein Gruß zum Schluss</strong><p id="mFinal"></p></div>
+      <button class="done" id="mDone" type="button">Byte gesammelt ✓</button>
+    </article>
+  </dialog>
+
+  <script src="config.js"></script>
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
