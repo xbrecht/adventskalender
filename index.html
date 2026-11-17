@@ -5,212 +5,468 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AI Bytes Adventskalender</title>
   <meta name="description" content="24 Türchen voller AI-Wissen zum Ausprobieren.">
-  <meta name="theme-color" content="#173a2f">
+  <meta name="theme-color" content="#21170f">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎄</text></svg>">
   <style>
+/* ========== Grundgerüst & Theme-Variablen ========== */
 :root {
-  --fir: #173a2f;
-  --fir-2: #1f4d3f;
-  --gold: #e0b252;
-  --gold-2: #f3d78c;
-  --cream: #f8f0df;
-  --berry: #a83a40;
-  --ink: #2a2a24;
-  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --ink: #2a2a24;
 }
+[hidden] { display: none !important; }
+
+/* Klassisch (bisheriges Design) */
+body[data-theme="klassisch"] {
+  --bg: radial-gradient(1200px 600px at 50% -10%, #2c6a56 0%, transparent 60%), linear-gradient(180deg, #0f2a22 0%, #173a2f 40%, #0e241d 100%);
+  --text: #f8f0df; --heading: #f3d78c; --kicker: #f3d78c; --muted: rgba(248,240,223,.85);
+  --track: rgba(255,255,255,.14); --bar: linear-gradient(90deg, #e0b252, #f3d78c);
+  --d1: linear-gradient(145deg, #b4434a, #8f2d34); --d2: linear-gradient(145deg, #2f7a62, #225c4a);
+  --d3: linear-gradient(145deg, #c79a3d, #a37a25); --d4: linear-gradient(145deg, #3d5a80, #2c4260);
+  --door-text: #fff; --back: radial-gradient(circle at 50% 40%, #fff6dc, #f1d9a0); --back-text: #173a2f;
+  --accent: #a83a40; --accent-2: #173a2f; --accent-2-text: #f3d78c; --card-top: #e0b252; --card-bg: #f8f0df;
+  --radius: 12px; --snow: 255,255,255; --meta: #173a2f;
+}
+
+/* Variante 1: Lebkuchen & Zuckerguss – hell, warm, verspielt */
+body[data-theme="lebkuchen"] {
+  --bg: radial-gradient(circle at 20% 10%, rgba(255,255,255,.7) 0, transparent 40%),
+        radial-gradient(#e9d6b8 1.2px, transparent 1.4px) 0 0 / 22px 22px,
+        linear-gradient(180deg, #fbf3e6 0%, #f3e3c9 100%);
+  --text: #4a2c1a; --heading: #9c3b2a; --kicker: #b5703a; --muted: #6b4a33;
+  --track: rgba(120,70,30,.15); --bar: linear-gradient(90deg, #c0392b, #e8907c);
+  --d1: linear-gradient(150deg, #c58648, #9a5a2b); --d2: linear-gradient(150deg, #b97a40, #8b4f25);
+  --d3: linear-gradient(150deg, #cf9455, #a2622f); --d4: linear-gradient(150deg, #b06f3a, #844822);
+  --door-text: #fffaf2; --back: radial-gradient(circle at 50% 40%, #fff, #fbe8e2); --back-text: #9c3b2a;
+  --accent: #c0392b; --accent-2: #6b3a1f; --accent-2-text: #ffe9c9; --card-top: #c0392b; --card-bg: #fffaf2;
+  --radius: 22px; --snow: 214,178,138; --meta: #fbf3e6;
+}
+/* Variante 2: Winternacht & Lichterkette – dunkel, funkelnd, Geschenkpakete */
+body[data-theme="lichterkette"] {
+  --bg: radial-gradient(900px 500px at 50% 0%, #24366e 0%, transparent 65%), linear-gradient(180deg, #0b1430 0%, #0d1a3d 55%, #070d22 100%);
+  --text: #eef2ff; --heading: #ffe08a; --kicker: #9fb4ff; --muted: rgba(238,242,255,.82);
+  --track: rgba(255,255,255,.12); --bar: linear-gradient(90deg, #ff5a5a, #ffd34d, #5ad1ff);
+  --d1: linear-gradient(150deg, #d83a4b, #a8222f); --d2: linear-gradient(150deg, #23966b, #17694a);
+  --d3: linear-gradient(150deg, #7b4bc9, #5a2f9e); --d4: linear-gradient(150deg, #2b7bd6, #1d57a3);
+  --door-text: #1b1b2e; --back: radial-gradient(circle at 50% 40%, #fffbe9, #ffe9a8); --back-text: #1d2650;
+  --accent: #d83a4b; --accent-2: #1d2650; --accent-2-text: #ffe08a; --card-top: #ffd34d; --card-bg: #fbf8f1;
+  --radius: 10px; --snow: 220,230,255; --meta: #0b1430;
+}
+/* Variante 3: Nordisch-Hygge – ruhig, pastellig, Strick & Kerzenlicht */
+body[data-theme="hygge"] {
+  --bg: radial-gradient(800px 400px at 50% -5%, #ffffff 0%, transparent 60%), linear-gradient(180deg, #f1f0ea 0%, #e6e7df 100%);
+  --text: #2f3d36; --heading: #2f4a3f; --kicker: #8a9a8e; --muted: #56655c;
+  --track: rgba(47,74,63,.12); --bar: linear-gradient(90deg, #9bb0a0, #d8a9a0);
+  --d1: #a9bcad; --d2: #dcb3a9; --d3: #e6d7bd; --d4: #9fb0bf;
+  --door-text: #2f3d36; --back: #fbfaf6; --back-text: #2f4a3f;
+  --accent: #b9786c; --accent-2: #2f4a3f; --accent-2-text: #f1ede2; --card-top: #9bb0a0; --card-bg: #fbfaf6;
+  --radius: 24px; --snow: 175,185,178; --meta: #f1f0ea;
+}
+
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: var(--serif);
-  color: var(--cream);
-  background:
-    radial-gradient(1200px 600px at 50% -10%, #2c6a56 0%, transparent 60%),
-    linear-gradient(180deg, #0f2a22 0%, var(--fir) 40%, #0e241d 100%);
-  background-attachment: fixed;
-}
+body { margin: 0; min-height: 100vh; font-family: var(--serif); color: var(--text); background: var(--bg); background-attachment: fixed; }
 #snow { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
-header, section, main, footer { position: relative; z-index: 1; }
+header, section, main, footer, .lights { position: relative; z-index: 1; }
 
-.hero { text-align: center; padding: 48px 20px 12px; }
-.kicker {
-  margin: 0; font-family: var(--sans); letter-spacing: .28em; text-transform: uppercase;
-  font-size: .78rem; color: var(--gold-2);
-}
-h1 {
-  margin: 10px 0 6px; font-size: clamp(2.1rem, 6vw, 3.6rem); line-height: 1.1; font-weight: 700;
-  color: var(--gold-2); text-shadow: 0 2px 0 rgba(0,0,0,.25);
-}
-.subtitle { margin: 0; font-size: clamp(1rem, 2.4vw, 1.2rem); opacity: .9; font-style: italic; }
-.greeting { margin: 14px 0 0; font-size: 1.05rem; }
+/* ========== Kopf ========== */
+.hero { text-align: center; padding: 44px 20px 8px; }
+.kicker { margin: 0; font-family: var(--sans); letter-spacing: .28em; text-transform: uppercase; font-size: .76rem; color: var(--kicker); }
+h1 { margin: 10px 0 2px; font-size: clamp(2.2rem, 6.4vw, 3.8rem); line-height: 1.08; font-weight: 700; color: var(--heading); text-shadow: 0 2px 0 rgba(0,0,0,.18); }
+.ornament { margin: 4px 0 6px; letter-spacing: .6em; color: var(--kicker); font-size: .95rem; }
+.subtitle { margin: 0; font-size: clamp(1rem, 2.4vw, 1.2rem); color: var(--muted); font-style: italic; }
+.greeting { margin: 14px 0 0; font-size: 1.1rem; }
 
-.status { max-width: 520px; margin: 18px auto 6px; padding: 0 20px; text-align: center; }
-.status p { margin: 0 0 8px; font-family: var(--sans); font-size: .95rem; opacity: .95; }
-.progress { height: 8px; border-radius: 99px; background: rgba(255,255,255,.14); overflow: hidden; }
-.progress-bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--gold), var(--gold-2)); transition: width .5s; }
+.status { max-width: 540px; margin: 16px auto 4px; padding: 0 20px; text-align: center; }
+.status p { margin: 0 0 8px; font-family: var(--sans); font-size: .95rem; color: var(--muted); }
+.progress { height: 8px; border-radius: 99px; background: var(--track); overflow: hidden; }
+.progress-bar { height: 100%; width: 0; background: var(--bar); transition: width .5s; }
 
-.grid {
-  max-width: 980px; margin: 18px auto 0; padding: 0 16px 40px;
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
-}
-@media (max-width: 760px) { .grid { grid-template-columns: repeat(3, 1fr); gap: 10px; } }
+/* ========== Raster & Türchen ========== */
+.grid { max-width: 980px; margin: 22px auto 0; padding: 0 16px 36px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+@media (max-width: 760px) { .grid { grid-template-columns: repeat(3, 1fr); gap: 11px; } }
 @media (max-width: 420px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 
-.door {
-  position: relative; aspect-ratio: 1 / 1.05; border: 0; padding: 0; cursor: pointer;
-  background: none; perspective: 700px; font-family: var(--serif); color: inherit;
-}
-.door:focus-visible { outline: 3px solid var(--gold-2); outline-offset: 3px; border-radius: 12px; }
+.door { position: relative; aspect-ratio: 1 / 1.05; border: 0; padding: 0; cursor: pointer; background: none; perspective: 700px; font-family: var(--serif); color: inherit; }
+.door:focus-visible { outline: 3px solid var(--heading); outline-offset: 3px; border-radius: var(--radius); }
 .door-inner { position: absolute; inset: 0; display: block; }
-.door-back, .door-front {
-  position: absolute; inset: 0; border-radius: 12px; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; text-align: center; padding: 8px;
-}
-.door-back {
-  background: radial-gradient(circle at 50% 40%, #fff6dc, #f1d9a0);
-  color: var(--fir); box-shadow: inset 0 0 18px rgba(120,80,0,.28);
-}
+.door-back, .door-front { position: absolute; inset: 0; border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 8px; overflow: hidden; }
+.door-back { background: var(--back); color: var(--back-text); box-shadow: inset 0 0 18px rgba(120,80,0,.18); }
 .door-back .emoji { font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1; }
-.door-back .mini { margin-top: 6px; font-size: .78rem; line-height: 1.2; font-weight: 600; }
+.door-back .mini { margin-top: 6px; font-size: .8rem; line-height: 1.2; font-weight: 600; }
 .door-front {
-  transform-origin: left center; transition: transform .6s cubic-bezier(.3,.7,.3,1);
-  box-shadow: 0 6px 16px rgba(0,0,0,.35), inset 0 0 0 2px rgba(255,255,255,.18);
-  backface-visibility: hidden;
+  color: var(--door-text); transform-origin: left center; transition: transform .6s cubic-bezier(.3,.7,.3,1), box-shadow .25s;
+  box-shadow: 0 6px 16px rgba(0,0,0,.28), inset 0 0 0 2px rgba(255,255,255,.18); backface-visibility: hidden;
 }
-.door:nth-child(4n+1) .door-front { background: linear-gradient(145deg, #b4434a, #8f2d34); }
-.door:nth-child(4n+2) .door-front { background: linear-gradient(145deg, #2f7a62, #225c4a); }
-.door:nth-child(4n+3) .door-front { background: linear-gradient(145deg, #c79a3d, #a37a25); }
-.door:nth-child(4n+4) .door-front { background: linear-gradient(145deg, #3d5a80, #2c4260); }
-.door-front::after {
-  content: ""; position: absolute; inset: 8px; border-radius: 8px;
-  border: 2px solid rgba(255,255,255,.28); pointer-events: none;
-}
-.door-front .num { font-size: clamp(1.8rem, 6vw, 2.8rem); font-weight: 700; text-shadow: 0 2px 0 rgba(0,0,0,.28); }
-.door-front .knob {
-  position: absolute; right: 12px; top: 50%; width: 10px; height: 10px; border-radius: 50%;
-  background: var(--gold-2); box-shadow: 0 1px 2px rgba(0,0,0,.4);
-}
+.door:nth-child(4n+1) .door-front { background: var(--d1); }
+.door:nth-child(4n+2) .door-front { background: var(--d2); }
+.door:nth-child(4n+3) .door-front { background: var(--d3); }
+.door:nth-child(4n+4) .door-front { background: var(--d4); }
+.door-front::after { content: ""; position: absolute; inset: 8px; border-radius: calc(var(--radius) - 4px); border: 2px solid rgba(255,255,255,.28); pointer-events: none; }
+.door-front .num { position: relative; z-index: 2; font-size: clamp(1.8rem, 6vw, 2.8rem); font-weight: 700; text-shadow: 0 2px 0 rgba(0,0,0,.22); }
+.door-front .knob { position: absolute; right: 12px; top: 50%; width: 10px; height: 10px; border-radius: 50%; background: #f3d78c; box-shadow: 0 1px 2px rgba(0,0,0,.4); z-index: 2; }
+.door-front .deco { display: none; }
+.door-front .lock { display: none; position: absolute; left: 50%; bottom: 13%; transform: translateX(-50%); font-size: clamp(1rem, 3.4vw, 1.4rem); z-index: 3; }
+.door.locked .lock { display: block; }
+.door.locked { filter: saturate(.8) brightness(.95); }
+.door:not(.locked):not(.opened):hover .door-front { transform: translateY(-4px) rotate(-1deg); box-shadow: 0 12px 24px rgba(0,0,0,.3), inset 0 0 0 2px rgba(255,255,255,.25); }
 .door.opened .door-front { transform: rotateY(-112deg); }
-.door.locked { filter: saturate(.7) brightness(.92); }
-.door.locked .door-front::before {
-  content: "🔒"; position: absolute; left: 50%; bottom: 14%; transform: translateX(-50%); font-size: clamp(1rem, 3.6vw, 1.5rem); opacity: 1;
-}
 .door.today:not(.opened) .door-front { animation: pulse 1.8s ease-in-out infinite; }
-.door.done .door-back::after {
-  content: "✓"; position: absolute; top: 6px; right: 10px; color: #2f7a62; font-weight: 700; font-family: var(--sans);
+.door.today:not(.opened) .door-front::before {
+  content: "Heute"; position: absolute; top: 9px; left: 50%; transform: translateX(-50%); z-index: 3;
+  font-family: var(--sans); font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  background: #fff; color: var(--accent); padding: 2px 8px; border-radius: 99px;
 }
-.door.shake { animation: shake .45s; }
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 6px 16px rgba(0,0,0,.35), 0 0 0 0 rgba(243,215,140,.7); }
-  50% { box-shadow: 0 6px 16px rgba(0,0,0,.35), 0 0 0 10px rgba(243,215,140,0); }
-}
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-7px); } 40% { transform: translateX(7px); }
-  60% { transform: translateX(-4px); } 80% { transform: translateX(4px); }
-}
+.door.done .door-back::after { content: "✓"; position: absolute; top: 6px; right: 10px; color: #2f7a62; font-weight: 700; font-family: var(--sans); }
+.door.shake, input.shake { animation: shake .45s; }
+@keyframes pulse { 0%,100% { box-shadow: 0 6px 16px rgba(0,0,0,.3), 0 0 0 0 rgba(255,215,120,.7); } 50% { box-shadow: 0 6px 16px rgba(0,0,0,.3), 0 0 0 10px rgba(255,215,120,0); } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
 
-footer { text-align: center; padding: 10px 20px 40px; font-family: var(--sans); font-size: .85rem; opacity: .7; }
-
-.toast {
-  position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 30px); opacity: 0;
-  background: var(--cream); color: var(--fir); padding: 12px 18px; border-radius: 12px;
-  font-family: var(--sans); font-size: .95rem; box-shadow: 0 8px 24px rgba(0,0,0,.4);
-  transition: .3s; z-index: 20; max-width: 90vw; text-align: center; pointer-events: none;
+/* --- Variante 1: Lebkuchen --- */
+body[data-theme="lebkuchen"] h1 { text-shadow: 0 2px 0 #fff, 0 4px 0 rgba(156,59,42,.15); }
+body[data-theme="lebkuchen"] .door-front { box-shadow: 0 8px 0 #6f3f1d, 0 14px 22px rgba(80,40,10,.25); }
+body[data-theme="lebkuchen"] .door-front::after { inset: 9px; border: 3px dashed rgba(255,255,255,.9); border-radius: 16px; }
+body[data-theme="lebkuchen"] .door-front .deco {
+  display: block; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle, #ff6b6b 2.5px, transparent 3px) 18% 22% / 100% 100% no-repeat,
+    radial-gradient(circle, #fff 2.5px, transparent 3px) 80% 18% / 100% 100% no-repeat,
+    radial-gradient(circle, #7ed6a5 2.5px, transparent 3px) 24% 80% / 100% 100% no-repeat,
+    radial-gradient(circle, #ffd166 2.5px, transparent 3px) 76% 76% / 100% 100% no-repeat;
 }
+body[data-theme="lebkuchen"] .door-front .num { color: #fff; text-shadow: 0 0 1px #fff, 0 3px 0 rgba(90,45,15,.45); font-size: clamp(2rem, 6.6vw, 3.1rem); }
+body[data-theme="lebkuchen"] .door-front .knob { background: #ff6b6b; box-shadow: 0 0 0 3px #fff; }
+body[data-theme="lebkuchen"] .door:not(.locked):not(.opened):hover .door-front { box-shadow: 0 10px 0 #6f3f1d, 0 18px 26px rgba(80,40,10,.3); }
+
+/* --- Variante 2: Lichterkette & Geschenke --- */
+.lights { display: none; }
+body[data-theme="lichterkette"] .lights {
+  display: flex; justify-content: space-between; padding: 0 2vw; height: 46px; margin-bottom: -20px;
+  background: radial-gradient(ellipse 60% 40px at 50% -14px, transparent 98%, rgba(0,0,0,0)) ;
+}
+body[data-theme="lichterkette"] .lights::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -22px; height: 40px;
+  border-bottom: 2px solid #2b3a5c; border-radius: 0 0 50% 50% / 0 0 100% 100%;
+}
+body[data-theme="lichterkette"] .lights span {
+  position: relative; top: 14px; width: 11px; height: 17px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: var(--c); box-shadow: 0 0 10px 2px var(--c), 0 0 22px 4px var(--c); animation: twinkle 1.8s ease-in-out infinite;
+}
+body[data-theme="lichterkette"] .lights span:nth-child(odd) { top: 20px; }
+body[data-theme="lichterkette"] .lights span::before { content: ""; position: absolute; top: -5px; left: 3px; width: 5px; height: 6px; background: #3a4766; border-radius: 2px; }
+@keyframes twinkle { 0%,100% { opacity: 1; } 50% { opacity: .45; box-shadow: 0 0 4px 1px var(--c); } }
+body[data-theme="lichterkette"] h1 { text-shadow: 0 0 18px rgba(255,224,138,.45), 0 2px 0 rgba(0,0,0,.3); }
+body[data-theme="lichterkette"] .door-front::after { display: none; }
+body[data-theme="lichterkette"] .door-front .deco {
+  display: block; position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, transparent 43%, #ffd34d 43%, #ffe9a0 50%, #ffd34d 57%, transparent 57%),
+    linear-gradient(180deg, transparent 43%, #ffd34d 43%, #ffe9a0 50%, #ffd34d 57%, transparent 57%);
+}
+body[data-theme="lichterkette"] .door-front .deco::after { content: "🎀"; position: absolute; top: 4%; left: 50%; transform: translateX(-50%); font-size: clamp(1.3rem, 4vw, 1.9rem); }
+body[data-theme="lichterkette"] .door-front .num {
+  width: 2.1em; height: 2.1em; display: grid; place-items: center; border-radius: 50%;
+  background: #fffaf0; color: #1b1b2e; text-shadow: none; font-size: clamp(1.3rem, 4.4vw, 2rem);
+  box-shadow: 0 2px 6px rgba(0,0,0,.35), inset 0 0 0 2px #ffd34d;
+}
+body[data-theme="lichterkette"] .door-front .knob { display: none; }
+body[data-theme="lichterkette"] .door-front .lock { bottom: 8%; }
+
+/* --- Variante 3: Hygge --- */
+body[data-theme="hygge"] h1 { font-weight: 500; letter-spacing: .01em; text-shadow: none; }
+body[data-theme="hygge"] .ornament { letter-spacing: .9em; }
+body[data-theme="hygge"] .door-front { box-shadow: 0 10px 24px rgba(47,61,54,.14); }
+body[data-theme="hygge"] .door-front::after { inset: 10px; border: 1.5px dashed rgba(47,61,54,.28); border-radius: 18px; }
+body[data-theme="hygge"] .door-front .deco {
+  display: block; position: absolute; inset: 0; opacity: .32;
+  background:
+    repeating-linear-gradient(60deg, transparent 0 7px, rgba(255,255,255,.6) 7px 9px),
+    repeating-linear-gradient(-60deg, transparent 0 7px, rgba(255,255,255,.6) 7px 9px);
+}
+body[data-theme="hygge"] .door-front .num {
+  width: 1.9em; height: 1.9em; display: grid; place-items: center; border-radius: 50%;
+  background: rgba(251,250,246,.92); text-shadow: none; font-weight: 500; font-size: clamp(1.4rem, 4.6vw, 2.1rem);
+}
+body[data-theme="hygge"] .door-front .knob { display: none; }
+body[data-theme="hygge"] .door-front .lock { filter: grayscale(.6); opacity: .8; }
+body[data-theme="hygge"] .door-back { box-shadow: inset 0 0 0 1.5px rgba(47,61,54,.12); }
+
+/* ========== Wimmelbild ========== */
+.scene-wrap { max-width: 1180px; margin: 18px auto 0; padding: 0 14px; }
+.howto { text-align: center; margin: 0 0 14px; font-family: var(--sans); font-size: .98rem; color: var(--muted); }
+.scene-frame { position: relative; border-radius: 30px; padding: 13px; background: linear-gradient(150deg, #c58648, #8e5229);
+  box-shadow: 0 10px 0 #6f3f1d, 0 24px 40px rgba(80,40,10,.3); }
+.scene-frame::after { content: ""; position: absolute; inset: 5px; border: 3px dashed rgba(255,255,255,.85); border-radius: 26px; pointer-events: none; }
+.scene-scroll { overflow-x: auto; border-radius: 18px; -webkit-overflow-scrolling: touch; }
+.scene { display: block; width: 100%; min-width: 960px; height: auto; user-select: none; -webkit-user-select: none; }
+.swipe-note { display: none; text-align: center; font-family: var(--sans); font-size: .82rem; color: var(--muted); margin: 14px 0 0; }
+@media (max-width: 980px) { .swipe-note { display: block; } }
+.spot { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+.spot text { font-family: var(--serif); font-weight: 700; pointer-events: none; }
+.spot .hit { fill: transparent; }
+.spot .ring { fill: rgba(255,209,102,.15); stroke: #ffd166; stroke-width: 3; stroke-dasharray: 5 4; opacity: 0; transition: opacity .3s; pointer-events: none; }
+.spot.found .ring { opacity: 1; }
+.spot.done .ring { stroke: #7ed6a5; fill: rgba(126,214,165,.18); stroke-dasharray: none; }
+.spot:focus-visible .ring { opacity: 1; stroke: #fff; }
+.spot.shake { animation: shake .45s; transform-box: fill-box; transform-origin: center; }
+.hint { fill: rgba(255,230,150,.16); stroke: #ffd166; stroke-width: 5; stroke-dasharray: 12 9; pointer-events: none;
+  transform-box: fill-box; transform-origin: center; animation: hintpulse 1s ease-in-out infinite; }
+@keyframes hintpulse { 50% { transform: scale(1.08); opacity: .55; } }
+.burst { pointer-events: none; transform-box: fill-box; transform-origin: center; animation: burst .85s ease-out forwards; }
+@keyframes burst { to { transform: translate(var(--dx), var(--dy)) scale(.3); opacity: 0; } }
+.tools { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 22px 0 6px; }
+.tool-btn { border: 0; border-radius: 99px; padding: 10px 18px; background: var(--accent); color: #fff; font-family: var(--sans);
+  font-size: .92rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 0 #7d2219; }
+.tool-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #7d2219; }
+.tool-btn.secondary { background: #fffaf2; color: var(--accent); box-shadow: 0 4px 0 #e2c9a8; }
+#grid { margin-top: 26px; }
+.jochen { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+.jochen .jhit { fill: transparent; }
+.jochen .jring { fill: rgba(255,209,102,.12); stroke: #ffd166; stroke-width: 5; stroke-dasharray: 9 7; opacity: 0; transition: opacity .3s; pointer-events: none; }
+.jochen.found .jring { opacity: 1; }
+.jochen:focus-visible .jring { opacity: 1; stroke: #fff; }
+.jcount { align-self: center; font-family: var(--sans); font-size: .9rem; font-weight: 600; color: #5e3577; background: #f1e6f7; border-radius: 99px; padding: 9px 16px; }
+.jochen-mini { width: 30px; height: 54px; vertical-align: middle; margin-right: 8px; }
+.jochen-say { display: flex; gap: 12px; align-items: center; background: #f4ebf9; border: 1px solid #dfcbec; border-radius: 14px; padding: 10px 14px; margin: 0 0 16px; }
+.jochen-say svg { flex: 0 0 auto; width: 40px; height: 72px; }
+.jochen-say p { margin: 0; font-family: var(--sans); font-size: .95rem; line-height: 1.5; color: #4b2f5e; }
+
+/* ========== Fuß & Testmodus ========== */
+footer { text-align: center; padding: 6px 20px 40px; font-family: var(--sans); font-size: .85rem; color: var(--muted); }
+footer p { margin: 0 0 8px; opacity: .8; }
+.admin-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.admin { border: 1px solid currentColor; background: transparent; color: inherit; opacity: .5; border-radius: 99px; padding: 6px 14px; font-family: var(--sans); font-size: .78rem; cursor: pointer; }
+.admin:hover, .admin:focus-visible { opacity: 1; }
+.admin-panel { display: flex; gap: 6px; }
+.admin-panel input { width: 110px; padding: 7px 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,.2); font-size: .95rem; text-align: center; }
+.admin-panel button, .theme-pick button { border: 0; border-radius: 8px; padding: 7px 12px; background: var(--accent); color: #fff; font-family: var(--sans); font-size: .82rem; cursor: pointer; }
+.theme-pick { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.theme-pick button { background: transparent; color: inherit; border: 1px solid currentColor; opacity: .7; }
+.theme-pick button.active { background: var(--accent); border-color: var(--accent); color: #fff; opacity: 1; }
+
+.toast { position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 30px); opacity: 0; background: #fffdf6; color: #2a2a24; padding: 12px 18px; border-radius: 12px; font-family: var(--sans); font-size: .95rem; box-shadow: 0 8px 24px rgba(0,0,0,.35); transition: .3s; z-index: 20; max-width: 90vw; text-align: center; pointer-events: none; }
 .toast.show { transform: translate(-50%, 0); opacity: 1; }
 
-/* Modal */
-dialog {
-  border: 0; padding: 0; background: transparent; width: min(680px, 94vw); max-height: 92vh; color: var(--ink);
-}
-dialog::backdrop { background: rgba(6, 20, 15, .72); backdrop-filter: blur(3px); }
-.card {
-  position: relative; background: var(--cream); border-radius: 18px; padding: 26px 26px 24px;
-  max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.5);
-  border-top: 6px solid var(--gold);
-}
+/* ========== Modal ========== */
+dialog { border: 0; padding: 0; background: transparent; width: min(680px, 94vw); max-height: 92vh; color: var(--ink); }
+dialog::backdrop { background: rgba(10, 15, 20, .62); backdrop-filter: blur(3px); }
+.card { position: relative; background: var(--card-bg); border-radius: 18px; padding: 26px 26px 24px; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.45); border-top: 6px solid var(--card-top); }
 @media (max-width: 480px) { .card { padding: 22px 18px 20px; } }
-.close {
-  position: absolute; top: 10px; right: 12px; width: 38px; height: 38px; border-radius: 50%;
-  border: 0; background: rgba(0,0,0,.07); font-size: 1.6rem; line-height: 1; cursor: pointer; color: var(--ink);
-}
+.close { position: absolute; top: 10px; right: 12px; width: 38px; height: 38px; border-radius: 50%; border: 0; background: rgba(0,0,0,.07); font-size: 1.6rem; line-height: 1; cursor: pointer; color: var(--ink); }
 .close:hover { background: rgba(0,0,0,.14); }
 .card-head { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; padding-right: 44px; }
-.daybadge {
-  background: var(--berry); color: #fff; font-family: var(--sans); font-size: .8rem; font-weight: 700;
-  padding: 4px 10px; border-radius: 99px;
-}
-.kind {
-  background: var(--fir); color: var(--gold-2); font-family: var(--sans); font-size: .78rem;
-  padding: 4px 10px; border-radius: 99px;
-}
-.card h2 { margin: 6px 0 4px; font-size: clamp(1.4rem, 4.6vw, 1.9rem); color: var(--fir); line-height: 1.2; }
+.daybadge { background: var(--accent); color: #fff; font-family: var(--sans); font-size: .8rem; font-weight: 700; padding: 4px 10px; border-radius: 99px; }
+.kind { background: var(--accent-2); color: var(--accent-2-text); font-family: var(--sans); font-size: .78rem; padding: 4px 10px; border-radius: 99px; }
+.card h2 { margin: 6px 0 4px; font-size: clamp(1.4rem, 4.6vw, 1.9rem); color: var(--accent-2); line-height: 1.2; }
 .teaser { margin: 0 0 14px; font-style: italic; color: #5b5a4d; }
 .lesson p { margin: 0 0 12px; line-height: 1.6; font-size: 1.05rem; }
-.lesson b { color: var(--berry); }
+.lesson b { color: var(--accent); }
 .box { border-radius: 12px; padding: 14px 16px; margin: 14px 0; font-family: var(--sans); font-size: .95rem; line-height: 1.55; }
 .box p { margin: 6px 0 0; }
 #mFinal { white-space: pre-line; }
 .prompt-box { background: #fffdf6; border: 1px solid #e4d6ac; }
 .box-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
-.prompt-box pre {
-  margin: 0; white-space: pre-wrap; word-wrap: break-word; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: .88rem; line-height: 1.55; color: #33332b; background: #f6efd9; padding: 12px; border-radius: 8px;
-}
-.copy {
-  border: 0; background: var(--fir); color: var(--gold-2); border-radius: 8px; padding: 7px 12px;
-  font-family: var(--sans); font-size: .85rem; cursor: pointer;
-}
-.copy:hover { background: var(--fir-2); }
+.prompt-box pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .88rem; line-height: 1.55; color: #33332b; background: #f6efd9; padding: 12px; border-radius: 8px; }
+.copy { border: 0; background: var(--accent-2); color: var(--accent-2-text); border-radius: 8px; padding: 7px 12px; font-family: var(--sans); font-size: .85rem; cursor: pointer; }
 .tip-box { background: #e9f3ea; border: 1px solid #c3dcc7; }
 .challenge-box { background: #fbe9e6; border: 1px solid #efc3bd; }
 .final-box { background: linear-gradient(135deg, #fff1c7, #f8dd93); border: 1px solid #e0b252; }
-.done {
-  display: block; width: 100%; margin-top: 10px; border: 0; border-radius: 12px; padding: 13px;
-  background: var(--berry); color: #fff; font-family: var(--sans); font-size: 1rem; font-weight: 600; cursor: pointer;
-}
+.done { display: block; width: 100%; margin-top: 10px; border: 0; border-radius: 12px; padding: 13px; background: var(--accent); color: #fff; font-family: var(--sans); font-size: 1rem; font-weight: 600; cursor: pointer; }
 .done:hover { filter: brightness(1.08); }
 .done.is-done { background: #2f7a62; }
 
-.admin {
-  margin-top: 8px; border: 1px solid rgba(255,255,255,.2); background: transparent; color: inherit;
-  opacity: .45; border-radius: 99px; padding: 5px 12px; font-family: var(--sans); font-size: .75rem; cursor: pointer;
-}
-.admin:hover, .admin:focus-visible { opacity: 1; }
-
 @media (prefers-reduced-motion: reduce) {
   .door-front, .progress-bar, .toast { transition: none; }
-  .door.today:not(.opened) .door-front, .door.shake { animation: none; }
+  .door.today:not(.opened) .door-front, .door.shake, .lights span, .hint, .spot.shake { animation: none; }
 }
+
+/* ===================================================================
+   Realistischer Look (überschreibt die Lebkuchen-Grundwerte)
+   =================================================================== */
+body[data-theme="lebkuchen"] {
+  --bg: radial-gradient(1100px 600px at 50% -5%, rgba(255,196,120,.18) 0%, transparent 65%),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .1  0 0 0 0 .07  0 0 0 0 .04  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+        linear-gradient(180deg, #2b1e15 0%, #21170f 55%, #170f0a 100%);
+  --text: #f1e7d6; --heading: #efd9a7; --kicker: #c8a46b; --muted: rgba(241,231,214,.72);
+  --track: rgba(255,255,255,.1); --bar: linear-gradient(90deg, #b8862f, #efd9a7);
+  --accent: #9e2b31; --accent-2: #3a2416; --accent-2-text: #efd9a7; --card-top: #9e2b31; --card-bg: #fbf7ef;
+  --snow: 255,255,255; --meta: #21170f; --radius: 10px;
+}
+body[data-theme="lebkuchen"] h1 { font-weight: 600; letter-spacing: .01em; text-shadow: 0 2px 18px rgba(0,0,0,.45); }
+.ornament { opacity: .7; }
+.greeting { color: var(--text); }
+.jochen-mini { filter: drop-shadow(0 2px 3px rgba(0,0,0,.4)); }
+
+.scene-wrap { max-width: 1240px; }
+.howto { max-width: 820px; margin: 0 auto 18px; line-height: 1.55; }
+.howto b { color: var(--heading); }
+.scene-frame {
+  border-radius: 6px; padding: 16px;
+  background: linear-gradient(135deg, #6a4329 0%, #4a2d1a 45%, #3a2213 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 0 1px rgba(0,0,0,.4), 0 30px 60px rgba(0,0,0,.55);
+}
+.scene-frame::after { inset: 10px; border: 1px solid rgba(239,217,167,.45); border-radius: 2px; }
+.scene-scroll {
+  position: relative; border-radius: 2px; overflow: auto; max-height: 78vh; cursor: grab;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.35); background: #e6edf4; touch-action: pan-x pan-y;
+}
+.scene-scroll.dragging { cursor: grabbing; }
+.scene { min-width: 0; width: 100%; transition: width .2s; }
+.scene text { user-select: none; -webkit-user-select: none; }
+.zoom { position: absolute; z-index: 3; right: 30px; top: 30px; display: flex; flex-direction: column; gap: 6px; }
+.zoom button {
+  width: 38px; height: 38px; border-radius: 6px; border: 1px solid rgba(0,0,0,.25); cursor: pointer;
+  background: rgba(251,247,239,.92); color: #3a2416; font-size: 1.35rem; line-height: 1; box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+.zoom button:hover { background: #fff; }
+.swipe-note { display: block; color: var(--muted); }
+
+.spot .ring { fill: rgba(255,209,102,.18); stroke: #f5c451; stroke-width: 2.5; stroke-dasharray: 4 3; }
+.spot.done .ring { stroke: #6fcf97; fill: rgba(111,207,151,.18); }
+.jochen-hit { cursor: pointer; outline: none; }
+.jochen-hit .hit { fill: transparent; }
+.jochen-hit .ring { fill: rgba(181,138,208,.2); stroke: #c39be0; stroke-width: 2.5; stroke-dasharray: 4 3; opacity: 0; transition: opacity .3s; pointer-events: none; }
+.jochen-hit.found .ring, .jochen-hit:focus-visible .ring { opacity: 1; }
+.hint { stroke: #f5c451; fill: rgba(255,230,150,.14); }
+
+.smoke { animation: smoke 7s ease-in-out infinite; }
+@keyframes smoke { 0%, 100% { transform: translate(0, 0); opacity: 1; } 50% { transform: translate(5px, -6px); opacity: .7; } }
+.tw { animation: tw 2.4s ease-in-out infinite; }
+@keyframes tw { 50% { opacity: .35; } }
+
+.tools { margin-top: 24px; }
+.tool-btn {
+  border-radius: 6px; font-weight: 500; letter-spacing: .01em; padding: 10px 18px;
+  background: linear-gradient(180deg, #b0353b, #8c262c); box-shadow: 0 2px 8px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.15);
+}
+.tool-btn:active { transform: translateY(1px); box-shadow: 0 1px 4px rgba(0,0,0,.35); }
+.tool-btn.secondary { background: transparent; color: var(--text); border: 1px solid rgba(241,231,214,.35); box-shadow: none; }
+.jcount { color: var(--text); background: rgba(255,255,255,.07); border: 1px solid rgba(241,231,214,.2); border-radius: 6px; font-weight: 500; }
+
+/* Liste im gleichen, ruhigeren Stil */
+body[data-theme="lebkuchen"] .door-front { box-shadow: 0 6px 16px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.15); }
+body[data-theme="lebkuchen"] .door-front::after { inset: 8px; border: 1px solid rgba(255,255,255,.35); border-style: solid; border-radius: 6px; }
+body[data-theme="lebkuchen"] .door-front .deco { display: none; }
+body[data-theme="lebkuchen"] .door-front .knob { background: #d8b25a; box-shadow: 0 1px 2px rgba(0,0,0,.5); }
+body[data-theme="lebkuchen"] .door-front .num { text-shadow: 0 2px 4px rgba(0,0,0,.35); }
+
+/* Modal wie Papier */
+.card { border-radius: 10px; border-top-width: 4px; background: var(--card-bg) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .38  0 0 0 0 .3  0 0 0 .06 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>"); }
+.daybadge, .kind { border-radius: 4px; letter-spacing: .02em; }
+.done { border-radius: 8px; font-weight: 500; background: linear-gradient(180deg, #b0353b, #8c262c); }
+.done.is-done { background: linear-gradient(180deg, #3d8a63, #2c6a4a); }
+.jochen-say { border-radius: 8px; background: #f3edf6; }
+footer { color: var(--muted); }
+.admin { border-radius: 6px; }
+.admin-panel button { border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) { .smoke, .tw { animation: none; } }
+
+.greeting { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; line-height: 1.4; }
+.jochen-mini { margin-right: 0; }
 </style>
 </head>
-<body>
+<body data-theme="lebkuchen">
   <canvas id="snow" aria-hidden="true"></canvas>
+  <div class="lights" id="lights" aria-hidden="true"></div>
 
   <header class="hero">
     <p class="kicker">AI Bytes Adventskalender</p>
     <h1 id="motto">Bytes unterm Tannenbaum</h1>
+    <p class="ornament" aria-hidden="true">❄ ✦ ❄</p>
     <p class="subtitle" id="subtitle"></p>
-    <p class="greeting" id="greeting"></p>
+    <p class="greeting"><svg class="jochen-mini" viewBox="-36 -72 72 130" aria-hidden="true"><use href="#jBody"/><use href="#jSanta"/></svg><span id="greeting"></span></p>
   </header>
 
   <section class="status" aria-live="polite">
-    <p id="statusText">Kalender wird geladen … Falls das so bleibt: Bitte JavaScript aktivieren bzw. prüfen, ob alle Dateien hochgeladen wurden.</p>
+    <p id="statusText">Kalender wird geladen … Falls das so bleibt: Bitte JavaScript aktivieren bzw. prüfen, ob die Datei vollständig hochgeladen wurde.</p>
     <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="24" id="progress">
       <div class="progress-bar" id="progressBar"></div>
     </div>
   </section>
 
   <main>
-    <div class="grid" id="grid"></div>
+    <div class="scene-wrap">
+      <p class="howto">Im Weihnachtsdorf sind 24 Zahlen versteckt, an Häusern, Ständen, Schildern und sogar im Schnee. Such die Zahl des heutigen Tages und tipp sie an. Vorsicht: Nicht jede Zahl im Dorf gehört zum Kalender.<br>Und irgendwo steckt <b>Jochen</b>, der fröhlichste Weihnachtsfan der Welt. Jeden Tag verkleidet er sich neu und sucht sich ein anderes Versteck.</p>
+      <div class="scene-frame">
+        <div class="zoom" aria-label="Zoom">
+          <button type="button" id="zoomIn" aria-label="Hineinzoomen">+</button>
+          <button type="button" id="zoomOut" aria-label="Herauszoomen">−</button>
+        </div>
+        <div class="scene-scroll" id="sceneScroll">
+          <svg class="scene" id="scene" viewBox="0 0 1600 1150" role="img" aria-label="Wimmelbild: ein verschneites Weihnachtsdorf von schräg oben mit versteckten Zahlen">
+            <defs>
+              <linearGradient id="ice" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#d7ecf7"/><stop offset=".5" stop-color="#b9dbee"/><stop offset="1" stop-color="#cfe6f3"/>
+              </linearGradient>
+              <radialGradient id="snowball" cx=".35" cy=".3" r=".75">
+                <stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#eef3f8"/><stop offset="1" stop-color="#c9d5e2"/>
+              </radialGradient>
+              <radialGradient id="lampGlow"><stop offset="0" stop-color="#ffd27a" stop-opacity=".9"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>
+              <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#dfe8f3" stop-opacity=".75"/><stop offset=".22" stop-color="#dfe8f3" stop-opacity=".15"/><stop offset=".4" stop-color="#dfe8f3" stop-opacity="0"/>
+              </linearGradient>
+              <radialGradient id="vignette" cx=".5" cy=".55" r=".75">
+                <stop offset=".6" stop-color="#1a2233" stop-opacity="0"/><stop offset="1" stop-color="#1a2233" stop-opacity=".38"/>
+              </radialGradient>
+              <filter id="shadowBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="4"/></filter>
+              <filter id="glowBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="4"/></filter>
+              <filter id="snowTex" x="0" y="0" width="100%" height="100%">
+                <feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="2" seed="4"/>
+                <feColorMatrix values="0 0 0 0 .55  0 0 0 0 .62  0 0 0 0 .74  0 0 0 .22 0"/>
+              </filter>
+              <symbol id="star" viewBox="-10 -10 20 20" overflow="visible">
+                <path d="M0,-10 L2.9,-3.1 L9.5,-3.1 L4.2,1.2 L5.9,8.1 L0,4 L-5.9,8.1 L-4.2,1.2 L-9.5,-3.1 L-2.9,-3.1 Z"/>
+              </symbol>
+              <linearGradient id="aub" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#9b6bb8"/><stop offset="1" stop-color="#5e3577"/>
+              </linearGradient>
+              <g id="jBody">
+                <path d="M-21,12 l-10,-8 M21,12 l10,-8" stroke="#6e4290" stroke-width="7" stroke-linecap="round"/>
+                <path d="M0,-40 C14,-40 18,-28 20,-10 C24,14 30,26 28,38 C26,50 14,54 0,54 C-14,54 -26,50 -28,38 C-30,26 -24,14 -20,-10 C-18,-28 -14,-40 0,-40Z" fill="url(#aub)"/>
+                <path d="M-14,-30 C-12,-20 -14,0 -18,14" stroke="#b58ad0" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>
+                <path d="M0,-42 q-2,-12 7,-22" stroke="#6f8f3a" stroke-width="6" fill="none" stroke-linecap="round"/>
+                <g fill="#6f8f3a"><ellipse cx="-11" cy="-37" rx="9" ry="5" transform="rotate(25 -11 -37)"/><ellipse cx="11" cy="-37" rx="9" ry="5" transform="rotate(-25 11 -37)"/><ellipse cx="0" cy="-40" rx="8" ry="5"/><ellipse cx="-5" cy="-33" rx="6" ry="4"/><ellipse cx="6" cy="-33" rx="6" ry="4"/></g>
+                <circle cx="-6" cy="-6" r="2.4" fill="#2b1d33"/><circle cx="6" cy="-6" r="2.4" fill="#2b1d33"/>
+                <circle cx="-5.2" cy="-6.8" r=".8" fill="#fff"/><circle cx="6.8" cy="-6.8" r=".8" fill="#fff"/>
+                <circle cx="-12" cy="2" r="3.8" fill="#ff8fb1" opacity=".75"/><circle cx="12" cy="2" r="3.8" fill="#ff8fb1" opacity=".75"/>
+                <path d="M-6,3 q6,7 12,0" stroke="#2b1d33" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+              </g>
+              <g id="jSanta"><path d="M-19,-33 C-14,-58 8,-70 26,-64 C16,-56 16,-46 19,-33Z" fill="#d83a4b"/><rect x="-21" y="-39" width="42" height="9" rx="4.5" fill="#fff"/><circle cx="26" cy="-64" r="5.5" fill="#fff"/></g>
+              <g id="jElf"><path d="M-18,-34 L6,-82 L18,-34Z" fill="#3f8a5f"/><rect x="-20" y="-39" width="40" height="8" rx="4" fill="#d83a4b"/><circle cx="6" cy="-82" r="4.5" fill="#ffd166"/></g>
+              <g id="jBobble"><path d="M-19,-32 a19,19 0 0 1 38,0Z" fill="#e74c3c"/><path d="M-16,-40 h32 M-11,-46 h22" stroke="#fff" stroke-width="3"/><rect x="-20" y="-36" width="40" height="7" rx="3" fill="#fff"/><circle cx="0" cy="-53" r="6" fill="#fff"/></g>
+              <g id="jScarf"><path d="M-23,10 q23,10 46,0 v7 q-23,10 -46,0Z" fill="#5dade2"/><path d="M10,17 l6,18 l7,-2 l-4,-17z" fill="#5dade2"/></g>
+              <g id="jAntlers"><path d="M-8,-38 C-14,-50 -20,-56 -26,-66 M-17,-52 l-11,-2 M-21,-60 l-3,-9 M8,-38 C14,-50 20,-56 26,-66 M17,-52 l11,-2 M21,-60 l3,-9" stroke="#8b5a2b" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="0" cy="-1" r="4" fill="#e74c3c"/></g>
+              <g id="jWings" fill="#fff" stroke="#e2d8f0" stroke-width="2"><ellipse cx="-28" cy="-4" rx="11" ry="20" transform="rotate(-28 -28 -4)"/><ellipse cx="28" cy="-4" rx="11" ry="20" transform="rotate(28 28 -4)"/></g>
+              <g id="jHalo"><ellipse cx="0" cy="-58" rx="15" ry="4.5" fill="none" stroke="#ffd166" stroke-width="3.5"/></g>
+              <g id="jNight"><path d="M-19,-33 C-16,-56 10,-62 34,-48 C20,-46 18,-42 19,-33Z" fill="#5d6fb3"/><rect x="-21" y="-39" width="42" height="8" rx="4" fill="#fff"/><circle cx="34" cy="-48" r="5" fill="#fff"/></g>
+            </defs>
+            <g id="world"></g>
+            <g id="spots"></g>
+            <g id="fx"></g>
+          </svg>
+        </div>
+      </div>
+      <p class="swipe-note">Mit + und − zoomen, Bild mit Finger oder Maus verschieben</p>
+      <div class="tools">
+        <button class="tool-btn" id="hintBtn" type="button">💡 Tipp, wo die Zahl ist</button>
+        <span class="jcount" id="jochenCount"></span>
+        <button class="tool-btn secondary" id="listBtn" type="button">📋 Alle Türchen als Liste</button>
+      </div>
+    </div>
+    <div class="grid" id="grid" hidden></div>
   </main>
 
   <footer>
     <p>Mit ❤️ gemacht · Jeden Tag ein Byte Wissen</p>
-    <button class="admin" id="adminBtn" type="button"></button>
+    <div class="admin-wrap">
+      <button class="admin" id="adminBtn" type="button">🔓 Testmodus</button>
+      <div class="admin-panel" id="adminPanel" hidden>
+        <input id="adminPin" type="password" inputmode="numeric" autocomplete="off" placeholder="PIN" aria-label="PIN">
+        <button type="button" id="adminGo">Öffnen</button>
+      </div>
+      <button class="admin" id="jochenMove" type="button" hidden>🍆 Jochen umsetzen (Test)</button>
+      <div class="theme-pick" id="themePick" hidden></div>
+    </div>
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -224,6 +480,7 @@ dialog::backdrop { background: rgba(6, 20, 15, .72); backdrop-filter: blur(3px);
       </div>
       <h2 id="mTitle"></h2>
       <p class="teaser" id="mTeaser"></p>
+      <div class="jochen-say"><svg viewBox="-36 -72 72 130" aria-hidden="true"><use href="#jBody"/><use href="#jSanta"/></svg><p><strong>Jochen sagt:</strong> <span id="mJochen"></span></p></div>
       <div id="mLesson" class="lesson"></div>
       <div class="box prompt-box" id="mPromptBox">
         <div class="box-head">
@@ -246,8 +503,9 @@ window.CALENDAR_CONFIG = {
   name: "Pauline",            // Name deiner Freundin (leer = "du")
   from: "Felix",              // Dein Name, erscheint im Schlussgruß
   adminPin: "1224",           // PIN für den Testmodus-Button im Seitenfuß (leer = ohne PIN)
+  theme: "lebkuchen",         // Design: "lebkuchen", "lichterkette", "hygge" oder "klassisch"
   motto: "Bytes unterm Tannenbaum",
-  subtitle: "24 Türchen voller Wissen, bis die Bescherung beginnt",
+  subtitle: "Finde jeden Tag deine Zahl im Weihnachtsdorf – und lerne etwas Neues über AI",
   finalMessage:
     "Du hast 24 Türchen geöffnet, ganz viel ausprobiert und dabei hoffentlich genauso viel Spaß gehabt wie ich beim Zusammenstellen. Ich bin gespannt, was du 2027 mit AI anstellst. Frohe Weihnachten!"
 };
@@ -512,53 +770,771 @@ window.DAYS = [
 ];
 </script>
   <script>
+// Isometrisches Weihnachtsdorf – wird beim Laden gezeichnet (immer gleich, fester Zufalls-Seed).
+(function () {
+  "use strict";
+  var OX = 800, OY = 3, HW = 34, HH = 22, ZS = 31;
+  var DX = HW / Math.hypot(HW, HH), DY = HH / Math.hypot(HW, HH);
+  function P(x, y, z) { return [OX + (x - y) * HW, OY + (x + y) * HH - (z || 0) * ZS]; }
+  function f1(n) { return Math.round(n * 10) / 10; }
+  function pts(a) { return a.map(function (p) { return f1(p[0]) + "," + f1(p[1]); }).join(" "); }
+  function poly(a, fill, extra) { return '<polygon points="' + pts(a) + '" fill="' + fill + '"' + (extra ? " " + extra : "") + "/>"; }
+  function line(a, b, stroke, w, extra) {
+    return '<line x1="' + f1(a[0]) + '" y1="' + f1(a[1]) + '" x2="' + f1(b[0]) + '" y2="' + f1(b[1]) + '" stroke="' + stroke + '" stroke-width="' + w + '"' + (extra ? " " + extra : "") + "/>";
+  }
+  function circ(c, r, fill, extra) { return '<circle cx="' + f1(c[0]) + '" cy="' + f1(c[1]) + '" r="' + f1(r) + '" fill="' + fill + '"' + (extra ? " " + extra : "") + "/>"; }
+  function ell(c, rx, ry, fill, extra) { return '<ellipse cx="' + f1(c[0]) + '" cy="' + f1(c[1]) + '" rx="' + f1(rx) + '" ry="' + f1(ry) + '" fill="' + fill + '"' + (extra ? " " + extra : "") + "/>"; }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+  function add(p, dx, dy) { return [p[0] + dx, p[1] + dy]; }
+
+  var seed = 1225;
+  function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+  function rr(a, b) { return a + rnd() * (b - a); }
+  function pick(a) { return a[Math.floor(rnd() * a.length)]; }
+  function shade(h, f) {
+    h = h.replace("#", "");
+    var c = [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16); });
+    return "#" + c.map(function (v) {
+      var n = f < 0 ? v * (1 + f) : v + (255 - v) * f;
+      n = Math.max(0, Math.min(255, Math.round(n)));
+      return (n < 16 ? "0" : "") + n.toString(16);
+    }).join("");
+  }
+
+  // Flächen-Koordinaten (u entlang der Fläche, v = Höhe)
+  function faceL(x, y, w, d, z0) { return function (u, v) { return P(x + u, y + d, z0 + v); }; }
+  function faceR(x, y, w, d, z0) { return function (u, v) { return P(x + w, y + d - u, z0 + v); }; }
+  function frect(F, u0, v0, u1, v1) { return [F(u0, v0), F(u1, v0), F(u1, v1), F(u0, v1)]; }
+  var MAT = { L: [f3(DX), f3(DY), 0, 1], R: [f3(DX), f3(-DY), 0, 1], G: [f3(DX), f3(DY), f3(-DX), f3(DY)], S: [1, 0, 0, 1] };
+  function f3(n) { return Math.round(n * 1000) / 1000; }
+  function ftext(kind, pt, txt, size, fill, extra, anchor) {
+    var m = MAT[kind];
+    return '<text transform="matrix(' + m.join(",") + "," + f1(pt[0]) + "," + f1(pt[1]) + ')" font-size="' + size + '" fill="' + fill +
+      '" text-anchor="' + (anchor || "middle") + '"' + (extra ? " " + extra : "") + ">" + esc(txt) + "</text>";
+  }
+  function tcenter(kind, pt, size) { var m = MAT[kind], oy = -size * 0.36; return [pt[0] + m[2] * oy, pt[1] + m[3] * oy]; }
+
+  // ---------- Sammelbehälter ----------
+  var ground, items, shadows, glows, spots, occ, guards;
+  function item(k, s) { items.push({ k: k, s: s }); }
+  function occupy(x, y, w, d) { occ.push([x, y, x + w, y + d]); }
+  function free(x, y, r) {
+    for (var i = 0; i < occ.length; i++) { var o = occ[i]; if (x > o[0] - r && x < o[2] + r && y > o[1] - r && y < o[3] + r) return false; }
+    for (var j = 0; j < guards.length; j++) { var g = guards[j]; if (Math.abs(x - g[0]) < 1.3 && Math.abs(y - g[1]) < 1.3) return false; }
+    return true;
+  }
+  function spot(day, kind, pt, size, wx, wy) {
+    spots[day] = { c: tcenter(kind, pt, size), r: Math.max(13, size * 1.15) };
+    if (wx !== undefined) guards.push([wx, wy]);
+  }
+  function numText(day, kind, pt, size, fill, extra) {
+    spot(day, kind, pt, size);
+    return ftext(kind, pt, day, size, fill, 'font-weight="700" class="num" ' + (extra || ""));
+  }
+  function shadowBox(x, y, w, d, h) {
+    var sx = h * 0.75, sy = -h * 0.3, s = "";
+    var F = [[x, y], [x + w, y], [x + w, y + d], [x, y + d]];
+    var S = F.map(function (p) { return [p[0] + sx, p[1] + sy]; });
+    var pr = function (a) { return a.map(function (p) { return P(p[0], p[1], 0); }); };
+    s += poly(pr(F), "#000") + poly(pr(S), "#000");
+    for (var i = 0; i < 4; i++) { var j = (i + 1) % 4; s += poly(pr([F[i], F[j], S[j], S[i]]), "#000"); }
+    shadows.push(s);
+  }
+  function shadowBlob(x, y, r) { var c = P(x + r * 0.5, y - r * 0.15, 0); shadows.push(ell(c, r * 46, r * 20, "#000")); }
+
+  function box(x, y, z0, w, d, h, col) {
+    return poly([P(x + w, y, z0), P(x + w, y + d, z0), P(x + w, y + d, z0 + h), P(x + w, y, z0 + h)], shade(col, -0.25)) +
+      poly([P(x, y + d, z0), P(x + w, y + d, z0), P(x + w, y + d, z0 + h), P(x, y + d, z0 + h)], shade(col, -0.05)) +
+      poly([P(x, y, z0 + h), P(x + w, y, z0 + h), P(x + w, y + d, z0 + h), P(x, y + d, z0 + h)], shade(col, 0.12));
+  }
+
+  // ---------- Häuser ----------
+  var WALLS = ["#efe4cf", "#e2bf86", "#c0604b", "#a7b6a0", "#9cadc2", "#e8d6b6", "#d4936a"];
+  var TILES = ["#7a3b2a", "#5e3326", "#4b4f57", "#6b3a2a"];
+  function fach(F, len, h) {
+    var c = "#4a3326", s = "", n = Math.max(2, Math.round(len / 0.75));
+    s += line(F(0, 0.18), F(len, 0.18), c, 2.6) + line(F(0, h - 0.02), F(len, h - 0.02), c, 2.6) + line(F(0, h * 0.52), F(len, h * 0.52), c, 2.2);
+    for (var i = 0; i <= n; i++) {
+      var u = len * i / n; s += line(F(u, 0.18), F(u, h), c, 2.4);
+      if (i < n && i % 2 === 0) s += line(F(u, 0.18), F(u + len / n, h * 0.52), c, 1.8);
+      if (i < n && i % 2 === 1) s += line(F(u + len / n, h * 0.52), F(u, h), c, 1.8);
+    }
+    return s;
+  }
+  function windowAt(F, uc, vc, ww, wh, lit, arched) {
+    var s = "", fr = "#f2ece2";
+    var outer = frect(F, uc - ww / 2 - 0.04, vc - wh / 2 - 0.05, uc + ww / 2 + 0.04, vc + wh / 2 + 0.05);
+    var pane = frect(F, uc - ww / 2, vc - wh / 2, uc + ww / 2, vc + wh / 2);
+    s += poly(outer, fr);
+    s += poly(pane, lit ? (arched ? "#f6b04e" : "#ffcf6e") : "#56657a");
+    if (lit) { glows.push(poly(frect(F, uc - ww / 2 - 0.1, vc - wh / 2 - 0.1, uc + ww / 2 + 0.1, vc + wh / 2 + 0.1), "#ffb240")); }
+    s += line(F(uc, vc - wh / 2), F(uc, vc + wh / 2), fr, 1.4) + line(F(uc - ww / 2, vc + wh * 0.1), F(uc + ww / 2, vc + wh * 0.1), fr, 1.4);
+    s += line(F(uc - ww / 2 - 0.05, vc - wh / 2 - 0.06), F(uc + ww / 2 + 0.05, vc - wh / 2 - 0.06), "#fbfdff", 2.2);
+    return s;
+  }
+  function plate(F, kind, u, v, num, day) {
+    var s = poly(frect(F, u - 0.22, v - 0.14, u + 0.22, v + 0.14), "#1f4f8f", 'stroke="#e9eef6" stroke-width="1.2"');
+    var pt = F(u, v - 0.1);
+    if (day) s += numText(day, kind, pt, 9.5, "#ffffff", 'font-family="Arial,Helvetica,sans-serif"');
+    else s += ftext(kind, pt, num, 9.5, "#ffffff", 'font-weight="700" font-family="Arial,Helvetica,sans-serif"');
+    return s;
+  }
+  function faceDetails(F, kind, len, h, o, isFront) {
+    var s = "", rows = h >= 1.95 ? 2 : 1, cols = Math.max(1, Math.floor((len - 0.2) / 0.72));
+    var door = isFront && o.door ? len / 2 + (o.doorShift || 0) : null;
+    for (var r = 0; r < rows; r++) {
+      var vc = rows === 1 ? h * 0.55 : (r === 0 ? h * 0.3 : h * 0.74);
+      for (var c = 0; c < cols; c++) {
+        var uc = (len - cols * 0.72) / 2 + 0.36 + c * 0.72;
+        if (door !== null && r === 0 && Math.abs(uc - door) < 0.55) continue;
+        if (o.plate && isFront && r === 0 && Math.abs(uc - (door + 0.48)) < 0.35) continue;
+        s += windowAt(F, uc, vc, o.church ? 0.26 : 0.32, o.church ? h * 0.42 : 0.42, rnd() < (o.church ? 0.95 : 0.62), o.church);
+      }
+    }
+    if (door !== null) {
+      s += poly(frect(F, door - 0.27, 0.05, door + 0.27, 0.92), "#efe7da");
+      s += poly(frect(F, door - 0.22, 0.05, door + 0.22, 0.86), o.church ? "#4a2f1f" : pick(["#5b3a26", "#2f4a3a", "#6b2d2b", "#3b4a63"]));
+      s += circ(F(door + 0.14, 0.42), 1.6, "#d8b25a");
+      if (rnd() < 0.6) s += circ(F(door, 0.66), 6, "none", 'stroke="#2f5d3f" stroke-width="3.5"') + circ(F(door, 0.6), 1.8, "#c0392b");
+      s += poly(frect(F, door - 0.32, 0, door + 0.32, 0.06), "#f6f8fb");
+      if (o.plate) s += plate(F, kind, door + 0.5, 0.8, o.plate, o.plate <= 24 ? o.plate : 0);
+    }
+    return s;
+  }
+  function roof(o, rh) {
+    var x = o.x, y = o.y, w = o.w, d = o.d, h = o.h, ov = 0.16, s = "", tile = o.tile;
+    var snowA = "#f8fafd", snowB = "#e3eaf3", wallR = shade(o.col, -0.28), wallL = shade(o.col, -0.08);
+    var eave = [], chim;
+    if (o.r === "x") {
+      s += poly([P(x, y + d / 2, h + rh), P(x + w, y + d / 2, h + rh), P(x + w, y, h), P(x, y, h)], snowB);
+      s += poly([P(x + w, y, h), P(x + w, y + d, h), P(x + w, y + d / 2, h + rh)], wallR);
+      s += windowAt(faceR(x, y, w, d, 0), d / 2, h + rh * 0.38, 0.22, 0.26, rnd() < 0.5);
+      s += poly([P(x - ov, y + d / 2, h + rh), P(x + w + ov, y + d / 2, h + rh), P(x + w + ov, y + d + ov, h), P(x - ov, y + d + ov, h)], snowA);
+      s += poly([P(x - ov, y + d + ov, h), P(x + w + ov, y + d + ov, h), P(x + w + ov, y + d + ov, h - 0.09), P(x - ov, y + d + ov, h - 0.09)], tile);
+      s += line(P(x + w + ov, y + d + ov, h - 0.05), P(x + w + ov, y + d / 2, h + rh), tile, 3);
+      s += line(P(x + w + ov, y + d / 2, h + rh), P(x + w, y - 0.02, h), tile, 3);
+      s += line(P(x - ov, y + d / 2, h + rh), P(x + w + ov, y + d / 2, h + rh), "#d6dee9", 1.5);
+      for (var u = 0; u <= w + 2 * ov; u += 0.2) eave.push(P(x - ov + u, y + d + ov, h - 0.09));
+      var cx = x + w * 0.72, cy = y + d * 0.22;
+      chim = [cx, cy, h + rh * ((cy - y) / (d / 2))];
+    } else {
+      s += poly([P(x - ov, y, h), P(x + w / 2, y, h + rh), P(x + w / 2, y + d, h + rh), P(x - ov, y + d, h)], snowA);
+      s += poly([P(x, y + d, h), P(x + w, y + d, h), P(x + w / 2, y + d, h + rh)], wallL);
+      s += windowAt(faceL(x, y, w, d, 0), w / 2, h + rh * 0.38, 0.22, 0.26, rnd() < 0.5);
+      s += poly([P(x + w / 2, y - ov, h + rh), P(x + w + ov, y - ov, h), P(x + w + ov, y + d + ov, h), P(x + w / 2, y + d + ov, h + rh)], snowB);
+      s += poly([P(x - ov, y + d, h), P(x + w / 2, y + d + ov, h + rh), P(x + w / 2, y + d, h + rh)], snowA);
+      s += poly([P(x + w + ov, y - ov, h), P(x + w + ov, y + d + ov, h), P(x + w + ov, y + d + ov, h - 0.09), P(x + w + ov, y - ov, h - 0.09)], shade(tile, -0.2));
+      s += line(P(x - ov, y + d, h - 0.05), P(x + w / 2, y + d + ov, h + rh), tile, 3);
+      s += line(P(x + w / 2, y + d + ov, h + rh), P(x + w + ov, y + d + ov, h - 0.05), tile, 3);
+      for (var u2 = 0; u2 <= d + 2 * ov; u2 += 0.2) eave.push(P(x + w + ov, y + d + ov - u2, h - 0.09));
+      var cx2 = x + w * 0.22, cy2 = y + d * 0.35;
+      chim = [cx2, cy2, h + rh * ((cx2 - x) / (w / 2))];
+    }
+    // Eiszapfen
+    eave.forEach(function (p, i) { if (i % 2 === 0) { var L = rr(3, 9); s += poly([add(p, -1.6, 0), add(p, 1.6, 0), add(p, 0, L)], "#eef6ff"); } });
+    // Lichterkette
+    if (o.lights) eave.forEach(function (p, i) {
+      var c = ["#ffdf8a", "#ff6b5b", "#ffd166", "#8fe3a8", "#ffe9b8"][i % 5];
+      s += circ(add(p, 0, 3), 2.1, c); glows.push(circ(add(p, 0, 3), 5, c));
+    });
+    // Schornstein + Rauch
+    if (!o.church) {
+      s += box(chim[0], chim[1], chim[2] - 0.15, 0.3, 0.3, 0.62, "#8a5a44");
+      s += poly([P(chim[0] - 0.03, chim[1] - 0.03, chim[2] + 0.48), P(chim[0] + 0.33, chim[1] - 0.03, chim[2] + 0.48), P(chim[0] + 0.33, chim[1] + 0.33, chim[2] + 0.48), P(chim[0] - 0.03, chim[1] + 0.33, chim[2] + 0.48)], "#f8fafd");
+      if (rnd() < 0.75) {
+        var sp = P(chim[0] + 0.15, chim[1] + 0.15, chim[2] + 0.5);
+        s += '<g class="smoke" style="animation-delay:' + f1(rr(0, 5)) + 's">' + circ(add(sp, 2, -10), 6, "#e8edf3", 'opacity=".55"') + circ(add(sp, 7, -24), 9, "#e8edf3", 'opacity=".4"') + circ(add(sp, 4, -42), 12, "#e8edf3", 'opacity=".25"') + "</g>";
+      }
+    }
+    return s;
+  }
+  function house(o) {
+    o.col = o.col || WALLS[o.c || 0]; o.tile = o.tile || TILES[(o.c || 0) % TILES.length];
+    var x = o.x, y = o.y, w = o.w, d = o.d, h = o.h, rh = o.rh || (o.r === "x" ? d : w) * 0.42 + 0.15, s = "";
+    occupy(x, y, w, d); shadowBox(x, y, w, d, h + rh * 0.5);
+    var FL = faceL(x, y, w, d, 0), FR = faceR(x, y, w, d, 0);
+    s += poly(frect(FR, 0, 0, d, h), shade(o.col, -0.26));
+    s += poly(frect(FL, 0, 0, w, h), shade(o.col, -0.04));
+    s += poly(frect(FR, 0, 0, d, 0.18), "#77736c") + poly(frect(FL, 0, 0, w, 0.18), "#8f8a82");
+    if (o.fach) { s += fach(FL, w, h); s += fach(FR, d, h); }
+    s += faceDetails(FL, "L", w, h, o, true);
+    s += faceDetails(FR, "R", d, h, o, false);
+    if (o.extra) s += o.extra(FL, FR);
+    s += roof(o, rh);
+    s += poly([P(x - 0.05, y + d + 0.22, 0), P(x + w + 0.22, y + d + 0.22, 0), P(x + w + 0.22, y - 0.05, 0), P(x + w, y, 0.08), P(x + w, y + d, 0.1), P(x, y + d, 0.08)], "#f4f7fb");
+    item(x + w / 2 + y + d / 2, s);
+    if (o.plate && o.plate <= 24) guards.push([x + w / 2, y + d + 0.6]);
+  }
+
+  // ---------- Kirche ----------
+  function church(x, y) {
+    house({ x: x, y: y, w: 3.2, d: 4.8, h: 2.4, r: "y", col: "#d9d1c0", tile: "#4b4f57", church: true, door: false,
+      extra: function (FL, FR) {
+        var s = poly(frect(FR, 1.15, 0.9, 2.05, 1.26), "#1f4f8f", 'stroke="#e9eef6" stroke-width="1.2"');
+        s += ftext("R", FR(1.38, 1.01), "Kirchweg", 7.5, "#fff", 'font-family="Arial,sans-serif"');
+        s += numText(2, "R", FR(1.86, 1.01), 9, "#fff", 'font-family="Arial,sans-serif"');
+        return s;
+      } });
+    // Turm
+    var tx = x + 0.8, ty = y + 4.8, tw = 1.6, th = 4.6, s = "";
+    occupy(tx, ty, tw, tw); shadowBox(tx, ty, tw, tw, th + 1.5);
+    var FL = faceL(tx, ty, tw, tw, 0), FR = faceR(tx, ty, tw, tw, 0);
+    s += poly(frect(FR, 0, 0, tw, th), "#a79f90") + poly(frect(FL, 0, 0, tw, th), "#cfc6b4");
+    s += line(FL(0, 2.2), FL(tw, 2.2), "#b8af9e", 2) + line(FR(0, 2.2), FR(tw, 2.2), "#958d7f", 2);
+    s += poly(frect(FL, 0.55, 0.05, 1.05, 1.15), "#efe7da") + poly(frect(FL, 0.6, 0.05, 1.0, 1.1), "#4a2f1f");
+    s += windowAt(FL, 0.8, 1.75, 0.22, 0.5, true, true) + windowAt(FR, 0.8, 1.75, 0.22, 0.5, true, true);
+    s += poly(frect(FL, 0.55, 3.3, 1.05, 3.9), "#3a3a3a") + poly(frect(FR, 0.55, 3.3, 1.05, 3.9), "#2e2e2e");
+    var clock = []; for (var i = 0; i < 16; i++) { var a = i / 16 * Math.PI * 2; clock.push(FL(0.8 + Math.cos(a) * 0.32, 2.75 + Math.sin(a) * 0.32)); }
+    s += poly(clock, "#f3ead2", 'stroke="#c9a14a" stroke-width="2"') + line(FL(0.8, 2.75), FL(0.8, 2.98), "#222", 1.8) + line(FL(0.8, 2.75), FL(0.96, 2.75), "#222", 1.8);
+    var apex = P(tx + tw / 2, ty + tw / 2, th + 2.6);
+    s += poly([P(tx - 0.1, ty + tw + 0.1, th), P(tx + tw + 0.1, ty + tw + 0.1, th), apex], "#5f8f7e");
+    s += poly([P(tx + tw + 0.1, ty - 0.1, th), P(tx + tw + 0.1, ty + tw + 0.1, th), apex], "#456e60");
+    s += poly([P(tx - 0.1, ty + tw + 0.1, th), P(tx + tw * 0.4, ty + tw + 0.1, th), add(apex, 0, 30)], "#f2f6fa", 'opacity=".85"');
+    s += line(apex, add(apex, 0, -18), "#d8b25a", 2.5) + line(add(apex, -6, -12), add(apex, 6, -12), "#d8b25a", 2.5);
+    item(tx + tw / 2 + ty + tw / 2, s);
+  }
+
+  // ---------- Markt ----------
+  function stall(x, y, col, label, day) {
+    var w = 1.3, d = 1.1, s = "";
+    occupy(x, y, w, d); shadowBox(x, y, w, d, 1.2);
+    s += box(x, y, 0, w, d, 0.55, "#8b5a3c");
+    var FL = faceL(x, y, w, d, 0);
+    s += line(FL(0, 0.3), FL(w, 0.3), "#6d4429", 1.2);
+    for (var g = 0; g < 7; g++) s += ell(P(x + 0.15 + g * 0.16, y + d - 0.2, 0.58), 3.5, 2, pick(["#c0392b", "#e0a030", "#8b5a2b", "#f4e1b5", "#3f8a5f"]));
+    [[x + 0.05, y + d - 0.05], [x + w - 0.05, y + d - 0.05], [x + w - 0.05, y + 0.05]].forEach(function (q) { s += line(P(q[0], q[1], 0.55), P(q[0], q[1], 1.3), "#5b3a26", 2.4); });
+    var h = 1.3, rh = 0.35, ov = 0.12;
+    s += poly([P(x, y + d / 2, h + rh), P(x + w, y + d / 2, h + rh), P(x + w, y, h), P(x, y, h)], shade(col, -0.2));
+    s += poly([P(x + w, y, h), P(x + w, y + d, h), P(x + w, y + d / 2, h + rh)], "#7a4a2c");
+    var n = 6;
+    for (var i = 0; i < n; i++) {
+      var a = x - ov + (w + 2 * ov) * i / n, b = x - ov + (w + 2 * ov) * (i + 1) / n;
+      s += poly([P(a, y + d / 2, h + rh), P(b, y + d / 2, h + rh), P(b, y + d + ov, h), P(a, y + d + ov, h)], i % 2 ? "#f4ede2" : col);
+    }
+    s += poly([P(x - ov, y + d / 2, h + rh), P(x + w + ov, y + d / 2, h + rh), P(x + w + ov, y + d * 0.8, h + rh * 0.4), P(x - ov, y + d * 0.8, h + rh * 0.35)], "#f8fafd", 'opacity=".92"');
+    for (var e = 0; e <= 6; e++) { var p = P(x - ov + (w + 2 * ov) * e / 6, y + d + ov, h - 0.03); s += circ(p, 1.8, "#ffe3a0"); glows.push(circ(p, 5, "#ffcf70")); }
+    s += poly(frect(FL, 0.06, 0.72, w - 0.06, 1.02), "#f1e3c3", 'stroke="#6b4428" stroke-width="1"');
+    s += ftext("L", FL(0.12, 0.8), label, 8, "#5a2e1a", 'font-family="Georgia,serif" font-style="italic"', "start");
+    if (day) {
+      s += numText(day, "L", FL(w - 0.38, 0.8), 9, "#5a2e1a", 'font-family="Georgia,serif"');
+      s += ftext("L", FL(w - 0.17, 0.8), "€", 8, "#5a2e1a", 'font-family="Georgia,serif"');
+    }
+    item(x + w / 2 + y + d / 2, s);
+  }
+
+  function bigTree(x, y) {
+    occupy(x - 0.9, y - 0.9, 1.8, 1.8);
+    var b = P(x, y, 0), H = 240, s = "";
+    shadows.push(ell(add(b, 70, 8), 110, 30, "#000"));
+    s += ell(b, 52, 22, "#f4f7fb");
+    s += '<rect x="' + f1(b[0] - 6) + '" y="' + f1(b[1] - 26) + '" width="12" height="26" fill="#5b3a26"/>';
+    var tiers = 6;
+    for (var i = 0; i < tiers; i++) {
+      var t = i / tiers, top = b[1] - 20 - H * (t + 1 / tiers * 1.55), bot = b[1] - 18 - H * t, wd = 92 * (1 - t * 0.78);
+      if (i === tiers - 1) top = b[1] - 20 - H;
+      var zig = [];
+      for (var k = 0; k <= 10; k++) zig.push([b[0] - wd + wd * 2 * k / 10, bot + (k % 2 ? -5 : 2)]);
+      s += poly([[b[0], top]].concat(zig.slice(0, 6)), "#2f6a4c");
+      s += poly([[b[0], top]].concat(zig.slice(5)), "#21503a");
+      s += poly([[b[0], top], [b[0] - wd * 0.5, top + (bot - top) * 0.5], [b[0] - wd * 0.1, top + (bot - top) * 0.32]], "#f2f6fa", 'opacity=".75"');
+    }
+    for (var l = 0; l < 70; l++) {
+      var tt = rnd(), yy = b[1] - 30 - H * 0.88 * tt, ww = 88 * (1 - tt * 0.8) * rr(-0.9, 0.9);
+      var c = pick(["#ffe9a8", "#ffe9a8", "#ff6b5b", "#ffd166", "#9ad7ff"]);
+      s += circ([b[0] + ww, yy], 2.2, c, 'class="tw" style="animation-delay:' + f1(rr(0, 3)) + 's"'); glows.push(circ([b[0] + ww, yy], 6, c));
+    }
+    for (var o = 0; o < 14; o++) {
+      var t2 = rr(0.05, 0.8), yo = b[1] - 30 - H * 0.88 * t2, wo = 80 * (1 - t2 * 0.8) * rr(-0.85, 0.85);
+      if (Math.abs(wo - 34) < 16 && Math.abs(yo - (b[1] - 92)) < 16) continue;
+      s += circ([b[0] + wo, yo], 4.5, pick(["#c0392b", "#d8b25a", "#c0392b", "#e8e0d0"]));
+    }
+    var orn = [b[0] + 34, b[1] - 92];
+    s += circ(orn, 11, "#b8262f") + circ(add(orn, -3, -4), 3, "#ffffff", 'opacity=".5"') + line(add(orn, 0, -11), add(orn, 0, -16), "#d8b25a", 2);
+    s += ftext("S", add(orn, 0, 3.5), "20", 9.5, "#ffd9c9", 'font-weight="700" class="num" font-family="Georgia,serif"');
+    spots[20] = { c: orn, r: 14 };
+    var st = [b[0], b[1] - 20 - H - 6];
+    glows.push(circ(st, 22, "#ffd166"));
+    s += '<use href="#star" x="' + f1(st[0] - 14) + '" y="' + f1(st[1] - 14) + '" width="28" height="28" fill="#ffd166" stroke="#d39a2a" stroke-width=".6"/>';
+    // Geschenke
+    var gifts = [[x + 0.35, y + 0.55, "#b8262f"], [x - 0.65, y + 0.6, "#2f5f9e"], [x + 0.75, y - 0.2, "#3f8a5f"], [x - 0.1, y + 0.85, "#d8b25a"]];
+    gifts.forEach(function (g, i) {
+      var gw = 0.38, gh = 0.3;
+      s += box(g[0], g[1], 0, gw, gw, gh, g[2]);
+      s += poly(frect(faceL(g[0], g[1], gw, gw, 0), gw / 2 - 0.04, 0, gw / 2 + 0.04, gh), "#f4e1b5");
+      s += poly(frect(faceR(g[0], g[1], gw, gw, 0), gw / 2 - 0.04, 0, gw / 2 + 0.04, gh), "#d9c49a");
+      if (i === 0) {
+        var FL = faceL(g[0], g[1], gw, gw, 0);
+        s += poly(frect(FL, 0.04, 0.05, 0.17, 0.2), "#f6efe0");
+        s += numText(24, "L", FL(0.105, 0.075), 7.5, "#b8262f", 'font-family="Georgia,serif"');
+      }
+    });
+    item(x + y + 0.9, s);
+  }
+
+  function tree(x, y, sc, snowy) {
+    var b = P(x, y, 0), H = 58 * sc, W = H * 0.42, s = "";
+    shadows.push(ell(add(b, H * 0.35, 3), H * 0.42, H * 0.13, "#000"));
+    s += '<rect x="' + f1(b[0] - 2.5) + '" y="' + f1(b[1] - 8) + '" width="5" height="9" fill="#5b3a26"/>';
+    for (var i = 0; i < 4; i++) {
+      var t = i / 4, top = b[1] - 6 - H * (t + 0.38), bot = b[1] - 5 - H * t * 0.92, wd = W * (1 - t * 0.7);
+      if (i === 3) top = b[1] - 6 - H;
+      s += poly([[b[0], top], [b[0] - wd, bot], [b[0], bot + 2]], "#2c5e45");
+      s += poly([[b[0], top], [b[0] + wd, bot], [b[0], bot + 2]], "#1d4433");
+      if (snowy) s += poly([[b[0], top], [b[0] - wd * 0.62, top + (bot - top) * 0.62], [b[0] - wd * 0.15, top + (bot - top) * 0.5], [b[0] + wd * 0.2, top + (bot - top) * 0.42]], "#f1f5f9", 'opacity=".88"');
+    }
+    item(x + y, s);
+  }
+
+  // ---------- Menschen & Kleinkram ----------
+  var COATS = ["#8c2f39", "#2e4a62", "#3d5c45", "#6b4f3a", "#2b2b30", "#b5651d", "#5b4a8a", "#a33c2c", "#355c7d", "#7a6a5a", "#c9b79c"];
+  var SKIN = ["#f1c9a5", "#e0ac7e", "#c68a5e", "#8d5a3b", "#f5d6bd"];
+  function person(x, y, kid) {
+    var p = P(x, y, 0), k = kid ? 0.72 : 1, coat = pick(COATS), s = "";
+    s += ell(add(p, 5, 1), 6 * k, 2.4 * k, "#000", 'opacity=".18"');
+    s += '<rect x="' + f1(p[0] - 3 * k) + '" y="' + f1(p[1] - 8 * k) + '" width="' + f1(2.4 * k) + '" height="' + f1(8 * k) + '" fill="#2b2b33"/>';
+    s += '<rect x="' + f1(p[0] + 0.6 * k) + '" y="' + f1(p[1] - 8 * k) + '" width="' + f1(2.4 * k) + '" height="' + f1(8 * k) + '" fill="#26262d"/>';
+    s += '<rect x="' + f1(p[0] - 4.6 * k) + '" y="' + f1(p[1] - 19.5 * k) + '" width="' + f1(9.2 * k) + '" height="' + f1(13 * k) + '" rx="' + f1(3.6 * k) + '" fill="' + coat + '"/>';
+    s += '<rect x="' + f1(p[0] + 0.5 * k) + '" y="' + f1(p[1] - 19 * k) + '" width="' + f1(4 * k) + '" height="' + f1(12 * k) + '" rx="' + f1(2 * k) + '" fill="#000" opacity=".15"/>';
+    s += '<rect x="' + f1(p[0] - 4.6 * k) + '" y="' + f1(p[1] - 19.5 * k) + '" width="' + f1(9.2 * k) + '" height="' + f1(2.6 * k) + '" fill="' + pick(["#c0392b", "#e8e0d0", "#d8b25a", "#3f8a5f", "#2f5f9e"]) + '"/>';
+    s += circ([p[0], p[1] - 23 * k], 3.4 * k, pick(SKIN));
+    var hat = pick(["#c0392b", "#2f5f9e", "#e8e0d0", "#3f8a5f", "#d8b25a", "#5b4a8a", "#2b2b30"]);
+    s += '<path d="M' + f1(p[0] - 3.6 * k) + "," + f1(p[1] - 23.5 * k) + " a" + f1(3.6 * k) + "," + f1(3.8 * k) + " 0 0 1 " + f1(7.2 * k) + ',0z" fill="' + hat + '"/>';
+    if (rnd() < 0.5) s += circ([p[0], p[1] - 27.6 * k], 1.5 * k, "#f4f1ea");
+    if (rnd() < 0.25) s += '<rect x="' + f1(p[0] + 4 * k) + '" y="' + f1(p[1] - 13 * k) + '" width="' + f1(5 * k) + '" height="' + f1(6 * k) + '" fill="' + pick(["#c0392b", "#d8b25a", "#2f5f9e"]) + '"/>';
+    item(x + y, s);
+  }
+  function lamp(x, y, day) {
+    var p0 = P(x, y, 0), p1 = P(x, y, 1.9), s = "";
+    occupy(x - 0.1, y - 0.1, 0.2, 0.2);
+    s += line(p0, add(p1, 0, 6), "#2d2a2a", 3) + ell(p0, 4, 2, "#2d2a2a");
+    s += poly([add(p1, -5, -6), add(p1, 5, -6), add(p1, 4, 6), add(p1, -4, 6)], "#ffe2a0", 'stroke="#2d2a2a" stroke-width="1.5"');
+    s += poly([add(p1, -7, -6), add(p1, 0, -12), add(p1, 7, -6)], "#2d2a2a") + poly([add(p1, -5, -8), add(p1, 0, -12), add(p1, 3, -9)], "#f4f7fb");
+    s += '<path d="M' + f1(p1[0] - 2) + "," + f1(p1[1] + 14) + " l2,-4 l2,4z" + '" fill="#c0392b"/>';
+    glows.push(circ(p1, 30, "url(#lampGlow)"));
+    if (day) {
+      var q = P(x, y, 0.95);
+      s += '<rect x="' + f1(q[0] - 8) + '" y="' + f1(q[1] - 7) + '" width="16" height="11" rx="1.5" fill="#2f4a3a" stroke="#d8c9a3" stroke-width="1"/>';
+      s += ftext("S", add(q, 0, 2), day, 8, "#f1e7cf", 'font-weight="700" class="num" font-family="Arial,sans-serif"');
+      spots[day] = { c: add(q, 0, -1.5), r: 13 }; guards.push([x, y]);
+    }
+    item(x + y, s);
+  }
+  function bench(x, y, day) {
+    occupy(x, y - 0.1, 0.9, 0.4);
+    var s = box(x, y, 0.22, 0.9, 0.28, 0.06, "#7a5236");
+    s += line(P(x + 0.05, y + 0.25, 0), P(x + 0.05, y + 0.25, 0.22), "#3a2a20", 2) + line(P(x + 0.85, y + 0.25, 0), P(x + 0.85, y + 0.25, 0.22), "#3a2a20", 2);
+    var FB = faceL(x, y - 0.04, 0.9, 0.04, 0.28);
+    s += poly(frect(FB, 0, 0, 0.9, 0.34), "#8a5f3f") + line(FB(0, 0.17), FB(0.9, 0.17), "#6d4429", 1);
+    s += poly([P(x, y, 0.28), P(x + 0.9, y, 0.28), P(x + 0.9, y + 0.28, 0.28), P(x, y + 0.28, 0.28)], "#f4f7fb");
+    if (day) { s += poly(frect(FB, 0.35, 0.06, 0.55, 0.28), "#c9a14a"); s += numText(day, "L", FB(0.45, 0.1), 7.5, "#3a2a20", 'font-family="Georgia,serif"'); guards.push([x + 0.45, y + 0.3]); }
+    item(x + y + 0.5, s);
+  }
+  function barrel(x, y, day) {
+    occupy(x - 0.2, y - 0.2, 0.4, 0.4);
+    var p = P(x, y, 0), s = "";
+    shadowBlob(x, y, 0.3);
+    s += '<path d="M' + f1(p[0] - 8) + "," + f1(p[1] - 20) + " v18 a8,3.5 0 0 0 16,0 v-18z" + '" fill="#7a4a2a"/>';
+    s += '<path d="M' + f1(p[0] + 1) + "," + f1(p[1] - 20) + " v18 a8,3.5 0 0 0 7,-1.5 v-16.5z" + '" fill="#000" opacity=".2"/>';
+    s += line(add(p, -8, -5), add(p, 8, -5), "#3a2a20", 1.6) + line(add(p, -8, -16), add(p, 8, -16), "#3a2a20", 1.6);
+    s += ell(add(p, 0, -20), 8, 3.4, "#5b3720") + ell(add(p, -1, -20.5), 6, 2.4, "#f4f7fb");
+    s += ftext("S", add(p, 0, -7.5), day, 9, "#f1dfbd", 'font-weight="700" class="num" font-family="Georgia,serif"');
+    spots[day] = { c: add(p, 0, -11), r: 13 }; guards.push([x, y]);
+    item(x + y, s);
+  }
+  function crate(x, y, day) {
+    occupy(x, y, 0.5, 0.5); shadowBox(x, y, 0.5, 0.5, 0.42);
+    var s = box(x, y, 0, 0.5, 0.5, 0.42, "#b0844f"), FL = faceL(x, y, 0.5, 0.5, 0);
+    s += line(FL(0, 0.14), FL(0.5, 0.14), "#8a6237", 1) + line(FL(0, 0.28), FL(0.5, 0.28), "#8a6237", 1);
+    s += poly([P(x, y, 0.42), P(x + 0.5, y, 0.42), P(x + 0.5, y + 0.5, 0.42), P(x, y + 0.5, 0.42)], "#f4f7fb");
+    s += numText(day, "L", FL(0.25, 0.1), 10, "#4a2f1a", 'font-family="Courier New,monospace"');
+    guards.push([x + 0.25, y + 0.5]);
+    item(x + y + 0.5, s);
+  }
+  function sack(x, y, day) {
+    occupy(x - 0.2, y - 0.2, 0.4, 0.4);
+    var p = P(x, y, 0), s = "";
+    s += '<path d="M' + f1(p[0] - 9) + "," + f1(p[1]) + " q-2,-14 4,-20 l-1,-4 h12 l-1,4 q6,6 4,20z" + '" fill="#c9a77a"/>';
+    s += '<path d="M' + f1(p[0] + 2) + "," + f1(p[1]) + " q4,-12 0,-20 l2,0 q6,6 4,20z" + '" fill="#000" opacity=".12"/>';
+    s += line(add(p, -5, -21), add(p, 5, -21), "#7a5a35", 1.5);
+    s += ftext("S", add(p, 0, -6), day, 8.5, "#7a5a35", 'font-weight="700" class="num" font-family="Courier New,monospace"');
+    spots[day] = { c: add(p, 0, -9), r: 12 }; guards.push([x, y]);
+    item(x + y, s);
+  }
+  function mailbox(x, y, day) {
+    occupy(x - 0.1, y - 0.1, 0.4, 0.3);
+    var s = line(P(x + 0.12, y + 0.12, 0), P(x + 0.12, y + 0.12, 0.95), "#3a3a3a", 2.5);
+    s += box(x, y, 0.95, 0.3, 0.24, 0.34, "#e3b505");
+    var FL = faceL(x, y, 0.3, 0.24, 0.95);
+    s += poly(frect(FL, 0.06, 0.25, 0.24, 0.28), "#3a3a3a");
+    s += ftext("L", FL(0.15, 0.17), "Leerung", 3.6, "#3a3a3a", 'font-family="Arial,sans-serif"');
+    s += numText(day, "L", FL(0.15, 0.04), 7, "#3a3a3a", 'font-family="Arial,sans-serif"');
+    s += poly([P(x, y, 1.29), P(x + 0.3, y, 1.29), P(x + 0.3, y + 0.24, 1.29), P(x, y + 0.24, 1.29)], "#f4f7fb");
+    guards.push([x + 0.15, y + 0.3]);
+    item(x + y + 0.3, s);
+  }
+  function shed(x, y, day) {
+    occupy(x, y, 1.4, 1.4); shadowBox(x, y, 1.4, 1.4, 1.1);
+    var s = box(x, y, 0, 1.4, 1.4, 1.0, "#8a6142"), FL = faceL(x, y, 1.4, 1.4, 0), FR = faceR(x, y, 1.4, 1.4, 0);
+    for (var u = 0.15; u < 1.4; u += 0.17) { s += line(FL(u, 0), FL(u, 1), "#6d4a31", 1) + line(FR(u, 0), FR(u, 1), "#5b3d28", 1); }
+    s += box(x - 0.1, y - 0.1, 1.0, 1.6, 1.6, 0.14, "#eef2f7");
+    s += poly(frect(FL, 0.42, 0, 0.98, 0.82), "#5b3d28") + line(FL(0.42, 0), FL(0.98, 0.82), "#7a5236", 2) + line(FL(0.98, 0), FL(0.42, 0.82), "#7a5236", 2);
+    s += poly(frect(FL, 0.55, 0.5, 0.85, 0.72), "#e9dcc4");
+    s += numText(day, "L", FL(0.7, 0.55), 9, "#5b3d28", 'font-family="Georgia,serif"');
+    guards.push([x + 0.7, y + 1.6]);
+    item(x + 0.7 + y + 0.7, s);
+  }
+  function busStop(x, y, day) {
+    occupy(x - 0.1, y - 0.1, 0.2, 0.2);
+    var s = line(P(x, y, 0), P(x, y, 2.1), "#6d6d6d", 2.5), top = P(x, y, 2.1), mid = P(x, y, 1.15);
+    s += circ(top, 10, "#f2c230", 'stroke="#2f7a52" stroke-width="2.5"') + ftext("S", add(top, 0, 4.5), "H", 12, "#2f7a52", 'font-weight="700" font-family="Arial,sans-serif"');
+    s += '<rect x="' + f1(mid[0] - 9) + '" y="' + f1(mid[1] - 12) + '" width="18" height="22" fill="#fbfbf7" stroke="#6d6d6d" stroke-width="1"/>';
+    s += ftext("S", add(mid, 0, -5), "Linie", 5, "#333", 'font-family="Arial,sans-serif"');
+    s += ftext("S", add(mid, 0, 6), day, 10, "#333", 'font-weight="700" class="num" font-family="Arial,sans-serif"');
+    spots[day] = { c: add(mid, 0, 2.5), r: 13 }; guards.push([x, y]);
+    item(x + y, s);
+  }
+  function signpost(x, y, day) {
+    occupy(x - 0.1, y - 0.1, 0.2, 0.2);
+    var s = line(P(x, y, 0), P(x, y, 2.0), "#6b4428", 3.5);
+    var F1 = faceL(x - 0.1, y - 0.02, 1.25, 0.02, 1.45);
+    s += poly([F1(0, 0), F1(1.1, 0), F1(1.25, 0.12), F1(1.1, 0.24), F1(0, 0.24)], "#d9a066", 'stroke="#6b4428" stroke-width="1"');
+    s += ftext("L", F1(0.08, 0.06), "Nordpol", 7.5, "#4a2c18", 'font-family="Georgia,serif" font-style="italic"', "start");
+    s += numText(day, "L", F1(0.78, 0.06), 8.5, "#4a2c18", 'font-family="Georgia,serif"');
+    s += ftext("L", F1(0.97, 0.06), "km", 6.5, "#4a2c18", 'font-family="Georgia,serif"');
+    var F2 = faceR(x - 0.02, y - 0.6, 0.02, 0.7, 0.75);
+    s += poly([F2(0, 0), F2(0.6, 0), F2(0.7, 0.11), F2(0.6, 0.22), F2(0, 0.22)], "#caa06a", 'stroke="#6b4428" stroke-width="1"');
+    s += ftext("R", F2(0.3, 0.05), "Markt", 7, "#4a2c18", 'font-family="Georgia,serif" font-style="italic"');
+    guards.push([x + 0.5, y + 0.4]);
+    item(x + y + 0.2, s);
+  }
+  function churchSign(x, y, day) {
+    occupy(x, y, 0.9, 0.2);
+    var F = faceL(x, y, 0.9, 0.05, 0.35), s = "";
+    s += line(P(x + 0.1, y + 0.05, 0), P(x + 0.1, y + 0.05, 0.9), "#5b3a26", 2.5) + line(P(x + 0.8, y + 0.05, 0), P(x + 0.8, y + 0.05, 0.9), "#5b3a26", 2.5);
+    s += poly(frect(F, 0, 0, 0.9, 0.55), "#2f3b33", 'stroke="#c9a14a" stroke-width="1.2"');
+    s += ftext("L", F(0.45, 0.33), "Christmette", 7, "#f3ead2", 'font-family="Georgia,serif" font-style="italic"');
+    s += numText(day, "L", F(0.36, 0.1), 8.5, "#f3ead2", 'font-family="Georgia,serif"');
+    s += ftext("L", F(0.6, 0.1), "Uhr", 7, "#f3ead2", 'font-family="Georgia,serif"');
+    s += poly(frect(F, -0.03, 0.55, 0.93, 0.6), "#f4f7fb");
+    guards.push([x + 0.45, y + 0.4]);
+    item(x + y + 0.5, s);
+  }
+  function snowman(x, y, day) {
+    occupy(x - 0.3, y - 0.3, 0.6, 0.6);
+    var p = P(x, y, 0), s = "";
+    shadowBlob(x, y, 0.4);
+    s += circ(add(p, 0, -11), 12, "url(#snowball)") + circ(add(p, 0, -28), 9, "url(#snowball)") + circ(add(p, 0, -41), 6.8, "url(#snowball)");
+    s += circ(add(p, -2.3, -42.5), 1, "#222") + circ(add(p, 2.3, -42.5), 1, "#222") + poly([add(p, 0, -41), add(p, 7, -40), add(p, 0, -39.3)], "#f08a24");
+    s += '<rect x="' + f1(p[0] - 7) + '" y="' + f1(p[1] - 36) + '" width="14" height="3" fill="#c0392b"/>';
+    s += '<rect x="' + f1(p[0] - 5) + '" y="' + f1(p[1] - 55) + '" width="10" height="9" fill="#2b2b2b"/><rect x="' + f1(p[0] - 7.5) + '" y="' + f1(p[1] - 47) + '" width="15" height="2" fill="#2b2b2b"/>';
+    s += line(add(p, -8, -29), add(p, -20, -36), "#5b3a26", 1.6) + line(add(p, 8, -29), add(p, 14, -22), "#5b3a26", 1.6);
+    s += line(add(p, 14, -22), add(p, 14, -6), "#6b4428", 1.6);
+    s += '<rect x="' + f1(p[0] + 6) + '" y="' + f1(p[1] - 32) + '" width="16" height="12" fill="#f1e3c3" stroke="#6b4428" stroke-width="1"/>';
+    s += ftext("S", add(p, 14, -22.5), day, 9, "#6b2d2b", 'font-weight="700" class="num" font-family="Georgia,serif"');
+    spots[day] = { c: add(p, 14, -26), r: 12 }; guards.push([x, y]);
+    item(x + y, s);
+  }
+  function sled(x, y, day) {
+    occupy(x, y, 1.0, 0.45);
+    var s = line(P(x - 0.1, y + 0.45, 0.02), P(x + 1.05, y + 0.45, 0.02), "#3a2a20", 2) + line(P(x - 0.1, y, 0.02), P(x + 1.05, y, 0.02), "#3a2a20", 2);
+    s += box(x, y, 0.1, 1.0, 0.45, 0.18, "#a8322f");
+    s += '<path d="M' + pts([P(x - 0.1, y + 0.45, 0.02)]) + " q-6,-2 -4,-8" + '" stroke="#3a2a20" stroke-width="2" fill="none"/>';
+    s += numText(day, "L", faceL(x, y, 1.0, 0.45, 0.1)(0.5, 0.03), 9.5, "#f3d9b0", 'font-family="Georgia,serif"');
+    guards.push([x + 0.5, y + 0.6]);
+    item(x + 0.5 + y + 0.2, s);
+  }
+  function fence(x0, y0, x1, y1) {
+    var n = Math.round(Math.hypot(x1 - x0, y1 - y0) / 0.32), s = "";
+    s += line(P(x0, y0, 0.32), P(x1, y1, 0.32), "#8a6142", 1.8) + line(P(x0, y0, 0.16), P(x1, y1, 0.16), "#8a6142", 1.8);
+    s += line(add(P(x0, y0, 0.36), 0, -1), add(P(x1, y1, 0.36), 0, -1), "#f4f7fb", 2.2);
+    for (var i = 0; i <= n; i++) { var t = i / n, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t; s += line(P(x, y, 0), P(x, y, 0.4), "#6d4a31", 2); }
+    occupy(Math.min(x0, x1) - 0.05, Math.min(y0, y1) - 0.05, Math.abs(x1 - x0) + 0.1, Math.abs(y1 - y0) + 0.1);
+    item((x0 + x1) / 2 + (y0 + y1) / 2, s);
+  }
+  function snowPile(x, y, r) {
+    var p = P(x, y, 0);
+    item(x + y, ell(add(p, 0, -2), r * 30, r * 13, "#f7f9fc") + ell(add(p, r * 8, 0), r * 22, r * 8, "#dbe4ee", 'opacity=".7"') + ell(add(p, -r * 6, -5), r * 14, r * 6, "#ffffff"));
+  }
+
+  // ---------- Jochen ----------
+  var COSTUMES = {
+    santa: { f: '<use href="#jSanta"/>' },
+    elf: { f: '<use href="#jElf"/>' },
+    schnee: { f: '<use href="#jBobble"/><use href="#jScarf"/>' },
+    rentier: { f: '<use href="#jAntlers"/>' },
+    engel: { b: '<use href="#jWings"/>', f: '<use href="#jHalo"/>' },
+    nacht: { f: '<use href="#jNight"/>' },
+    geschenk: { f: '<rect x="-34" y="2" width="68" height="11" rx="2" fill="#b22f3c"/><rect x="-30" y="12" width="60" height="44" fill="#d83a4b"/><rect x="-5" y="2" width="10" height="54" fill="#ffd166"/><path d="M0,2 q-16,-16 -20,-2 q5,8 20,2 q16,-16 20,-2 q-5,8 -20,2" fill="#ffd166"/>' }
+  };
+  // Verstecke: [x, y, z, Tiefen-Verschiebung]
+  var JSPOTS = [
+    [7.7, 7.4, 2.45, 0.6],
+    [24.2, 3.8, 3.05, 0.6],
+    [23.95, 24.31, 0, 0],
+    [9.65, 10.82, 0, 0],
+    [13.74, 16.21, 0, 0],
+    [25.35, 16.71, 0, 0],
+    [20.05, 27.45, 0, 0],
+    [19.65, 13.41, 0, 0],
+    [20.38, 23.37, 0, 0],
+    [28.39, 10.32, 0, 0],
+    [8.39, 22.43, 0, 0],
+    [21.95, 8.2, 0, 0],
+    [-1.34, 17.72, 0, 0],
+    [23.29, 25.92, 0, 0],
+    [15.34, 11.87, 0, 0],
+    [12.02, 15.35, 0, 0],
+    [7.89, 28.98, 0, 0],
+    [0.57, 11.67, 0, 0],
+    [12.1, -1.23, 0, 0],
+    [20.85, 25.91, 0, 0],
+    [19.5, -0.7, 0, 0],
+    [11.7, 25.64, 0, 0],
+    [3.94, 17.15, 0, 0],
+    [28.02, 14.25, 0, 0]
+  ];
+  function jochen(js, costume) {
+    var p = P(js[0], js[1], js[2]), sc = 0.3, c = COSTUMES[costume] || COSTUMES.santa, s = "";
+    if (!js[2]) s += ell(add(p, 4, 0), 9, 3, "#000", 'opacity=".22"');
+    var ty = p[1] - 54 * sc;
+    s += '<g transform="translate(' + f1(p[0]) + " " + f1(ty) + ") scale(" + sc + ')">' + (c.b || "") + '<use href="#jBody"/>' + (c.f || "") + "</g>";
+    item(js[0] + js[1] + (js[3] || 0) - 0.02, s);
+    return [p[0], ty + 4 * sc];
+  }
+
+  // ---------- Aufbau ----------
+  function build(root, opts) {
+    opts = opts || {};
+    seed = 1225; ground = []; items = []; shadows = []; glows = []; spots = {}; occ = []; guards = [];
+
+    // Boden
+    ground.push('<rect x="-50" y="-50" width="1700" height="1250" fill="#eaf0f6"/>');
+    function gpoly(a, fill, extra) { ground.push(poly(a.map(function (q) { return P(q[0], q[1], 0); }), fill, extra)); }
+    gpoly([[-30, 12], [50, 12], [50, 14], [-30, 14]], "#cfd5dd");
+    gpoly([[12, -30], [14, -30], [14, 50], [12, 50]], "#cfd5dd");
+    gpoly([[9, 9], [17, 9], [17, 17], [9, 17]], "#c9c2b8");
+    for (var g = 9.5; g < 17; g += 0.5) { ground.push(line(P(g, 9, 0), P(g, 17, 0), "#b7afa4", 0.8, 'opacity=".6"')); ground.push(line(P(9, g, 0), P(17, g, 0), "#b7afa4", 0.8, 'opacity=".6"')); }
+    for (var sp = 0; sp < 40; sp++) { var q = P(rr(9.3, 16.7), rr(9.3, 16.7), 0); ground.push(ell(q, rr(10, 30), rr(4, 11), "#eef3f8", 'opacity=".85"')); }
+    [[-30, 12.55], [-30, 13.45]].forEach(function (t) { ground.push(line(P(t[0], t[1], 0), P(50, t[1], 0), "#b9c1cb", 2.2, 'stroke-dasharray="14 6"')); });
+    [[12.55, -30], [13.45, -30]].forEach(function (t) { ground.push(line(P(t[0], t[1], 0), P(t[0], 50, 0), "#b9c1cb", 2.2, 'stroke-dasharray="14 6"')); });
+    // Eisbahn
+    gpoly([[2.8, 17.8], [8.4, 17.8], [8.4, 22.6], [2.8, 22.6]], "url(#ice)");
+    for (var sc = 0; sc < 26; sc++) {
+      var a = P(rr(3, 8.2), rr(18, 22.4), 0), b = add(a, rr(-30, 30), rr(-10, 10));
+      ground.push('<path d="M' + f1(a[0]) + "," + f1(a[1]) + " Q" + f1((a[0] + b[0]) / 2 + rr(-8, 8)) + "," + f1((a[1] + b[1]) / 2 + rr(-6, 6)) + " " + f1(b[0]) + "," + f1(b[1]) + '" stroke="#ffffff" stroke-width="1" fill="none" opacity=".55"/>');
+    }
+    var icePt = P(5.6, 20.4, 0);
+    ground.push(ftext("G", icePt, "9", 34, "#ffffff", 'font-weight="700" class="num" opacity=".8" font-family="Georgia,serif"'));
+    spots[9] = { c: tcenter("G", icePt, 34), r: 18 }; occ.push([4.9, 19.7, 6.3, 21.1]);
+    // Schnee-Schrift im Garten
+    var snowPt = P(1.3, 21.9, 0);
+    ground.push(ftext("G", add(snowPt, 1.5, 1.5), "16", 26, "#c3cedb", 'font-weight="700" font-family="Georgia,serif"'));
+    ground.push(ftext("G", snowPt, "16", 26, "#d9e1ea", 'font-weight="700" class="num" font-family="Georgia,serif"'));
+    spots[16] = { c: tcenter("G", snowPt, 26), r: 18 }; occ.push([0.4, 21.2, 2.4, 22.8]);
+    // Fußspuren & Schlittenspuren
+    for (var fp = 0; fp < 60; fp++) {
+      var fx = rr(-4, 30), fy = rr(-4, 30); if (Math.abs(fy - 13) < 1 || Math.abs(fx - 13) < 1) continue;
+      var dir = rnd() < 0.5;
+      for (var st = 0; st < 6; st++) ground.push(ell(P(fx + (dir ? st * 0.22 : (st % 2) * 0.08), fy + (dir ? (st % 2) * 0.08 : st * 0.22), 0), 2.6, 1.3, "#d3dce7"));
+    }
+
+    // Rink-Bande
+    ground.push(gl3(2.8, 17.8, 8.4, 17.8, "#c9a777") + gl3(2.8, 17.8, 2.8, 22.6, "#c9a777") + gl3(2.8, 22.6, 8.4, 22.6, "#a8865a") + gl3(8.4, 17.8, 8.4, 22.6, "#a8865a"));
+    function gl3(a, b, c, d, col) { return poly([P(a, b, 0), P(c, d, 0), P(c, d, 0.14), P(a, b, 0.14)], col) + line(P(a, b, 0.14), P(c, d, 0.14), "#f4f7fb", 1.5); }
+
+    // Häuser
+    var H = [
+      { x: 3, y: 6, w: 3, d: 2.4, h: 2.0, r: "x", c: 0, fach: 1, plate: 27, door: 1, lights: 1 },
+      { x: 6.6, y: 6.3, w: 2.2, d: 2.2, h: 1.6, r: "y", c: 1, plate: 92, door: 1 },
+      { x: 3, y: 2.6, w: 2.5, d: 2.4, h: 2.3, r: "x", c: 2, door: 1 },
+      { x: 6.6, y: 2.6, w: 2.2, d: 2.4, h: 1.8, r: "y", c: 4, fach: 1 },
+      { x: 0, y: 2.6, w: 2.2, d: 2.4, h: 1.7, r: "y", c: 5, door: 1 },
+      { x: 0, y: 6, w: 2.2, d: 2.4, h: 1.9, r: "x", c: 3, plate: 72, door: 1 },
+      { x: 9.4, y: 2.8, w: 2.2, d: 2.2, h: 2.0, r: "x", c: 1, fach: 1, door: 1 },
+      { x: 9.4, y: 6.0, w: 2.2, d: 2.2, h: 1.7, r: "y", c: 6, door: 1, lights: 1 },
+      { x: 15.2, y: 2.8, w: 2.2, d: 2.2, h: 1.7, r: "x", c: 2, fach: 1, plate: 86, door: 1 },
+      { x: 15.2, y: 6.0, w: 2.2, d: 2.2, h: 2.1, r: "y", c: 0, door: 1 },
+      { x: 23, y: 2.6, w: 2.4, d: 2.4, h: 2.0, r: "x", c: 0, plate: 4, door: 1, lights: 1 },
+      { x: 23, y: 6.3, w: 2.4, d: 2.3, h: 1.6, r: "y", c: 3, plate: 31, door: 1 },
+      { x: 2, y: 9.4, w: 2.4, d: 2.2, h: 1.8, r: "x", c: 6, plate: 1, door: 1 },
+      { x: 5.5, y: 9.4, w: 2.4, d: 2.2, h: 2.2, r: "x", c: 1, fach: 1, door: 1, lights: 1 },
+      { x: 18.4, y: 9.6, w: 2.4, d: 2.0, h: 1.9, r: "x", c: 3, plate: 64, door: 1 },
+      { x: 21.6, y: 9.4, w: 2.4, d: 2.2, h: 2.2, r: "x", c: 0, fach: 1, door: 1 },
+      { x: 2, y: 14.6, w: 2.4, d: 2.2, h: 1.7, r: "y", c: 2, door: 1 },
+      { x: 5.5, y: 14.6, w: 2.4, d: 2.2, h: 1.9, r: "x", c: 5, door: 1, lights: 1 },
+      { x: 18, y: 14.6, w: 2.4, d: 2.2, h: 1.7, r: "x", c: 2, door: 1 },
+      { x: 21.6, y: 14.6, w: 2.4, d: 2.2, h: 2.0, r: "y", c: 4, fach: 1, door: 1 },
+      { x: 17.6, y: 17.6, w: 2.6, d: 2.4, h: 2.2, r: "x", c: 1, fach: 1, plate: 12, door: 1, lights: 1 },
+      { x: 21.2, y: 17.6, w: 2.6, d: 2.3, h: 1.8, r: "y", c: 4, plate: 45, door: 1 },
+      { x: 17.6, y: 21.6, w: 2.5, d: 2.5, h: 1.6, r: "y", c: 0, plate: 21, door: 1 },
+      { x: 21.2, y: 21.6, w: 3, d: 2.5, h: 2.4, r: "x", c: 2, fach: 1, plate: 53, door: 1 },
+      { x: 3, y: 23.6, w: 2.8, d: 2.2, h: 1.8, r: "x", c: 2, plate: 7, door: 1, lights: 1 },
+      { x: 7, y: 23.6, w: 2.2, d: 2.2, h: 2.2, r: "y", c: 0, fach: 1, door: 1 },
+      { x: -0.2, y: 18, w: 2.2, d: 2.6, h: 1.6, r: "y", c: 6, plate: 38, door: 1 },
+      { x: 9.4, y: 18, w: 2.2, d: 2.2, h: 1.9, r: "x", c: 0, door: 1 },
+      { x: 14.6, y: 18, w: 2.2, d: 2.2, h: 2.1, r: "y", c: 3, fach: 1, door: 1 },
+      { x: 9.4, y: 22, w: 2.2, d: 2.2, h: 1.7, r: "y", c: 1, door: 1 },
+      { x: 14.6, y: 22, w: 2.4, d: 2.2, h: 2.0, r: "x", c: 6, door: 1, lights: 1 },
+      { x: 25.6, y: 14.6, w: 2.2, d: 2.2, h: 1.6, r: "x", c: 1, door: 1 },
+      { x: 25.8, y: 9.4, w: 2.0, d: 2.2, h: 1.7, r: "y", c: 5 },
+      { x: 2, y: 26.6, w: 2.4, d: 2.0, h: 1.6, r: "x", c: 4, door: 1 },
+      { x: 26.4, y: 2.6, w: 2.2, d: 2.2, h: 1.8, r: "y", c: 2, door: 1 },
+      { x: 9.6, y: -1.2, w: 2.2, d: 2.0, h: 1.7, r: "x", c: 5, door: 1 },
+      { x: 26, y: 18.6, w: 2.2, d: 2.4, h: 1.9, r: "x", c: 0, fach: 1, door: 1 }
+    ];
+    H.forEach(house);
+    church(18.6, 2.6);
+
+    // Markt
+    stall(9.3, 9.3, "#b8262f", "Waffeln");
+    stall(10.9, 9.3, "#2f6a4c", "Lebkuchen");
+    stall(14.5, 9.3, "#b8262f", "Maroni", 5);
+    stall(16.0, 9.3, "#2f5f9e", "Kerzen");
+    stall(9.3, 15.6, "#2f6a4c", "Glühwein", 3);
+    stall(10.9, 15.6, "#b8262f", "Punsch");
+    stall(14.5, 15.6, "#8a5a2b", "Mandeln");
+    stall(16.0, 15.6, "#2f6a4c", "Bratwurst");
+    bigTree(13, 13);
+    // Girlanden über dem Platz
+    [[9.3, 10.4, 16.7, 10.4], [9.3, 15.6, 16.7, 15.6]].forEach(function (gl) {
+      var a = P(gl[0], gl[1], 1.6), b = P(gl[2], gl[3], 1.6), s = '<path d="M' + f1(a[0]) + "," + f1(a[1]) + " Q" + f1((a[0] + b[0]) / 2) + "," + f1((a[1] + b[1]) / 2 + 26) + " " + f1(b[0]) + "," + f1(b[1]) + '" stroke="#2d2a2a" stroke-width="1" fill="none"/>';
+      for (var i = 1; i < 18; i++) { var t = i / 18, x = (1 - t) * (1 - t) * a[0] + 2 * (1 - t) * t * (a[0] + b[0]) / 2 + t * t * b[0], y = (1 - t) * (1 - t) * a[1] + 2 * (1 - t) * t * ((a[1] + b[1]) / 2 + 26) + t * t * b[1]; var c = ["#ffe3a0", "#ff6b5b", "#ffd166", "#9ad7ff"][i % 4]; s += circ([x, y + 2], 1.9, c); glows.push(circ([x, y + 2], 5, c)); }
+      item(gl[1] + 13 + 0.9, s);
+    });
+
+    // Objekte mit Zahlen
+    snowman(20.6, 20.7, 6);
+    barrel(8.55, 12.35, 8);
+    sled(12.3, 23.6, 10);
+    mailbox(5.0, 11.75, 11);
+    lamp(19, 11.8, 13);
+    shed(24.5, 24.3, 14);
+    crate(17.45, 10.75, 15);
+    sack(12.35, 16.95, 17);
+    busStop(24.6, 11.75, 18);
+    bench(9.15, 13.0, 19);
+    churchSign(17.75, 7.85, 22);
+    signpost(11.75, 21.15, 23);
+
+    // Laternen
+    [1, 4, 7, 19, 22, 25].forEach(function (v, i) {
+      if (v !== 19) lamp(v, 11.8);
+      lamp(v + 1.5, 14.2);
+      if (v < 9 || v > 17) { lamp(11.8, v + (i % 2 ? 1.5 : 0)); lamp(14.2, v + 1.5); }
+    });
+    // Zäune
+    fence(6.2, 8.95, 8.6, 8.95); fence(17.6, 21.0, 19.9, 21.0); fence(0, 23.2, 2.8, 23.2); fence(3, 5.6, 5.8, 5.6); fence(23, 21.0, 25.4, 21.0);
+    // Schneehaufen
+    [[1, 11.6], [8, 14.4], [16.6, 11.6], [21, 14.5], [24.8, 14.4], [11.6, 3], [14.4, 6], [11.6, 24], [14.5, 20.5], [0.6, 14.4], [26.5, 11.7]].forEach(function (s) { snowPile(s[0], s[1], rr(0.6, 1)); });
+    // Bäume in Gärten
+    for (var t = 0; t < 400; t++) {
+      var tx = rr(-1, 28), ty = rr(-1, 28);
+      if (Math.abs(ty - 13) < 1.5 || Math.abs(tx - 13) < 1.5 || (tx > 8.6 && tx < 17.4 && ty > 8.6 && ty < 17.4) || (tx > 2.5 && tx < 8.7 && ty > 17.5 && ty < 22.9)) continue;
+      if (!free(tx, ty, 0.45)) continue;
+      occupy(tx - 0.2, ty - 0.2, 0.4, 0.4); tree(tx, ty, rr(0.6, 1.05), rnd() < 0.8);
+    }
+    // Wald rundherum
+    for (var fx2 = -22; fx2 < 46; fx2 += 0.85) for (var fy2 = -22; fy2 < 46; fy2 += 0.85) {
+      var wx = fx2 + rr(-0.35, 0.35), wy = fy2 + rr(-0.35, 0.35);
+      if (wx > -1.3 && wx < 28.8 && wy > -1.6 && wy < 28.8) continue;
+      if (Math.abs(wy - 13) < 1.4 || Math.abs(wx - 13) < 1.4) continue;
+      var sp2 = P(wx, wy, 0); if (sp2[0] < -40 || sp2[0] > 1640 || sp2[1] < 30 || sp2[1] > 1230) continue;
+      if (rnd() < 0.72) tree(wx, wy, rr(0.8, 1.35), rnd() < 0.85);
+    }
+    // Menschen
+    var placed = 0, tries = 0;
+    while (placed < 95 && tries < 4000) {
+      tries++;
+      var area = rnd(), px, py;
+      if (area < 0.35) { px = rr(9.2, 16.8); py = rr(9.2, 16.8); }
+      else if (area < 0.65) { px = rr(-6, 32); py = rr(12.2, 13.8); }
+      else if (area < 0.9) { px = rr(12.2, 13.8); py = rr(-6, 32); }
+      else { px = rr(3.1, 8.1); py = rr(18.1, 22.3); }
+      var spp = P(px, py, 0); if (spp[0] < 10 || spp[0] > 1590 || spp[1] < 40 || spp[1] > 1140) continue;
+      if (!free(px, py, 0.18)) continue;
+      occupy(px - 0.12, py - 0.12, 0.24, 0.24); person(px, py, rnd() < 0.2); placed++;
+    }
+
+    // Jochen
+    var jpos = null;
+    if (opts.jochen) jpos = jochen(JSPOTS[opts.jochen.spot % JSPOTS.length], opts.jochen.costume);
+
+    items.sort(function (a, b) { return a.k - b.k; });
+    var out = ground.join("") +
+      '<rect x="-50" y="-50" width="1700" height="1250" filter="url(#snowTex)" opacity=".55"/>' +
+      '<g filter="url(#shadowBlur)" opacity=".2">' + shadows.join("") + "</g>" +
+      items.map(function (i) { return i.s; }).join("") +
+      '<g filter="url(#glowBlur)" opacity=".55" style="mix-blend-mode:screen">' + glows.join("") + "</g>" +
+      '<rect x="0" y="0" width="1600" height="1150" fill="url(#haze)" pointer-events="none"/>' +
+      '<rect x="0" y="0" width="1600" height="1150" fill="url(#vignette)" pointer-events="none"/>';
+    root.innerHTML = out;
+    return { spots: spots, jochen: jpos, free: function (x, y, r) { return free(x, y, r || 0.3); } };
+  }
+
+  window.buildScene = build;
+  window.JOCHEN_SPOT_COUNT = JSPOTS.length;
+  window.JOCHEN_SPOTS = JSPOTS;
+  window.JOCHEN_COSTUMES = Object.keys(COSTUMES);
+})();
+</script>
+  <script>
 (function () {
   "use strict";
   var cfg = window.CALENDAR_CONFIG || {};
   var DAYS = window.DAYS || [];
   var YEAR = cfg.year || 2026;
-  var params = new URLSearchParams(location.search);
+  var params;
+  try { params = new URLSearchParams(location.search); } catch (e) { params = new URLSearchParams(""); }
   var $ = function (id) { return document.getElementById(id); };
+  document.body.setAttribute("data-theme", params.get("theme") || cfg.theme || "lebkuchen");
 
   // ---------- Datum (Europe/Berlin) ----------
   function today() {
     var t = params.get("today"); // Testmodus: ?today=2026-12-10
     var m = t && /^(\d{4})-(\d{2})-(\d{2})$/.exec(t);
     if (m) return { y: +m[1], m: +m[2], d: +m[3] };
-    var parts = new Intl.DateTimeFormat("en-CA", {
-      timeZone: "Europe/Berlin", year: "numeric", month: "2-digit", day: "2-digit"
-    }).formatToParts(new Date());
     var o = {};
-    parts.forEach(function (p) { o[p.type] = +p.value; });
+    try {
+      new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin", year: "numeric", month: "2-digit", day: "2-digit" })
+        .formatToParts(new Date()).forEach(function (p) { o[p.type] = +p.value; });
+    } catch (e) { var n = new Date(); o = { year: n.getFullYear(), month: n.getMonth() + 1, day: n.getDate() }; }
     return { y: o.year, m: o.month, d: o.day };
   }
   var now = today();
-  var previewAll = params.get("preview") === "all"; // Testmodus: ?preview=all
+  var todayDay = (now.y === YEAR && now.m === 12 && now.d <= 24) ? now.d : 0;
+  var dayNum = Math.round((Date.UTC(now.y, now.m - 1, now.d) - Date.UTC(YEAR, 10, 1)) / 86400000);
+  var dateKey = now.y + "-" + now.m + "-" + now.d;
+
+  // ---------- Testmodus ----------
+  var SKEY = "ai-bytes-preview-" + YEAR;
+  var previewAll = params.get("preview") === "all";
+  try { if (sessionStorage.getItem(SKEY) === "1") previewAll = true; } catch (e) { /* ignorieren */ }
+  var jochenShift = 0;
 
   function isUnlocked(day) {
     if (previewAll) return true;
     if (now.y > YEAR) return true;
-    if (now.y < YEAR) return false;
-    if (now.m < 12) return false;
-    return day <= now.d; // Dezember: bis heute; nach dem 24. ist alles offen
+    if (now.y < YEAR || now.m < 12) return false;
+    return day <= now.d;
   }
-  function daysUntilDec1() {
-    var a = Date.UTC(now.y, now.m - 1, now.d);
-    var b = Date.UTC(YEAR, 11, 1);
-    return Math.round((b - a) / 86400000);
+  function daysUntilDec1() { return Math.round((Date.UTC(YEAR, 11, 1) - Date.UTC(now.y, now.m - 1, now.d)) / 86400000); }
+
+  // ---------- Speicher ----------
+  var state;
+  function storageKey() { return "ai-bytes-adventskalender-" + YEAR + (previewAll || params.get("today") ? "-test" : ""); }
+  function loadState() {
+    state = { opened: {}, done: {}, jochen: {} };
+    try {
+      var raw = localStorage.getItem(storageKey());
+      if (raw) { var p = JSON.parse(raw); state.opened = p.opened || {}; state.done = p.done || {}; state.jochen = p.jochenDays || {}; }
+    } catch (e) { /* ignorieren */ }
   }
-  var todayDay = (now.y === YEAR && now.m === 12 && now.d <= 24) ? now.d : 0;
+  function save() {
+    try { localStorage.setItem(storageKey(), JSON.stringify({ opened: state.opened, done: state.done, jochenDays: state.jochen })); } catch (e) { /* ignorieren */ }
+  }
+  loadState();
 
-  // ---------- Speicher (nur Komfort) ----------
-  var KEY = "ai-bytes-adventskalender-" + YEAR + (previewAll || params.get("today") ? "-test" : "");
-  var state = { opened: {}, done: {} };
-  try {
-    var raw = localStorage.getItem(KEY);
-    if (raw) { var p = JSON.parse(raw); state.opened = p.opened || {}; state.done = p.done || {}; }
-  } catch (e) { /* ignorieren */ }
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignorieren */ } }
-
-  // ---------- Hilfsfunktionen ----------
+  // ---------- Hilfen ----------
   function richText(parent, str) {
     parent.textContent = "";
     str.split("**").forEach(function (part, i) {
@@ -570,9 +1546,9 @@ window.DAYS = [
   var toastTimer;
   function toast(msg) {
     var t = $("toast"); t.textContent = msg; t.classList.add("show");
-    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove("show"); }, 3200);
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove("show"); }, 4200);
   }
-  function shuffled(n) { // feste Reihenfolge, damit das Gitter stabil bleibt
+  function shuffled(n) {
     var a = [], i, seed = 24122026;
     for (i = 1; i <= n; i++) a.push(i);
     function rnd() { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
@@ -584,7 +1560,7 @@ window.DAYS = [
   // ---------- Kopf ----------
   $("motto").textContent = cfg.motto || "Bytes unterm Tannenbaum";
   $("subtitle").textContent = cfg.subtitle || "";
-  $("greeting").textContent = cfg.name ? "Hallo " + cfg.name + "! 🎄" : "Hallo du! 🎄";
+  $("greeting").textContent = (cfg.name ? "Hallo " + cfg.name + "!" : "Hallo du!") + " Jochen freut sich schon riesig auf dich.";
   if (cfg.name) {
     document.querySelector(".kicker").textContent = "Für " + cfg.name + " · AI Bytes Adventskalender";
     document.title = "AI Bytes Adventskalender für " + cfg.name;
@@ -595,86 +1571,238 @@ window.DAYS = [
     $("progressBar").style.width = (opened / 24 * 100) + "%";
     $("progress").setAttribute("aria-valuenow", opened);
     var text;
-    if (!previewAll && now.y === YEAR && now.m < 12) {
+    if (previewAll) text = "Testmodus: alle Zahlen sind anklickbar · " + opened + " von 24 gefunden";
+    else if (now.y === YEAR && now.m < 12) {
       var n = daysUntilDec1();
-      text = n <= 0 ? "Es geht gleich los!" : "Noch " + n + (n === 1 ? " Tag" : " Tage") + " bis zum 1. Dezember – dann öffnet sich das erste Türchen.";
-    } else if (!previewAll && now.y < YEAR) {
-      text = "Der Kalender startet am 1. Dezember " + YEAR + ".";
-    } else if (todayDay) {
-      text = "Heute ist der " + todayDay + ". Dezember – Türchen " + todayDay + " wartet auf dich! · " + opened + " von 24 geöffnet";
-    } else {
-      text = opened + " von 24 Türchen geöffnet";
-    }
-    if (previewAll) text = "👀 Testmodus: alle Türchen sind offen · " + opened + " von 24 geöffnet";
+      text = "Noch " + n + (n === 1 ? " Tag" : " Tage") + " bis zum 1. Dezember – dann darfst du die erste Zahl suchen. Jochen ist aber schon da!";
+    } else if (now.y < YEAR) text = "Der Kalender startet am 1. Dezember " + YEAR + ".";
+    else if (todayDay) text = "Heute ist der " + todayDay + ". Dezember – finde die " + todayDay + " im Dorf! · " + opened + " von 24 gefunden";
+    else text = opened + " von 24 Zahlen gefunden";
     $("statusText").textContent = text;
   }
 
-  // ---------- Türchen ----------
-  var grid = $("grid");
-  var byDay = {};
-  DAYS.forEach(function (d) { byDay[d.day] = d; });
+  // ---------- Jochen ----------
+  var JOCHEN_MSG = {
+    santa: "Hohoho! Erwischt – ich wollte gerade Geschenke verteilen!",
+    elf: "Psst! Ich bin heute Wichtel und helfe beim Geschenke-Einpacken.",
+    schnee: "Brrr, aber herrlich! So eine Bommelmütze ist das Beste am Winter.",
+    rentier: "Rentier Jochen meldet sich startklar für Heiligabend!",
+    engel: "Ein Engel? Na klar! Ich schwebe vor Vorfreude auf Wolke sieben.",
+    nacht: "Oh, gefunden! Ich wollte gerade ein Weihnachtsschläfchen machen.",
+    geschenk: "Überraschung! Das schönste Geschenk bin natürlich ich 😄"
+  };
+  var JOCHEN_SAYS = [
+    "Hallo {name}! Ich bin Jochen und begleite dich durch den Advent. Heute bauen wir den perfekten Prompt – ich bin schon ganz aufgeregt!",
+    "Je mehr die AI über dich weiß, desto besser hilft sie dir. Über mich musst du nur eins wissen: Ich liebe Weihnachten!",
+    "Ideen sammeln ist mein Lieblingssport. Gleich nach Plätzchen-Naschen und Verkleiden.",
+    "Heute stellt die AI die Fragen. Ich hätte auch eine: Hast du mich heute im Dorf schon entdeckt?",
+    "Wochenende! Zeit für Kunst. Ich stehe gern Modell – am liebsten mit Weihnachtsmütze.",
+    "Nikolaus! Ich hab meine Stiefel geputzt. Okay, ich hab keine Füße. Aber die Vorfreude zählt!",
+    "Zeigen statt erklären – genau so mache ich das mit meinen Kostümen auch.",
+    "Manchmal lohnt es sich, kurz nachzudenken. Ich überlege zum Beispiel jeden Morgen, wo ich mich verstecke.",
+    "Ein guter Freund sagt dir auch mal die Wahrheit. Heute darf die AI ehrlich sein – ich bleibe trotzdem optimistisch!",
+    "Schwierige Nachrichten? Mit dem richtigen Ton wird alles leichter. Und mit einem Lächeln sowieso.",
+    "Detektivarbeit! Quellen prüfen ist fast so spannend, wie mich im Dorf zu suchen.",
+    "Ich hab das Weihnachtsmenü schon im Kopf: Hauptsache, es gibt Nachtisch!",
+    "Fotografier mal was! Ich bin übrigens sehr fotogen, falls du ein Motiv suchst.",
+    "Lange Dokumente? Die AI liest, du entspannst. So mag ich das.",
+    "Zahlen erzählen Geschichten. Meine Lieblingszahl? Natürlich die 24!",
+    "Heute bringst du der AI bei, wie du tickst. Ich ticke übrigens: weihnachtlich.",
+    "Ein eigener Assistent! Falls er Hilfe beim Verkleiden braucht – ich bin da.",
+    "Einfach mal reden statt tippen. Ich rede eh am liebsten, und zwar über Weihnachten.",
+    "Lernen macht Spaß, wenn man dabei lacht. Und ich lache eigentlich immer.",
+    "Agenten! Klingt nach Geheimmission. Meine Mission: dich jeden Tag zum Lächeln bringen.",
+    "Heute baust du dein eigenes Tool. Ich glaube fest an dich – wie immer!",
+    "Gut aufpassen, was man teilt. Ich teile nur gute Laune, davon hab ich genug.",
+    "Morgen ist Heiligabend! Heute noch einmal kritisch denken – und dann wird gefeiert.",
+    "Frohe Weihnachten, {name}! Danke, dass du jeden Tag vorbeigeschaut hast. Das war der schönste Advent meines Lebens!"
+  ];
+  function jochenToday() {
+    var n = Math.max(0, dayNum) + jochenShift, count = window.JOCHEN_SPOT_COUNT || 24, cos = window.JOCHEN_COSTUMES || ["santa"];
+    return { spot: (n * 5) % count, costume: cos[n % cos.length] };
+  }
+  function jochenKey() { return dateKey + (jochenShift ? "#" + jochenShift : ""); }
+  function updateJochen() {
+    var found = !!state.jochen[jochenKey()];
+    var total = Object.keys(state.jochen).length;
+    $("jochenCount").textContent = found ? "🍆 Jochen heute gefunden ✓ · an " + total + (total === 1 ? " Tag" : " Tagen") + " entdeckt"
+      : "🍆 Wo steckt Jochen heute?" + (total ? " · schon an " + total + (total === 1 ? " Tag" : " Tagen") + " entdeckt" : "");
+    var g = $("spots").querySelector(".jochen-hit"); if (g) g.classList.toggle("found", found);
+  }
 
+  // ---------- Wimmelbild ----------
+  var NS = "http://www.w3.org/2000/svg", layer = $("spots"), fx = $("fx"), SPOTS = {}, JPOS = null, JC = null;
+  function svgEl(n, a) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); return e; }
+  function buildWorld() {
+    JC = jochenToday();
+    var res = { spots: {}, jochen: null };
+    try { res = window.buildScene($("world"), { jochen: JC }); } catch (e) { if (window.console) console.error(e); }
+    SPOTS = res.spots || {}; JPOS = res.jochen;
+  }
+  function renderSpots() {
+    while (layer.firstChild) layer.removeChild(layer.firstChild);
+    Object.keys(SPOTS).forEach(function (k) {
+      var day = +k, s = SPOTS[k];
+      var g = svgEl("g", { "class": "spot", "data-day": day, tabindex: "0", role: "button", "aria-label": "Zahl " + day });
+      g.appendChild(svgEl("circle", { "class": "ring", cx: s.c[0], cy: s.c[1], r: s.r }));
+      g.appendChild(svgEl("circle", { "class": "hit", cx: s.c[0], cy: s.c[1], r: s.r }));
+      g.addEventListener("click", function () { if (!dragMoved) onSpot(day, g); });
+      g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSpot(day, g); } });
+      layer.appendChild(g);
+      syncSpot(day);
+    });
+    if (JPOS) {
+      var j = svgEl("g", { "class": "jochen-hit", tabindex: "0", role: "button", "aria-label": "Jochen" });
+      j.appendChild(svgEl("circle", { "class": "ring", cx: JPOS[0], cy: JPOS[1], r: 22 }));
+      j.appendChild(svgEl("circle", { "class": "hit", cx: JPOS[0], cy: JPOS[1], r: 18 }));
+      j.addEventListener("click", function () { if (!dragMoved) onJochen(); });
+      j.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onJochen(); } });
+      layer.appendChild(j);
+    }
+    updateJochen();
+  }
+  function syncSpot(day) {
+    var g = layer.querySelector('.spot[data-day="' + day + '"]'); if (!g) return;
+    g.classList.toggle("found", !!state.opened[day] && isUnlocked(day));
+    g.classList.toggle("done", !!state.done[day]);
+  }
+  function burstAt(cx, cy) {
+    for (var i = 0; i < 12; i++) {
+      var a = i / 12 * Math.PI * 2, d = 35 + Math.random() * 25;
+      var dot = svgEl("circle", { "class": "burst", cx: cx, cy: cy, r: 3 + Math.random() * 3,
+        style: "--dx:" + Math.round(Math.cos(a) * d) + "px;--dy:" + Math.round(Math.sin(a) * d) + "px",
+        fill: ["#ffd166", "#e8574b", "#8fd3a8", "#ffffff"][i % 4] });
+      fx.appendChild(dot);
+      (function (el) { setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 900); })(dot);
+    }
+  }
+  function onSpot(day, g) {
+    if (!isUnlocked(day)) {
+      g.classList.remove("shake"); g.getBoundingClientRect(); g.classList.add("shake");
+      toast("Gut gefunden – aber die " + day + " ist erst am " + day + ". Dezember dran 🎄");
+      return;
+    }
+    var first = !state.opened[day];
+    state.opened[day] = true; save(); syncSpot(day); updateStatus();
+    var door = grid.querySelector('.door[data-day="' + day + '"]'); if (door) door.classList.add("opened");
+    if (first) { burstAt(SPOTS[day].c[0], SPOTS[day].c[1]); setTimeout(function () { openModal(day); }, 750); } else openModal(day);
+  }
+  function onJochen() {
+    var k = jochenKey(), first = !state.jochen[k];
+    state.jochen[k] = true; save(); updateJochen();
+    toast((JOCHEN_MSG[JC.costume] || "Erwischt!") + " Morgen verstecke ich mich woanders!");
+    if (first) burstAt(JPOS[0], JPOS[1]);
+  }
+
+  // ---------- Zoom & Verschieben ----------
+  var sc = $("sceneScroll"), svg = $("scene"), zoom = 1, dragMoved = false;
+  function baseWidth() { return Math.max(sc.clientWidth, window.innerWidth < 700 ? 1000 : 0); }
+  function applyZoom(z, keepCenter) {
+    var cx = (sc.scrollLeft + sc.clientWidth / 2) / (sc.scrollWidth || 1), cy = (sc.scrollTop + sc.clientHeight / 2) / (sc.scrollHeight || 1);
+    zoom = Math.max(1, Math.min(3, z));
+    svg.style.width = Math.round(baseWidth() * zoom) + "px";
+    if (keepCenter) { sc.scrollLeft = cx * sc.scrollWidth - sc.clientWidth / 2; sc.scrollTop = cy * sc.scrollHeight - sc.clientHeight / 2; }
+  }
+  $("zoomIn").addEventListener("click", function () { applyZoom(zoom * 1.5, true); });
+  $("zoomOut").addEventListener("click", function () { applyZoom(zoom / 1.5, true); });
+  window.addEventListener("resize", function () { applyZoom(zoom, true); });
+  (function () {
+    var down = false, sx, sy, sl, st;
+    sc.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "touch") return; // Touch scrollt nativ
+      down = true; dragMoved = false; sx = e.clientX; sy = e.clientY; sl = sc.scrollLeft; st = sc.scrollTop;
+    });
+    window.addEventListener("pointermove", function (e) {
+      if (!down) return;
+      var dx = e.clientX - sx, dy = e.clientY - sy;
+      if (Math.abs(dx) + Math.abs(dy) > 5) { dragMoved = true; sc.classList.add("dragging"); }
+      if (dragMoved) { sc.scrollLeft = sl - dx; sc.scrollTop = st - dy; }
+    });
+    window.addEventListener("pointerup", function () {
+      if (!down) return; down = false; sc.classList.remove("dragging");
+      setTimeout(function () { dragMoved = false; }, 0);
+    });
+  })();
+  function scrollToPoint(x, y) {
+    var r = svg.getBoundingClientRect(), k = r.width / 1600;
+    sc.scrollLeft = x * k - sc.clientWidth / 2; sc.scrollTop = y * k - sc.clientHeight / 2;
+  }
+
+  $("hintBtn").addEventListener("click", function () {
+    var target = 0;
+    if (todayDay && !state.opened[todayDay]) target = todayDay;
+    else for (var d = 24; d >= 1; d--) { if (isUnlocked(d) && !state.opened[d]) { target = d; break; } }
+    if (!target || !SPOTS[target]) {
+      toast(now.y === YEAR && now.m < 12 && !previewAll ? "Ab dem 1. Dezember gibt es hier Tipps. Aber Jochen kannst du schon suchen!" : "Du hast alle bisherigen Zahlen gefunden 🎉");
+      return;
+    }
+    var c = SPOTS[target].c;
+    var h = svgEl("circle", { "class": "hint", cx: c[0] + (Math.random() * 90 - 45), cy: c[1] + (Math.random() * 90 - 45), r: 130 });
+    fx.appendChild(h);
+    setTimeout(function () { if (h.parentNode) h.parentNode.removeChild(h); }, 3800);
+    scrollToPoint(c[0], c[1]);
+    toast("Irgendwo im leuchtenden Kreis versteckt sich die " + target + " 🔎");
+  });
+
+  // ---------- Liste ----------
+  var grid = $("grid"), byDay = {};
+  DAYS.forEach(function (d) { byDay[d.day] = d; });
+  var ORDER = shuffled(24);
   function makeDoor(day) {
-    var d = byDay[day];
-    var b = document.createElement("button");
+    var d = byDay[day], b = document.createElement("button");
     b.type = "button"; b.className = "door"; b.dataset.day = day;
     var unlocked = isUnlocked(day);
     if (!unlocked) b.classList.add("locked");
-    if (day === todayDay) b.classList.add("today");
+    if (day === todayDay && !previewAll) b.classList.add("today");
     if (state.opened[day] && unlocked) b.classList.add("opened");
     if (state.done[day]) b.classList.add("done");
     b.setAttribute("aria-label", "Türchen " + day + (unlocked ? "" : " (noch verschlossen)"));
     b.innerHTML = '<span class="door-inner"><span class="door-back"><span class="emoji"></span><span class="mini"></span></span>' +
-      '<span class="door-front"><span class="num"></span><span class="knob"></span></span></span>';
+      '<span class="door-front"><span class="deco"></span><span class="num"></span><span class="lock">🔒</span><span class="knob"></span></span></span>';
     b.querySelector(".num").textContent = day;
     b.querySelector(".emoji").textContent = d ? d.emoji : "🎁";
     b.querySelector(".mini").textContent = d ? d.title : "";
-    b.addEventListener("click", function () { onDoor(day, b); });
+    b.addEventListener("click", function () {
+      if (!isUnlocked(day)) { b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); toast("Noch nicht! Türchen " + day + " öffnet sich am " + day + ". Dezember 🎄"); return; }
+      if (b.classList.contains("opened")) { openModal(day); return; }
+      state.opened[day] = true; save(); b.classList.add("opened"); updateStatus(); syncSpot(day);
+      setTimeout(function () { openModal(day); }, 550);
+    });
     return b;
   }
+  $("listBtn").addEventListener("click", function () {
+    grid.hidden = !grid.hidden;
+    this.textContent = grid.hidden ? "Alle Türchen als Liste" : "Liste ausblenden";
+    if (!grid.hidden) grid.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 
-  function onDoor(day, el) {
-    if (!isUnlocked(day)) {
-      el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake");
-      toast("Noch nicht! Türchen " + day + " öffnet sich am " + day + ". Dezember 🎄");
-      return;
-    }
-    if (el.classList.contains("opened")) { openModal(day); return; }
-    state.opened[day] = true; save();
-    el.classList.add("opened"); updateStatus();
-    setTimeout(function () { openModal(day); }, 550);
+  function render() {
+    grid.textContent = "";
+    ORDER.forEach(function (n) { grid.appendChild(makeDoor(n)); });
+    renderSpots(); updateStatus(); updateAdmin();
   }
-
-  shuffled(24).forEach(function (n) { grid.appendChild(makeDoor(n)); });
 
   // ---------- Modal ----------
   var modal = $("modal"), current = 0;
   function show(id, on) { $(id).style.display = on ? "" : "none"; }
-
   function openModal(day) {
     var d = byDay[day]; if (!d) return;
     current = day;
     $("mDay").textContent = "Türchen " + day;
-    $("mKind").textContent = d.kind === "lern" ? "🎓 Lernhappen" : "🎯 Challenge";
+    $("mKind").textContent = d.kind === "lern" ? "Lernhappen" : "Challenge";
     $("mTitle").textContent = d.title;
     $("mTeaser").textContent = d.teaser;
+    $("mJochen").textContent = (JOCHEN_SAYS[day - 1] || "").replace(/\{name\}/g, cfg.name || "du");
     var l = $("mLesson"); l.textContent = "";
     d.lesson.forEach(function (para) { var p = document.createElement("p"); richText(p, para); l.appendChild(p); });
-    $("mPrompt").textContent = d.prompt;
-    $("mCopy").textContent = "Kopieren";
-    $("mTip").textContent = d.tip || "";
-    show("mTipBox", !!d.tip);
-    $("mChallenge").textContent = d.challenge || "";
-    show("mChallengeBox", !!d.challenge);
+    $("mPrompt").textContent = d.prompt; $("mCopy").textContent = "Kopieren";
+    $("mTip").textContent = d.tip || ""; show("mTipBox", !!d.tip);
+    $("mChallenge").textContent = d.challenge || ""; show("mChallengeBox", !!d.challenge);
     var last = day === 24;
-    if (last) {
-      $("mFinal").textContent = (cfg.name ? "Liebe " + cfg.name + ",\n\n" : "") + (cfg.finalMessage || "") +
-        (cfg.from ? "\n\nDein " + cfg.from : "");
-    }
+    if (last) $("mFinal").textContent = (cfg.name ? "Liebe " + cfg.name + ",\n\n" : "") + (cfg.finalMessage || "") + (cfg.from ? "\n\nDein " + cfg.from : "");
     show("mFinalBox", last);
     syncDone();
-    modal.scrollTop = 0;
-    if (typeof modal.showModal === "function") modal.showModal(); else modal.setAttribute("open", "");
+    if (typeof modal.showModal === "function") { try { modal.showModal(); } catch (e) { modal.setAttribute("open", ""); } } else modal.setAttribute("open", "");
     var card = modal.querySelector(".card"); if (card) card.scrollTop = 0;
   }
   function syncDone() {
@@ -682,15 +1810,13 @@ window.DAYS = [
     b.classList.toggle("is-done", on);
     b.textContent = on ? "Byte gesammelt ✓ (nochmal tippen zum Zurücknehmen)" : "Ausprobiert – Byte gesammelt ✓";
   }
-  function closeModal() { if (modal.close) modal.close(); else modal.removeAttribute("open"); }
-
+  function closeModal() { if (modal.close) { try { modal.close(); } catch (e) { /* ignorieren */ } } modal.removeAttribute("open"); }
   $("mClose").addEventListener("click", closeModal);
   modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
   $("mDone").addEventListener("click", function () {
     if (state.done[current]) delete state.done[current]; else state.done[current] = true;
-    save(); syncDone();
-    var door = grid.querySelector('.door[data-day="' + current + '"]');
-    if (door) door.classList.toggle("done", !!state.done[current]);
+    save(); syncDone(); syncSpot(current);
+    var door = grid.querySelector('.door[data-day="' + current + '"]'); if (door) door.classList.toggle("done", !!state.done[current]);
     if (state.done[current]) toast("Super! Wieder ein Byte schlauer 🎄");
   });
   $("mCopy").addEventListener("click", function () {
@@ -705,26 +1831,56 @@ window.DAYS = [
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fallback); else fallback();
   });
 
-  // ---------- Testmodus-Button (für dich) ----------
-  var adminBtn = $("adminBtn");
-  adminBtn.textContent = previewAll ? "🔒 Testmodus beenden" : "🔓 Alle Türchen öffnen (Test)";
+  // ---------- Testmodus-Button ----------
+  var adminBtn = $("adminBtn"), panel = $("adminPanel"), pinInput = $("adminPin"), moveBtn = $("jochenMove");
+  function updateAdmin() {
+    adminBtn.textContent = previewAll ? "Testmodus beenden" : "Testmodus";
+    moveBtn.hidden = !previewAll;
+    if (previewAll) panel.hidden = true;
+  }
+  function setPreview(on) {
+    previewAll = on;
+    try { if (on) sessionStorage.setItem(SKEY, "1"); else sessionStorage.removeItem(SKEY); } catch (e) { /* ignorieren */ }
+    if (!on && jochenShift) { jochenShift = 0; buildWorld(); }
+    loadState(); render();
+    toast(on ? "Testmodus an: alle Zahlen sind anklickbar 🔓" : "Testmodus aus: normaler Kalender 🔒");
+  }
   adminBtn.addEventListener("click", function () {
-    var pin = cfg.adminPin;
-    if (pin && prompt("PIN eingeben:") !== String(pin)) { toast("Falsche PIN"); return; }
-    location.href = location.pathname + (previewAll ? "" : "?preview=all");
+    if (previewAll) { setPreview(false); return; }
+    if (!cfg.adminPin) { setPreview(true); return; }
+    panel.hidden = !panel.hidden;
+    if (!panel.hidden) { pinInput.value = ""; pinInput.focus(); }
+  });
+  function checkPin() {
+    if (pinInput.value.trim() === String(cfg.adminPin)) setPreview(true);
+    else { pinInput.classList.remove("shake"); void pinInput.offsetWidth; pinInput.classList.add("shake"); toast("Falsche PIN"); }
+  }
+  $("adminGo").addEventListener("click", checkPin);
+  pinInput.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); checkPin(); } });
+  moveBtn.addEventListener("click", function () {
+    jochenShift++; buildWorld(); renderSpots();
+    if (JPOS) scrollToPoint(JPOS[0], JPOS[1]);
+    toast("Jochen hat sich ein neues Versteck gesucht (Kostüm: " + JC.costume + ")");
   });
 
-  updateStatus();
+  buildWorld();
+  render();
+  applyZoom(1, false);
+  function centerView() {
+    if (sc.scrollWidth > sc.clientWidth) sc.scrollLeft = (sc.scrollWidth - sc.clientWidth) / 2;
+    if (sc.scrollHeight > sc.clientHeight) sc.scrollTop = (sc.scrollHeight - sc.clientHeight) / 2;
+  }
+  centerView(); setTimeout(centerView, 60);
 
   // ---------- Schnee ----------
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   var cv = $("snow");
   if (cv && cv.getContext && !reduce) {
     var ctx = cv.getContext("2d"), W, H, flakes = [];
-    function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+    var resize = function () { W = cv.width = innerWidth; H = cv.height = innerHeight; };
     resize(); addEventListener("resize", resize);
-    var count = Math.min(90, Math.floor(innerWidth / 14));
-    for (var i = 0; i < count; i++) flakes.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 2.4 + .8, s: Math.random() * .8 + .3, o: Math.random() * .5 + .3, p: Math.random() * 6.28 });
+    var count = Math.min(80, Math.floor(innerWidth / 16));
+    for (var i = 0; i < count; i++) flakes.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 2.2 + .6, s: Math.random() * .7 + .25, o: Math.random() * .45 + .25, p: Math.random() * 6.28 });
     (function tick() {
       ctx.clearRect(0, 0, W, H);
       flakes.forEach(function (f) {
