@@ -7,7 +7,185 @@
   <meta name="description" content="24 Türchen voller AI-Wissen zum Ausprobieren.">
   <meta name="theme-color" content="#173a2f">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎄</text></svg>">
-  <link rel="stylesheet" href="style.css">
+  <style>
+:root {
+  --fir: #173a2f;
+  --fir-2: #1f4d3f;
+  --gold: #e0b252;
+  --gold-2: #f3d78c;
+  --cream: #f8f0df;
+  --berry: #a83a40;
+  --ink: #2a2a24;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--serif);
+  color: var(--cream);
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #2c6a56 0%, transparent 60%),
+    linear-gradient(180deg, #0f2a22 0%, var(--fir) 40%, #0e241d 100%);
+  background-attachment: fixed;
+}
+#snow { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+header, section, main, footer { position: relative; z-index: 1; }
+
+.hero { text-align: center; padding: 48px 20px 12px; }
+.kicker {
+  margin: 0; font-family: var(--sans); letter-spacing: .28em; text-transform: uppercase;
+  font-size: .78rem; color: var(--gold-2);
+}
+h1 {
+  margin: 10px 0 6px; font-size: clamp(2.1rem, 6vw, 3.6rem); line-height: 1.1; font-weight: 700;
+  color: var(--gold-2); text-shadow: 0 2px 0 rgba(0,0,0,.25);
+}
+.subtitle { margin: 0; font-size: clamp(1rem, 2.4vw, 1.2rem); opacity: .9; font-style: italic; }
+.greeting { margin: 14px 0 0; font-size: 1.05rem; }
+
+.status { max-width: 520px; margin: 18px auto 6px; padding: 0 20px; text-align: center; }
+.status p { margin: 0 0 8px; font-family: var(--sans); font-size: .95rem; opacity: .95; }
+.progress { height: 8px; border-radius: 99px; background: rgba(255,255,255,.14); overflow: hidden; }
+.progress-bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--gold), var(--gold-2)); transition: width .5s; }
+
+.grid {
+  max-width: 980px; margin: 18px auto 0; padding: 0 16px 40px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+}
+@media (max-width: 760px) { .grid { grid-template-columns: repeat(3, 1fr); gap: 10px; } }
+@media (max-width: 420px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+
+.door {
+  position: relative; aspect-ratio: 1 / 1.05; border: 0; padding: 0; cursor: pointer;
+  background: none; perspective: 700px; font-family: var(--serif); color: inherit;
+}
+.door:focus-visible { outline: 3px solid var(--gold-2); outline-offset: 3px; border-radius: 12px; }
+.door-inner { position: absolute; inset: 0; display: block; }
+.door-back, .door-front {
+  position: absolute; inset: 0; border-radius: 12px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center; padding: 8px;
+}
+.door-back {
+  background: radial-gradient(circle at 50% 40%, #fff6dc, #f1d9a0);
+  color: var(--fir); box-shadow: inset 0 0 18px rgba(120,80,0,.28);
+}
+.door-back .emoji { font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1; }
+.door-back .mini { margin-top: 6px; font-size: .78rem; line-height: 1.2; font-weight: 600; }
+.door-front {
+  transform-origin: left center; transition: transform .6s cubic-bezier(.3,.7,.3,1);
+  box-shadow: 0 6px 16px rgba(0,0,0,.35), inset 0 0 0 2px rgba(255,255,255,.18);
+  backface-visibility: hidden;
+}
+.door:nth-child(4n+1) .door-front { background: linear-gradient(145deg, #b4434a, #8f2d34); }
+.door:nth-child(4n+2) .door-front { background: linear-gradient(145deg, #2f7a62, #225c4a); }
+.door:nth-child(4n+3) .door-front { background: linear-gradient(145deg, #c79a3d, #a37a25); }
+.door:nth-child(4n+4) .door-front { background: linear-gradient(145deg, #3d5a80, #2c4260); }
+.door-front::after {
+  content: ""; position: absolute; inset: 8px; border-radius: 8px;
+  border: 2px solid rgba(255,255,255,.28); pointer-events: none;
+}
+.door-front .num { font-size: clamp(1.8rem, 6vw, 2.8rem); font-weight: 700; text-shadow: 0 2px 0 rgba(0,0,0,.28); }
+.door-front .knob {
+  position: absolute; right: 12px; top: 50%; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--gold-2); box-shadow: 0 1px 2px rgba(0,0,0,.4);
+}
+.door.opened .door-front { transform: rotateY(-112deg); }
+.door.locked { filter: saturate(.7) brightness(.92); }
+.door.locked .door-front::before {
+  content: "🔒"; position: absolute; left: 50%; bottom: 14%; transform: translateX(-50%); font-size: clamp(1rem, 3.6vw, 1.5rem); opacity: 1;
+}
+.door.today:not(.opened) .door-front { animation: pulse 1.8s ease-in-out infinite; }
+.door.done .door-back::after {
+  content: "✓"; position: absolute; top: 6px; right: 10px; color: #2f7a62; font-weight: 700; font-family: var(--sans);
+}
+.door.shake { animation: shake .45s; }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 6px 16px rgba(0,0,0,.35), 0 0 0 0 rgba(243,215,140,.7); }
+  50% { box-shadow: 0 6px 16px rgba(0,0,0,.35), 0 0 0 10px rgba(243,215,140,0); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px); } 40% { transform: translateX(7px); }
+  60% { transform: translateX(-4px); } 80% { transform: translateX(4px); }
+}
+
+footer { text-align: center; padding: 10px 20px 40px; font-family: var(--sans); font-size: .85rem; opacity: .7; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 30px); opacity: 0;
+  background: var(--cream); color: var(--fir); padding: 12px 18px; border-radius: 12px;
+  font-family: var(--sans); font-size: .95rem; box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  transition: .3s; z-index: 20; max-width: 90vw; text-align: center; pointer-events: none;
+}
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+/* Modal */
+dialog {
+  border: 0; padding: 0; background: transparent; width: min(680px, 94vw); max-height: 92vh; color: var(--ink);
+}
+dialog::backdrop { background: rgba(6, 20, 15, .72); backdrop-filter: blur(3px); }
+.card {
+  position: relative; background: var(--cream); border-radius: 18px; padding: 26px 26px 24px;
+  max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  border-top: 6px solid var(--gold);
+}
+@media (max-width: 480px) { .card { padding: 22px 18px 20px; } }
+.close {
+  position: absolute; top: 10px; right: 12px; width: 38px; height: 38px; border-radius: 50%;
+  border: 0; background: rgba(0,0,0,.07); font-size: 1.6rem; line-height: 1; cursor: pointer; color: var(--ink);
+}
+.close:hover { background: rgba(0,0,0,.14); }
+.card-head { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; padding-right: 44px; }
+.daybadge {
+  background: var(--berry); color: #fff; font-family: var(--sans); font-size: .8rem; font-weight: 700;
+  padding: 4px 10px; border-radius: 99px;
+}
+.kind {
+  background: var(--fir); color: var(--gold-2); font-family: var(--sans); font-size: .78rem;
+  padding: 4px 10px; border-radius: 99px;
+}
+.card h2 { margin: 6px 0 4px; font-size: clamp(1.4rem, 4.6vw, 1.9rem); color: var(--fir); line-height: 1.2; }
+.teaser { margin: 0 0 14px; font-style: italic; color: #5b5a4d; }
+.lesson p { margin: 0 0 12px; line-height: 1.6; font-size: 1.05rem; }
+.lesson b { color: var(--berry); }
+.box { border-radius: 12px; padding: 14px 16px; margin: 14px 0; font-family: var(--sans); font-size: .95rem; line-height: 1.55; }
+.box p { margin: 6px 0 0; }
+#mFinal { white-space: pre-line; }
+.prompt-box { background: #fffdf6; border: 1px solid #e4d6ac; }
+.box-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+.prompt-box pre {
+  margin: 0; white-space: pre-wrap; word-wrap: break-word; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: .88rem; line-height: 1.55; color: #33332b; background: #f6efd9; padding: 12px; border-radius: 8px;
+}
+.copy {
+  border: 0; background: var(--fir); color: var(--gold-2); border-radius: 8px; padding: 7px 12px;
+  font-family: var(--sans); font-size: .85rem; cursor: pointer;
+}
+.copy:hover { background: var(--fir-2); }
+.tip-box { background: #e9f3ea; border: 1px solid #c3dcc7; }
+.challenge-box { background: #fbe9e6; border: 1px solid #efc3bd; }
+.final-box { background: linear-gradient(135deg, #fff1c7, #f8dd93); border: 1px solid #e0b252; }
+.done {
+  display: block; width: 100%; margin-top: 10px; border: 0; border-radius: 12px; padding: 13px;
+  background: var(--berry); color: #fff; font-family: var(--sans); font-size: 1rem; font-weight: 600; cursor: pointer;
+}
+.done:hover { filter: brightness(1.08); }
+.done.is-done { background: #2f7a62; }
+
+.admin {
+  margin-top: 8px; border: 1px solid rgba(255,255,255,.2); background: transparent; color: inherit;
+  opacity: .45; border-radius: 99px; padding: 5px 12px; font-family: var(--sans); font-size: .75rem; cursor: pointer;
+}
+.admin:hover, .admin:focus-visible { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .door-front, .progress-bar, .toast { transition: none; }
+  .door.today:not(.opened) .door-front, .door.shake { animation: none; }
+}
+</style>
 </head>
 <body>
   <canvas id="snow" aria-hidden="true"></canvas>
@@ -20,7 +198,7 @@
   </header>
 
   <section class="status" aria-live="polite">
-    <p id="statusText"></p>
+    <p id="statusText">Kalender wird geladen … Falls das so bleibt: Bitte JavaScript aktivieren bzw. prüfen, ob alle Dateien hochgeladen wurden.</p>
     <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="24" id="progress">
       <div class="progress-bar" id="progressBar"></div>
     </div>
@@ -61,8 +239,503 @@
     </article>
   </dialog>
 
-  <script src="config.js"></script>
-  <script src="content.js"></script>
-  <script src="app.js"></script>
+  <script>
+// Persönliche Einstellungen – hier kannst du alles anpassen.
+window.CALENDAR_CONFIG = {
+  year: 2026,                 // Jahr des Adventskalenders
+  name: "Pauline",            // Name deiner Freundin (leer = "du")
+  from: "Felix",              // Dein Name, erscheint im Schlussgruß
+  adminPin: "1224",           // PIN für den Testmodus-Button im Seitenfuß (leer = ohne PIN)
+  motto: "Bytes unterm Tannenbaum",
+  subtitle: "24 Türchen voller Wissen, bis die Bescherung beginnt",
+  finalMessage:
+    "Du hast 24 Türchen geöffnet, ganz viel ausprobiert und dabei hoffentlich genauso viel Spaß gehabt wie ich beim Zusammenstellen. Ich bin gespannt, was du 2027 mit AI anstellst. Frohe Weihnachten!"
+};
+</script>
+  <script>
+// Inhalte der 24 Türchen.
+// kind: "lern" = Lernhappen, "challenge" = Challenge
+window.DAYS = [
+  {
+    day: 1, kind: "lern", emoji: "🧱", title: "Der Prompt-Baukasten",
+    teaser: "Vier Zutaten, die aus einer Frage einen guten Auftrag machen.",
+    lesson: [
+      "Wenn eine Antwort mittelmäßig ist, liegt es selten an der AI – meistens fehlt dem Prompt etwas. Gute Prompts haben vier Zutaten: **Rolle** (wer soll die AI sein?), **Aufgabe** (was genau soll herauskommen?), **Kontext** (für wen, wofür, mit welchen Grenzen?) und **Format** (Tabelle, Stichpunkte, Länge).",
+      "Du brauchst nicht immer alle vier. Aber wenn das Ergebnis nicht passt, frag dich: Welche Zutat habe ich weggelassen? Meist ist es der Kontext."
+    ],
+    prompt: "Du bist [Rolle, z. B. erfahrene Reiseplanerin].\nAufgabe: [was genau soll entstehen?]\nKontext: [wer bin ich, wofür brauche ich es, welche Einschränkungen gibt es?]\nFormat: [z. B. Tabelle, max. 150 Wörter, Du-Form]\nFrag nach, falls dir Informationen fehlen.",
+    tip: "Der Satz „Frag nach, falls dir Informationen fehlen“ ist der günstigste Qualitätshebel, den es gibt."
+  },
+  {
+    day: 2, kind: "challenge", emoji: "📝", title: "Mini-Briefing: Kontext mitgeben",
+    teaser: "Fünf Sätze über dich machen jede Antwort persönlicher.",
+    lesson: [
+      "Die AI kennt dich nur so gut, wie du dich vorstellst. Ein kurzes Briefing am Gesprächsanfang – Beruf, Ziele, Vorlieben, Tonfall – verändert die Antworten spürbar.",
+      "Das Briefing schreibst du einmal und kopierst es künftig vor neue Gespräche. (Tag 16 zeigt dir, wie du es dauerhaft hinterlegst.)"
+    ],
+    prompt: "Hier ist mein Hintergrund: [Beruf/Alltag, Ziele, Vorlieben, wie ich Antworten mag]. Behalte das für dieses Gespräch im Hinterkopf. Bestätige kurz und frag mich, was du noch wissen solltest, um mir bessere Antworten zu geben.",
+    tip: "Schreib auch auf, was du NICHT magst (z. B. „keine Floskeln, keine langen Einleitungen“).",
+    challenge: "Stelle dieselbe Alltagsfrage zweimal: einmal ohne, einmal mit Briefing. Wo ist der Unterschied am größten?"
+  },
+  {
+    day: 3, kind: "lern", emoji: "💡", title: "Brainstorming: erst Masse, dann Klasse",
+    teaser: "Mit AI hast du in Minuten 30 Ideen und die Auswahl dazu.",
+    lesson: [
+      "AI ist ein unermüdlicher Ideengeber. Der Trick: Trenne Sammeln und Bewerten. Lass dir zuerst viele, bewusst unterschiedliche Ideen liefern, auch verrückte, und filtere erst danach.",
+      "Wenn die Ideen zu brav sind, gib Denkrichtungen vor: „einmal ohne Budget“, „einmal für Kinder“, „einmal das Gegenteil vom Üblichen“. Danach lässt du die besten drei nach deinen Kriterien bewerten."
+    ],
+    prompt: "Ich suche Ideen für [Thema/Anlass]. Schritt 1: Nenne 25 Ideen, die sich deutlich voneinander unterscheiden, darunter 5 bewusst ungewöhnliche. Schritt 2: Bewerte sie nach meinen Kriterien: [z. B. Aufwand, Budget, Wow-Effekt]. Schritt 3: Wähle die besten 3 und skizziere jeweils den ersten konkreten Schritt.",
+    tip: "Frag nach dem ersten Schritt: Eine Idee ohne nächsten Schritt bleibt meistens liegen."
+  },
+  {
+    day: 4, kind: "challenge", emoji: "🎤", title: "Die Interview-Methode",
+    teaser: "Lass die AI zuerst dich befragen, bevor sie antwortet.",
+    lesson: [
+      "Statt dir alle Details vorab zu überlegen, drehst du den Spieß um: Die AI interviewt dich. Das fördert Anforderungen zutage, die dir selbst noch nicht bewusst waren.",
+      "Besonders stark bei Entscheidungen, Planungen und Texten, die persönlich klingen sollen."
+    ],
+    prompt: "Ich möchte [Ziel]. Bevor du antwortest, stell mir bis zu 7 Fragen – eine nach der anderen –, damit du das Ergebnis genau auf mich zuschneiden kannst. Danach liefere die Lösung.",
+    tip: "„Eine nach der anderen“ verhindert den Fragenkatalog, bei dem man sich erschlagen fühlt.",
+    challenge: "Nutze die Methode für etwas, das wirklich ansteht: eine Entscheidung, ein Geschenk, eine Rede, ein Projekt."
+  },
+  {
+    day: 5, kind: "challenge", emoji: "🎨", title: "Bildprompts: deine Weihnachtskarte",
+    teaser: "Samstags-Special: Bilder erzeugen, die nach deiner Idee aussehen.",
+    lesson: [
+      "Bei Bildgeneratoren zählt die Beschreibung: **Motiv**, **Stil** (Aquarell, Foto, Scherenschnitt), **Licht und Stimmung**, **Bildausschnitt** und manchmal, was **nicht** drauf soll.",
+      "Ändere beim Nachsteuern immer nur eine Sache. So lernst du, welcher Hebel was bewirkt."
+    ],
+    prompt: "Erstelle eine Weihnachtskarte im Stil eines Aquarells: [Motiv, z. B. kleine Hütte im Schnee], warmes Kerzenlicht, sanfte Farben, gemütliche Stimmung, viel freier Platz oben für Text. Keine Schrift im Bild.",
+    tip: "Schrift im Bild ist bei vielen Generatoren noch fehleranfällig. Den Gruß setzt du besser selbst in einem Design-Tool darauf.",
+    challenge: "Erzeuge drei Varianten und ändere jeweils nur einen Parameter (Stil, Licht oder Motiv). Verschick deine Lieblingskarte wirklich."
+  },
+  {
+    day: 6, kind: "challenge", emoji: "🎅", title: "Dein Schreibstil als Profil",
+    teaser: "Nikolaus-Special: Texte, die wie du klingen.",
+    lesson: [
+      "Generische AI-Texte erkennt man sofort. Das Gegenmittel: Gib der AI 2–3 echte Texte von dir und lass sie deinen Stil analysieren. Das Ergebnis ist ein Stilprofil, das du jedem künftigen Schreibauftrag voranstellen kannst.",
+      "So klingen Mails, Nachrichten und Posts nach dir statt nach Pressemitteilung."
+    ],
+    prompt: "Analysiere meine folgenden Texte und beschreibe meinen Schreibstil in 8 Stichpunkten (Satzlänge, Ton, typische Wendungen, Humor, was ich vermeide). Erstelle daraus eine Stilanleitung, die ich künftig vor Schreibaufträge setzen kann.\n\nText 1: [...]\nText 2: [...]\nText 3: [...]",
+    tip: "Nimm Texte, die du wirklich gern geschrieben hast – nicht die, die du schreiben musstest.",
+    challenge: "Lass dir mit deinem Stilprofil einen Nikolausgruß schreiben und bewerte: Würdest du das so abschicken?"
+  },
+  {
+    day: 7, kind: "lern", emoji: "🧩", title: "Few-Shot: Beispiele statt Beschreibungen",
+    teaser: "Zeigen schlägt Erklären.",
+    lesson: [
+      "Statt lang zu beschreiben, wie ein Ergebnis aussehen soll, zeig zwei bis drei gute Beispiele. Die AI erkennt Muster in Länge, Ton und Aufbau erstaunlich zuverlässig.",
+      "Das nennt sich „Few-Shot Prompting“ und ist eine der robustesten Techniken überhaupt."
+    ],
+    prompt: "Ich möchte Texte in genau diesem Stil:\n\nBeispiel 1: [...]\nBeispiel 2: [...]\n\nSchreibe jetzt einen für: [Thema]. Halte dich an Länge, Ton und Aufbau der Beispiele.",
+    tip: "Ein Negativbeispiel („So bitte nicht: …“) schärft das Ergebnis zusätzlich."
+  },
+  {
+    day: 8, kind: "lern", emoji: "🧠", title: "Denken lassen",
+    teaser: "Wann sich Reasoning-Modi lohnen und wann nicht.",
+    lesson: [
+      "Viele Tools bieten einen Denkmodus, in dem die AI vor der Antwort länger überlegt. Das lohnt sich bei Logik, Mathe, Abwägungen, Planung und kniffligen Analysen. Für Umformulieren oder Smalltalk reicht der schnelle Modus.",
+      "Auch ohne Denkmodus hilft die Bitte, schrittweise vorzugehen und Annahmen offenzulegen."
+    ],
+    prompt: "Denke Schritt für Schritt über folgendes Problem nach: [Problem]. Liste zuerst deine Annahmen und die möglichen Optionen, wäge sie gegeneinander ab und gib dann eine Empfehlung mit Begründung. Markiere, wo du unsicher bist.",
+    tip: "Lies nicht nur das Fazit. Die Annahmen verraten, ob die AI dein Problem richtig verstanden hat."
+  },
+  {
+    day: 9, kind: "challenge", emoji: "🥊", title: "Kritischer Sparringspartner",
+    teaser: "Finde die Schwachstellen, bevor es andere tun.",
+    lesson: [
+      "AI ist ein hervorragender Gegenpart, wenn du sie ausdrücklich darum bittest. Mit einem Pre-Mortem stellst du dir vor, das Vorhaben sei gescheitert, und lässt die AI die Gründe suchen.",
+      "So findest du Risiken, solange du noch etwas ändern kannst."
+    ],
+    prompt: "Ich plane [Vorhaben]. Spiele den kritischen Gegenpart: Nenne die 5 stärksten Einwände und die 3 größten Risiken. Stell dir außerdem vor, das Vorhaben ist in einem Jahr gescheitert: Was waren die wahrscheinlichsten Gründe? Sei fair, aber nicht weichgespült. Zum Schluss: Welche Frage sollte ich beantworten, bevor ich starte?",
+    tip: "Frag danach: „Welche dieser Einwände sind wirklich ernst, welche eher Pedanterie?“",
+    challenge: "Teste es an einem echten Plan: Urlaub, Anschaffung, Jobidee oder Wochenendprojekt."
+  },
+  {
+    day: 10, kind: "challenge", emoji: "💌", title: "Der Tonfall-Umschreiber",
+    teaser: "Die richtigen Worte für schwierige Nachrichten.",
+    lesson: [
+      "Eine Absage, eine Erinnerung, ein „Nein“ an Verwandte oder eine knifflige Mail an den Chef: Mit AI formulierst du dieselbe Nachricht in verschiedenen Tonlagen und siehst sofort, was passt.",
+      "Beschreibe dazu die Situation, das Ziel und die Beziehung zur anderen Person. Lass dir zwei bis drei Varianten geben, zum Beispiel herzlich, sachlich und knapp-direkt, und mische dir das Beste zusammen."
+    ],
+    prompt: "Ich muss [Person/Beziehung] folgendes mitteilen: [Inhalt]. Mein Ziel: [z. B. Beziehung wahren, klar absagen, Frist anmahnen]. Schreibe 3 Varianten: herzlich, sachlich und knapp-direkt. Erkläre in je einem Satz, wann welche Variante passt, und nenne eine Formulierung, die leicht missverstanden werden könnte.",
+    tip: "Sag der AI, was du auf keinen Fall ausdrücken willst (z. B. „nicht vorwurfsvoll“). Das hilft oft mehr als jede positive Vorgabe.",
+    challenge: "Nimm eine Nachricht, die du schon länger vor dir herschiebst, und schick sie heute ab."
+  },
+  {
+    day: 11, kind: "lern", emoji: "🔭", title: "Recherche mit Quellen-Check",
+    teaser: "Web-Suche und Deep Research richtig einsetzen.",
+    lesson: [
+      "Viele Tools können im Web suchen. Für größere Fragen gibt es oft „Deep Research“: Die AI arbeitet mehrere Minuten, liest viele Seiten und liefert einen Bericht mit Quellen.",
+      "Entscheidend ist, wie du fragst: Verlange mehrere unabhängige Quellen, Datumsangaben und eine klare Trennung zwischen Fakten und Einschätzungen."
+    ],
+    prompt: "Recherchiere aktuell zu [Thema]. Vergleiche mindestens 3 unabhängige Quellen, nenne Widersprüche zwischen ihnen, gib Links und Veröffentlichungsdatum an und trenne klar zwischen gesicherten Fakten und Einschätzungen. Am Ende: Was ist noch unklar?",
+    tip: "Frag zum Schluss: „Was spricht gegen dieses Ergebnis?“ So bekommst du auch die Gegenseite."
+  },
+  {
+    day: 12, kind: "challenge", emoji: "🍽️", title: "Planen mit Rahmenbedingungen",
+    teaser: "Samstags-Special: das Weihnachtsmenü.",
+    lesson: [
+      "AI planen zu lassen funktioniert am besten, wenn du harte Rahmenbedingungen nennst: Personen, Budget, Zeit, Unverträglichkeiten, vorhandene Ausstattung. Je klarer die Grenzen, desto brauchbarer der Plan.",
+      "Verlange immer auch einen Plan B. Bei Planungen ist das der Teil, der im Ernstfall Gold wert ist."
+    ],
+    prompt: "Plane ein Weihnachtsmenü für [Anzahl] Personen. Rahmen: Budget [..], Kochzeit am Tag selbst max. [..], Unverträglichkeiten/Vorlieben: [..], vorhandene Geräte: [..]. Liefere: Menüvorschlag, Zeitplan rückwärts ab Essenszeit, Einkaufsliste nach Supermarktbereichen sortiert und einen Plan B, falls etwas schiefgeht.",
+    tip: "Rückwärts planen („ab Essenszeit“) ist ein Trick, der fast jede Planung entspannt.",
+    challenge: "Lass dir den Zeitplan als Checkliste ausgeben und probiere sie wirklich am Weihnachtstag aus."
+  },
+  {
+    day: 13, kind: "challenge", emoji: "📸", title: "Fotos verstehen",
+    teaser: "Sonntags-Special: zeig der AI, worum es geht.",
+    lesson: [
+      "Moderne Modelle verstehen Bilder: Kühlschrankinhalt, Pflanze, Fehlermeldung, Wegweiser, handschriftliche Notiz, Diagramm. Ein Foto ersetzt oft drei Absätze Beschreibung.",
+      "Wichtig: Lass die AI erst beschreiben, was sie sieht, und dann die Aufgabe lösen. Das deckt Fehldeutungen früh auf."
+    ],
+    prompt: "Hier ist ein Foto von [Kühlschrankinhalt/Pflanze/Fehlermeldung/Tabelle]. Beschreibe zuerst, was du siehst. Dann: [Aufgabe, z. B. schlage 3 Rezepte vor / erkläre das Problem / was fehlt mir noch?]. Frag nach, wenn etwas unscharf oder unklar ist.",
+    tip: "Lade keine Fotos fremder Personen oder sensibler Dokumente hoch, wenn du nicht sicher bist, was damit geschieht.",
+    challenge: "Fotografiere deinen Kühlschrank und lass dir ein Abendessen aus dem vorhandenen Inhalt zusammenstellen."
+  },
+  {
+    day: 14, kind: "lern", emoji: "📄", title: "Dokumente und PDFs",
+    teaser: "Lange Texte in Minuten durchdringen.",
+    lesson: [
+      "Du kannst Dokumente hochladen oder einfügen und gezielt befragen. Das spart Zeit bei Verträgen, Studien, Anleitungen und Protokollen.",
+      "Gute Aufträge verlangen Belegstellen: Wenn die AI Seitenzahlen oder Zitate nennen muss, kannst du jede Aussage schnell nachprüfen."
+    ],
+    prompt: "Ich lade ein Dokument hoch. Liefere: 1) eine Zusammenfassung in 5 Sätzen, 2) die 5 wichtigsten Zahlen oder Fakten mit Seitenangabe, 3) offene Fragen und Risiken, 4) To-dos für mich. Nenne zu jeder Aussage die Belegstelle.",
+    tip: "Stelle nach der Zusammenfassung gezielte Fragen. Die eigentlichen Erkenntnisse stecken meist im Nachfragen."
+  },
+  {
+    day: 15, kind: "challenge", emoji: "📊", title: "Tabellen und Daten auswerten",
+    teaser: "Aus Zahlenkolonnen werden Antworten.",
+    lesson: [
+      "Mit CSV- oder Excel-Dateien kann die AI Auffälligkeiten finden, Auswertungen rechnen und Diagramme erstellen. Wichtig ist, erst einen Überblick zu verlangen, bevor es an die Fragen geht.",
+      "Und: Rechne Stichproben nach. Bei Zahlen gilt besonders, dass vertrauen gut und prüfen besser ist."
+    ],
+    prompt: "Hier ist meine Tabelle. Verschaffe dir zuerst einen Überblick (Spalten, Auffälligkeiten, fehlende Werte). Dann beantworte: [Frage]. Erstelle ein passendes Diagramm und erkläre in 3 Sätzen, was es zeigt – und was es nicht beweist.",
+    tip: "Der Zusatz „was es nicht beweist“ schützt vor vorschnellen Schlüssen.",
+    challenge: "Nimm eigene Daten: Haushaltsbuch, Laufzeiten, Lesehistorie. Welche Frage hättest du dir vorher nie gestellt?"
+  },
+  {
+    day: 16, kind: "lern", emoji: "⚙️", title: "Custom Instructions, Memory, Projekte",
+    teaser: "Die AI dauerhaft auf dich einstellen.",
+    lesson: [
+      "Die meisten Tools bieten eigene Anweisungen, ein Gedächtnis und Projekte mit Dateien und Vorgaben. Damit musst du nicht jedes Mal von vorn erklären, wer du bist und wie du es magst.",
+      "Die Funktionen heißen je nach Tool unterschiedlich. Suche in den Einstellungen nach „Anweisungen“, „Personalisierung“ oder „Projekte“."
+    ],
+    prompt: "Antworte auf Deutsch, direkt und ohne Floskeln. Wenn meine Frage unklar ist, frag zuerst nach. Gib bei Fakten Quellen an. Bei Entscheidungen: Pro und Contra und eine klare Empfehlung. Widersprich mir, wenn ich falsch liege.",
+    tip: "Halte die Anweisungen kurz und prüfe das Gedächtnis ab und zu: Altes und Überholtes darf raus."
+  },
+  {
+    day: 17, kind: "challenge", emoji: "🤖", title: "Den eigenen Assistenten bauen",
+    teaser: "Ein Spezialist für genau deine Wiederholungsaufgabe.",
+    lesson: [
+      "Was du regelmäßig tust – Mails beantworten, Wochenplan, Rezepte, Lernkarten –, kannst du als eigenen Assistenten einrichten (je nach Tool: Projekt, Custom GPT, Gem oder ähnlich).",
+      "Das Beste: Die AI schreibt die Anleitung für den Assistenten selbst, wenn du sie interviewen lässt."
+    ],
+    prompt: "Hilf mir, eine Anleitung (System-Prompt) für einen Assistenten zu schreiben, der [wiederkehrende Aufgabe] übernimmt. Frag mich nach Zielgruppe, Ton, Format und Grenzen und liefere dann eine fertige Anleitung, die ich in ein Projekt oder einen eigenen Assistenten einfügen kann.",
+    tip: "Teste jeden neuen Assistenten mit drei kniffligen Fällen, bevor du dich auf ihn verlässt.",
+    challenge: "Baue einen Assistenten für eine Aufgabe, die dich jede Woche nervt, und nutze ihn eine Woche lang."
+  },
+  {
+    day: 18, kind: "lern", emoji: "🎙️", title: "Sprachmodus und Diktieren",
+    teaser: "Sprechen ist oft schneller als Tippen.",
+    lesson: [
+      "Beim Sprechen denkst du freier. Diktiere unsortierte Gedanken, und lass die AI Ordnung hineinbringen. Auch der Sprachmodus für Gespräche ist stark: zum Brainstorming, für Sprachübungen oder zum Üben von Gesprächen.",
+      "Gerade unterwegs oder beim Spazierengehen entstehen so die besten Ideen."
+    ],
+    prompt: "Ich spreche gleich meine Gedanken zu [Thema] unsortiert ein. Ordne sie danach in: Kernaussagen, offene Fragen und nächste Schritte. Behalte meine Wortwahl bei, wo es sinnvoll ist.",
+    tip: "Für Fremdsprachen: Bitte die AI, dich zu korrigieren, aber erst am Ende, damit der Redefluss bleibt."
+  },
+  {
+    day: 19, kind: "challenge", emoji: "🎓", title: "Lernen mit der AI",
+    teaser: "Samstags-Special: Tutor statt Textlieferant.",
+    lesson: [
+      "Passives Lesen bleibt schlecht hängen. Lass dich lieber abfragen: Die AI erklärt in Schritten, fragt nach, korrigiert und stellt ein Quiz. Besonders wirksam ist die Feynman-Methode: Du erklärst, die AI sucht die Lücken.",
+      "So wird die AI vom Antwortautomaten zum geduldigen Lernpartner."
+    ],
+    prompt: "Erkläre mir [Thema] so, als hätte ich kein Vorwissen, aber großes Interesse, in 5 Schritten. Stell mir nach jedem Schritt eine Verständnisfrage und warte auf meine Antwort. Am Ende: ein Quiz mit 5 Fragen, steigend schwer.",
+    tip: "Sag am Ende: „Erkläre ich es dir jetzt in eigenen Worten, und du suchst die Lücken.“",
+    challenge: "Wähle ein Thema, das dich schon lange reizt, und lerne es an diesem Wochenende in 30 Minuten an."
+  },
+  {
+    day: 20, kind: "lern", emoji: "🛠️", title: "Agenten und Connectoren",
+    teaser: "Sonntags-Special: wenn die AI nicht nur redet, sondern handelt.",
+    lesson: [
+      "Ein Chatbot antwortet, ein Agent erledigt mehrstufige Aufgaben: suchen, Dateien erstellen, Tools bedienen, je nach Einrichtung auch auf Kalender, Mails oder Dokumente zugreifen (über sogenannte Connectoren).",
+      "Wichtig sind klare Ziele, begrenzte Rechte und ein prüfender Blick aufs Ergebnis. Starte mit Aufgaben, die nur lesen und nichts verändern."
+    ],
+    prompt: "Ziel: [gewünschtes Ergebnis]. Erledige das in Schritten. Zeig mir zuerst deinen Plan und warte auf mein OK. Sende, lösche oder bezahle nichts ohne meine ausdrückliche Bestätigung. Am Ende: eine Zusammenfassung, was du getan hast.",
+    tip: "Gib Agenten nur so viele Zugriffsrechte, wie die Aufgabe wirklich braucht."
+  },
+  {
+    day: 21, kind: "challenge", emoji: "💻", title: "Vibe Coding",
+    teaser: "Ein Mini-Tool bauen, ohne programmieren zu können.",
+    lesson: [
+      "Du kannst der AI sagen, was du brauchst, und sie baut dir eine kleine Webseite oder ein Tool: Rechner, Zufallsgenerator, Tippspiel, Checkliste. Das nennt man Vibe Coding.",
+      "Kleiner Spoiler: Dieser Adventskalender ist genau so entstanden."
+    ],
+    prompt: "Baue mir eine einfache einzelne HTML-Seite: [Idee, z. B. Haushaltsrechner, Spiele-Zufallsgenerator, Wichtel-Auslosung]. Design: [Stil]. Funktion: [Details]. Erkläre mir danach in einfachen Worten, wie ich die Datei öffne und was ich anpassen kann.",
+    tip: "Arbeite in kleinen Schritten: Erst läuft es, dann wird es schön. Bei Änderungen: „Ändere nur X, alles andere bleibt.“",
+    challenge: "Baue etwas Kleines, das dir im Alltag nützt, und öffne es im Browser."
+  },
+  {
+    day: 22, kind: "lern", emoji: "🔒", title: "Datenschutz und Sicherheit",
+    teaser: "Was in den Chat darf und was besser nicht.",
+    lesson: [
+      "Vorsicht bei Passwörtern, Ausweis- und Kontodaten, sensiblen Gesundheitsinfos anderer und vertraulichen Firmendaten. Schau in die Einstellungen deines Tools: Wird mit deinen Chats trainiert? Gibt es temporäre Chats?",
+      "Neu hinzu kommt „Prompt Injection“: Versteckte Anweisungen in Webseiten oder Dateien können eine AI täuschen. Sei deshalb vorsichtig, wenn eine AI fremde Inhalte liest und gleichzeitig Rechte hat."
+    ],
+    prompt: "Ich möchte folgenden Text mit dir bearbeiten, aber ohne persönliche Daten. Ersetze Namen, Adressen, Zahlen und Firmenbezeichnungen durch Platzhalter wie [PERSON_1] und liste mir die Ersetzungen separat auf, damit ich sie nachher zurücktauschen kann.\n\nText: [...]",
+    tip: "Arbeitest du beruflich mit AI, kläre vorher die Regeln deines Arbeitgebers."
+  },
+  {
+    day: 23, kind: "lern", emoji: "⚖️", title: "Kritisches Denken",
+    teaser: "Der Ja-Sager-Effekt und wer die Verantwortung trägt.",
+    lesson: [
+      "AI-Modelle neigen dazu, dir zuzustimmen und deine Sicht zu bestätigen. Das fühlt sich gut an, hilft aber nicht. Frag deshalb bewusst neutral oder fordere die Gegenposition an.",
+      "Bei Gesundheit, Recht und Finanzen ist die AI eine gute Vorbereitung auf das Gespräch mit Fachleuten, aber kein Ersatz dafür. Die Verantwortung für das Ergebnis bleibt bei dir."
+    ],
+    prompt: "Hier ist meine Einschätzung: [...]. Sei kein Ja-Sager. Argumentiere zuerst die Gegenposition so stark wie möglich, dann sag mir ehrlich, was an meiner Sicht trägt und was nicht.",
+    tip: "Bei wichtigen Fragen: erst selbst eine Meinung bilden, dann die AI fragen. So bleibt dein eigenes Urteil trainiert."
+  },
+  {
+    day: 24, kind: "challenge", emoji: "🎁", title: "Dein Prompt-Schatz für 2027",
+    teaser: "Heiligabend: aus 23 Türchen wird deine persönliche Werkzeugkiste.",
+    lesson: [
+      "Zum Abschluss sammelst du, was bei dir funktioniert hat. Eine persönliche Prompt-Bibliothek spart dir künftig Zeit und macht aus Einzeltricks eine Gewohnheit.",
+      "Ordne nach Alltag, Arbeit, Kreativität und Lernen und lass dir von der AI zeigen, welche Lücken du 2027 noch füllen könntest."
+    ],
+    prompt: "Hier sind meine 5 liebsten Prompts aus dem AI-Bytes-Adventskalender und was ich damit gemacht habe: [...]. Hilf mir, daraus eine persönliche Prompt-Bibliothek zu bauen, mit Titel, Anwendungsfall, Vorlage und Tipp, sortiert nach Alltag, Arbeit, Kreativität und Lernen. Schlage 5 Lücken vor, die ich 2027 ausprobieren sollte.",
+    tip: "Pflege die Bibliothek: Alle paar Monate aussortieren, verbessern und neue Funde ergänzen.",
+    challenge: "Lege deine Bibliothek an einem festen Ort ab (Notizen-App, Dokument) und ergänze jede Woche einen Prompt."
+  }
+];
+</script>
+  <script>
+(function () {
+  "use strict";
+  var cfg = window.CALENDAR_CONFIG || {};
+  var DAYS = window.DAYS || [];
+  var YEAR = cfg.year || 2026;
+  var params = new URLSearchParams(location.search);
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ---------- Datum (Europe/Berlin) ----------
+  function today() {
+    var t = params.get("today"); // Testmodus: ?today=2026-12-10
+    var m = t && /^(\d{4})-(\d{2})-(\d{2})$/.exec(t);
+    if (m) return { y: +m[1], m: +m[2], d: +m[3] };
+    var parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/Berlin", year: "numeric", month: "2-digit", day: "2-digit"
+    }).formatToParts(new Date());
+    var o = {};
+    parts.forEach(function (p) { o[p.type] = +p.value; });
+    return { y: o.year, m: o.month, d: o.day };
+  }
+  var now = today();
+  var previewAll = params.get("preview") === "all"; // Testmodus: ?preview=all
+
+  function isUnlocked(day) {
+    if (previewAll) return true;
+    if (now.y > YEAR) return true;
+    if (now.y < YEAR) return false;
+    if (now.m < 12) return false;
+    return day <= now.d; // Dezember: bis heute; nach dem 24. ist alles offen
+  }
+  function daysUntilDec1() {
+    var a = Date.UTC(now.y, now.m - 1, now.d);
+    var b = Date.UTC(YEAR, 11, 1);
+    return Math.round((b - a) / 86400000);
+  }
+  var todayDay = (now.y === YEAR && now.m === 12 && now.d <= 24) ? now.d : 0;
+
+  // ---------- Speicher (nur Komfort) ----------
+  var KEY = "ai-bytes-adventskalender-" + YEAR + (previewAll || params.get("today") ? "-test" : "");
+  var state = { opened: {}, done: {} };
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) { var p = JSON.parse(raw); state.opened = p.opened || {}; state.done = p.done || {}; }
+  } catch (e) { /* ignorieren */ }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignorieren */ } }
+
+  // ---------- Hilfsfunktionen ----------
+  function richText(parent, str) {
+    parent.textContent = "";
+    str.split("**").forEach(function (part, i) {
+      if (!part) return;
+      if (i % 2) { var b = document.createElement("b"); b.textContent = part; parent.appendChild(b); }
+      else parent.appendChild(document.createTextNode(part));
+    });
+  }
+  var toastTimer;
+  function toast(msg) {
+    var t = $("toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove("show"); }, 3200);
+  }
+  function shuffled(n) { // feste Reihenfolge, damit das Gitter stabil bleibt
+    var a = [], i, seed = 24122026;
+    for (i = 1; i <= n; i++) a.push(i);
+    function rnd() { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }
+    for (i = a.length - 1; i > 0; i--) { var j = Math.floor(rnd() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; }
+    return a;
+  }
+
+  // ---------- Kopf ----------
+  $("motto").textContent = cfg.motto || "Bytes unterm Tannenbaum";
+  $("subtitle").textContent = cfg.subtitle || "";
+  $("greeting").textContent = cfg.name ? "Hallo " + cfg.name + "! 🎄" : "Hallo du! 🎄";
+  if (cfg.name) {
+    document.querySelector(".kicker").textContent = "Für " + cfg.name + " · AI Bytes Adventskalender";
+    document.title = "AI Bytes Adventskalender für " + cfg.name;
+  }
+
+  function updateStatus() {
+    var opened = Object.keys(state.opened).length;
+    $("progressBar").style.width = (opened / 24 * 100) + "%";
+    $("progress").setAttribute("aria-valuenow", opened);
+    var text;
+    if (!previewAll && now.y === YEAR && now.m < 12) {
+      var n = daysUntilDec1();
+      text = n <= 0 ? "Es geht gleich los!" : "Noch " + n + (n === 1 ? " Tag" : " Tage") + " bis zum 1. Dezember – dann öffnet sich das erste Türchen.";
+    } else if (!previewAll && now.y < YEAR) {
+      text = "Der Kalender startet am 1. Dezember " + YEAR + ".";
+    } else if (todayDay) {
+      text = "Heute ist der " + todayDay + ". Dezember – Türchen " + todayDay + " wartet auf dich! · " + opened + " von 24 geöffnet";
+    } else {
+      text = opened + " von 24 Türchen geöffnet";
+    }
+    if (previewAll) text = "👀 Testmodus: alle Türchen sind offen · " + opened + " von 24 geöffnet";
+    $("statusText").textContent = text;
+  }
+
+  // ---------- Türchen ----------
+  var grid = $("grid");
+  var byDay = {};
+  DAYS.forEach(function (d) { byDay[d.day] = d; });
+
+  function makeDoor(day) {
+    var d = byDay[day];
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "door"; b.dataset.day = day;
+    var unlocked = isUnlocked(day);
+    if (!unlocked) b.classList.add("locked");
+    if (day === todayDay) b.classList.add("today");
+    if (state.opened[day] && unlocked) b.classList.add("opened");
+    if (state.done[day]) b.classList.add("done");
+    b.setAttribute("aria-label", "Türchen " + day + (unlocked ? "" : " (noch verschlossen)"));
+    b.innerHTML = '<span class="door-inner"><span class="door-back"><span class="emoji"></span><span class="mini"></span></span>' +
+      '<span class="door-front"><span class="num"></span><span class="knob"></span></span></span>';
+    b.querySelector(".num").textContent = day;
+    b.querySelector(".emoji").textContent = d ? d.emoji : "🎁";
+    b.querySelector(".mini").textContent = d ? d.title : "";
+    b.addEventListener("click", function () { onDoor(day, b); });
+    return b;
+  }
+
+  function onDoor(day, el) {
+    if (!isUnlocked(day)) {
+      el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake");
+      toast("Noch nicht! Türchen " + day + " öffnet sich am " + day + ". Dezember 🎄");
+      return;
+    }
+    if (el.classList.contains("opened")) { openModal(day); return; }
+    state.opened[day] = true; save();
+    el.classList.add("opened"); updateStatus();
+    setTimeout(function () { openModal(day); }, 550);
+  }
+
+  shuffled(24).forEach(function (n) { grid.appendChild(makeDoor(n)); });
+
+  // ---------- Modal ----------
+  var modal = $("modal"), current = 0;
+  function show(id, on) { $(id).style.display = on ? "" : "none"; }
+
+  function openModal(day) {
+    var d = byDay[day]; if (!d) return;
+    current = day;
+    $("mDay").textContent = "Türchen " + day;
+    $("mKind").textContent = d.kind === "lern" ? "🎓 Lernhappen" : "🎯 Challenge";
+    $("mTitle").textContent = d.title;
+    $("mTeaser").textContent = d.teaser;
+    var l = $("mLesson"); l.textContent = "";
+    d.lesson.forEach(function (para) { var p = document.createElement("p"); richText(p, para); l.appendChild(p); });
+    $("mPrompt").textContent = d.prompt;
+    $("mCopy").textContent = "Kopieren";
+    $("mTip").textContent = d.tip || "";
+    show("mTipBox", !!d.tip);
+    $("mChallenge").textContent = d.challenge || "";
+    show("mChallengeBox", !!d.challenge);
+    var last = day === 24;
+    if (last) {
+      $("mFinal").textContent = (cfg.name ? "Liebe " + cfg.name + ",\n\n" : "") + (cfg.finalMessage || "") +
+        (cfg.from ? "\n\nDein " + cfg.from : "");
+    }
+    show("mFinalBox", last);
+    syncDone();
+    modal.scrollTop = 0;
+    if (typeof modal.showModal === "function") modal.showModal(); else modal.setAttribute("open", "");
+    var card = modal.querySelector(".card"); if (card) card.scrollTop = 0;
+  }
+  function syncDone() {
+    var b = $("mDone"), on = !!state.done[current];
+    b.classList.toggle("is-done", on);
+    b.textContent = on ? "Byte gesammelt ✓ (nochmal tippen zum Zurücknehmen)" : "Ausprobiert – Byte gesammelt ✓";
+  }
+  function closeModal() { if (modal.close) modal.close(); else modal.removeAttribute("open"); }
+
+  $("mClose").addEventListener("click", closeModal);
+  modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
+  $("mDone").addEventListener("click", function () {
+    if (state.done[current]) delete state.done[current]; else state.done[current] = true;
+    save(); syncDone();
+    var door = grid.querySelector('.door[data-day="' + current + '"]');
+    if (door) door.classList.toggle("done", !!state.done[current]);
+    if (state.done[current]) toast("Super! Wieder ein Byte schlauer 🎄");
+  });
+  $("mCopy").addEventListener("click", function () {
+    var text = byDay[current].prompt, btn = $("mCopy");
+    function ok() { btn.textContent = "Kopiert ✓"; }
+    function fallback() {
+      var ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); ok(); } catch (e) { btn.textContent = "Bitte manuell kopieren"; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fallback); else fallback();
+  });
+
+  // ---------- Testmodus-Button (für dich) ----------
+  var adminBtn = $("adminBtn");
+  adminBtn.textContent = previewAll ? "🔒 Testmodus beenden" : "🔓 Alle Türchen öffnen (Test)";
+  adminBtn.addEventListener("click", function () {
+    var pin = cfg.adminPin;
+    if (pin && prompt("PIN eingeben:") !== String(pin)) { toast("Falsche PIN"); return; }
+    location.href = location.pathname + (previewAll ? "" : "?preview=all");
+  });
+
+  updateStatus();
+
+  // ---------- Schnee ----------
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var cv = $("snow");
+  if (cv && cv.getContext && !reduce) {
+    var ctx = cv.getContext("2d"), W, H, flakes = [];
+    function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+    resize(); addEventListener("resize", resize);
+    var count = Math.min(90, Math.floor(innerWidth / 14));
+    for (var i = 0; i < count; i++) flakes.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 2.4 + .8, s: Math.random() * .8 + .3, o: Math.random() * .5 + .3, p: Math.random() * 6.28 });
+    (function tick() {
+      ctx.clearRect(0, 0, W, H);
+      flakes.forEach(function (f) {
+        f.y += f.s; f.p += .01; f.x += Math.sin(f.p) * .4;
+        if (f.y > H + 5) { f.y = -5; f.x = Math.random() * W; }
+        ctx.beginPath(); ctx.fillStyle = "rgba(255,255,255," + f.o + ")"; ctx.arc(f.x, f.y, f.r, 0, 6.283); ctx.fill();
+      });
+      requestAnimationFrame(tick);
+    })();
+  }
+})();
+</script>
 </body>
 </html>
