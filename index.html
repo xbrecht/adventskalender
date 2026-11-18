@@ -376,6 +376,31 @@ footer { color: var(--muted); }
 .ev-fox { animation: foxhop .35s ease-in-out infinite; }
 @keyframes foxhop { 50% { transform: translateY(-3px); } }
 #world.lightshow .tw { animation: tw .45s steps(2) infinite; animation-delay: 0s !important; }
+
+/* Album, Herbert, Sterne, Chips */
+.chip { align-self: center; font-family: var(--sans); font-size: .9rem; color: var(--heading); padding: 9px 14px; border-radius: 6px; background: rgba(239,217,167,.1); border: 1px solid rgba(239,217,167,.3); }
+.tools + .tools { margin-top: 10px; }
+.herbert-hit, .bonus-star { cursor: pointer; outline: none; }
+.herbert-hit .hit, .bonus-star .hit { fill: transparent; }
+.herbert-hit .ring { fill: rgba(216,178,90,.18); stroke: #d8b25a; stroke-width: 2; stroke-dasharray: 3 3; opacity: 0; pointer-events: none; }
+.herbert-hit.found .ring { opacity: 1; }
+.bonus-star use { animation: tw 3s ease-in-out infinite; }
+.album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-top: 10px; }
+.album-card { background: #f3ede2; border: 1px solid #e2d6bf; border-radius: 10px; padding: 10px 8px; text-align: center; font-family: var(--sans); }
+.album-card svg { width: 100%; height: 120px; }
+.album-card.has { background: #fff8ea; border-color: #d8b25a; }
+.album-name { font-weight: 600; color: #3a2416; margin-top: 4px; font-size: .9rem; }
+.album-date { color: #7a6a5a; font-size: .78rem; }
+#bonusText { white-space: pre-line; }
+
+.album-grid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); }
+.album-card svg { height: 104px; }
+.album-q { height: 104px; display: flex; align-items: center; justify-content: center; font-family: Georgia, serif; font-size: 3rem; color: #c9b99c; }
+.album-day { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: #9a8a74; }
+
+.steps-box { background: #f4efe4; border: 1px solid #e2d6bf; }
+.steps-box ol { margin: 8px 0 0; padding-left: 1.3em; }
+.steps-box li { margin: 3px 0; }
 </style>
 </head>
 <body data-theme="lebkuchen">
@@ -398,7 +423,7 @@ footer { color: var(--muted); }
 
   <main>
     <div class="scene-wrap">
-      <p class="howto">Es ist Nacht im Weihnachtsdorf, und es schneit. Irgendwo zwischen Fenstern, Laternen und Lichterketten sind 24 Zahlen versteckt: an Häusern, Ständen, Schildern und sogar im Schnee. Such die Zahl des heutigen Tages und tipp sie an. Vorsicht: Die meisten Zahlen im Dorf gehören nicht zum Kalender.<br>Und irgendwo steckt <b>Jochen</b>. Er ist ein stiller Genießer, mag den Advent sehr und nimmt die Dinge, wie sie kommen, auch die Kostüme, in die er jeden Tag schlüpft. Achte auf sein Lächeln.</p>
+      <p class="howto">Es ist Nacht im Weihnachtsdorf, und es schneit. Irgendwo zwischen Fenstern, Laternen und Lichterketten sind 24 Zahlen versteckt: an Häusern, Ständen, Schildern und sogar im Schnee. Such die Zahl des heutigen Tages und tipp sie an. Vorsicht: Die meisten Zahlen im Dorf gehören nicht zum Kalender.<br>Und irgendwo steckt <b>Jochen</b>. Er ist ein stiller Genießer, mag den Advent sehr und nimmt die Dinge, wie sie kommen, auch die Kostüme, in die er jeden Tag schlüpft. Achte auf sein Lächeln. Manchmal hat er seinen Dackel <b>Herbert</b> dabei. Und an fünf Tagen liegt irgendwo ein kleiner goldener Stern.</p>
       <div class="scene-frame">
         <div class="zoom" aria-label="Zoom">
           <button type="button" id="zoomIn" aria-label="Hineinzoomen">+</button>
@@ -423,6 +448,12 @@ footer { color: var(--muted); }
               </radialGradient>
               <linearGradient id="shoot" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
               <filter id="nightBody" color-interpolation-filters="sRGB"><feColorMatrix values=".4645 .0165 .0165 0 .0176  .0195 .5035 .0195 0 .026  .03 .03 .64 0 .0525  0 0 0 1 0"/></filter>
+              <linearGradient id="fogGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#9aa6c8" stop-opacity=".55"/><stop offset=".5" stop-color="#8d99bd" stop-opacity=".32"/><stop offset="1" stop-color="#9aa6c8" stop-opacity=".45"/>
+              </linearGradient>
+              <filter id="albumDark"><feColorMatrix values="0 0 0 0 .16  0 0 0 0 .14  0 0 0 0 .2  0 0 0 1 0"/></filter>
+              <filter id="nightFull" color-interpolation-filters="sRGB"><feColorMatrix values=".286 .022 .022 0 .0235  .026 .338 .026 0 .035  .04 .04 .52 0 .07  0 0 0 1 0"/></filter>
+              <clipPath id="coatClip"><path d="M-25,6 C-29,18 -33,30 -31,42 C-29,54 -14,58 0,58 C14,58 29,54 31,42 C33,30 29,18 25,6Z"/></clipPath>
               <filter id="cloudBlur" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="16"/></filter>
               <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
               <filter id="shadowBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="4"/></filter>
@@ -467,9 +498,14 @@ footer { color: var(--muted); }
       </div>
       <p class="swipe-note">Mit + und − zoomen, Bild mit Finger oder Maus verschieben</p>
       <div class="tools">
-        <button class="tool-btn" id="hintBtn" type="button">💡 Tipp, wo die Zahl ist</button>
         <span class="jcount" id="jochenCount"></span>
-        <button class="tool-btn secondary" id="listBtn" type="button">📋 Alle Türchen als Liste</button>
+        <span class="jcount" id="starCount"></span>
+      </div>
+      <div class="tools">
+        <button class="tool-btn" id="hintBtn" type="button">💡 Tipp, wo die Zahl ist</button>
+        <button class="tool-btn secondary" id="albumBtn" type="button">📖 Jochens Album</button>
+        <button class="tool-btn secondary" id="soundBtn" type="button">🔇 Ton aus</button>
+        <button class="tool-btn secondary" id="listBtn" type="button">Alle Türchen als Liste</button>
       </div>
     </div>
     <div class="grid" id="grid" hidden></div>
@@ -488,6 +524,22 @@ footer { color: var(--muted); }
     </div>
   </footer>
 
+  <dialog id="album" aria-labelledby="albumTitle">
+    <article class="card">
+      <button class="close" id="albumClose" aria-label="Schließen">×</button>
+      <h2 id="albumTitle">Jochens Kostüm-Album</h2>
+      <p class="teaser" id="albumInfo"></p>
+      <div class="album-grid" id="albumGrid"></div>
+    </article>
+  </dialog>
+  <dialog id="bonus" aria-labelledby="bonusTitle">
+    <article class="card">
+      <button class="close" id="bonusClose" aria-label="Schließen">×</button>
+      <h2 id="bonusTitle">⭐ Alle fünf goldenen Sterne!</h2>
+      <div class="box final-box"><p id="bonusText"></p></div>
+    </article>
+  </dialog>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <dialog id="modal" aria-labelledby="mTitle">
@@ -501,6 +553,7 @@ footer { color: var(--muted); }
       <p class="teaser" id="mTeaser"></p>
       <div class="jochen-say"><svg viewBox="-36 -72 72 130" aria-hidden="true"><use href="#jBody"/><use href="#jSanta"/></svg><p><strong>Jochen sagt:</strong> <span id="mJochen"></span></p></div>
       <div id="mLesson" class="lesson"></div>
+      <div class="box steps-box" id="mStepsBox"><strong>🪜 So gehst du vor</strong><ol id="mSteps"></ol></div>
       <div class="box prompt-box" id="mPromptBox">
         <div class="box-head">
           <strong>✨ Prompt zum Ausprobieren</strong>
@@ -525,266 +578,466 @@ window.CALENDAR_CONFIG = {
   theme: "lebkuchen",         // Design: "lebkuchen", "lichterkette", "hygge" oder "klassisch"
   motto: "Bytes unterm Tannenbaum",
   subtitle: "Finde jeden Tag deine Zahl im Weihnachtsdorf – und lerne etwas Neues über AI",
+  bonusMessage:
+    "du hast alle fünf goldenen Sterne gefunden – du bist eine richtig gute Sucherin. Dafür gibt es ein kleines Extra: Lös diesen Gutschein bei mir ein, für einen Abend, an dem ich für dich koche. Carbonara, natürlich. Jochen hat mir das Rezept verraten.",
   finalMessage:
     "Du hast 24 Türchen geöffnet, ganz viel ausprobiert und dabei hoffentlich genauso viel Spaß gehabt wie ich beim Zusammenstellen. Ich bin gespannt, was du 2027 mit AI anstellst. Frohe Weihnachten!"
 };
 </script>
   <script>
 // Inhalte der 24 Türchen.
-// kind: "lern" = Lernhappen, "challenge" = Challenge
+// kind: "lern" = Lernhappen, "challenge" = Challenge; steps = "So gehst du vor"
 window.DAYS = [
   {
-    day: 1, kind: "lern", emoji: "🧱", title: "Der Prompt-Baukasten",
-    teaser: "Vier Zutaten, die aus einer Frage einen guten Auftrag machen.",
-    lesson: [
+    "day": 1,
+    "kind": "lern",
+    "emoji": "🧱",
+    "title": "Der Prompt-Baukasten",
+    "teaser": "Vier Zutaten, die aus einer Frage einen guten Auftrag machen.",
+    "lesson": [
       "Wenn eine Antwort mittelmäßig ist, liegt es selten an der AI – meistens fehlt dem Prompt etwas. Gute Prompts haben vier Zutaten: **Rolle** (wer soll die AI sein?), **Aufgabe** (was genau soll herauskommen?), **Kontext** (für wen, wofür, mit welchen Grenzen?) und **Format** (Tabelle, Stichpunkte, Länge).",
       "Du brauchst nicht immer alle vier. Aber wenn das Ergebnis nicht passt, frag dich: Welche Zutat habe ich weggelassen? Meist ist es der Kontext."
     ],
-    prompt: "Du bist [Rolle, z. B. erfahrene Reiseplanerin].\nAufgabe: [was genau soll entstehen?]\nKontext: [wer bin ich, wofür brauche ich es, welche Einschränkungen gibt es?]\nFormat: [z. B. Tabelle, max. 150 Wörter, Du-Form]\nFrag nach, falls dir Informationen fehlen.",
-    tip: "Der Satz „Frag nach, falls dir Informationen fehlen“ ist der günstigste Qualitätshebel, den es gibt."
+    "prompt": "Du bist [Rolle, z. B. erfahrene Reiseplanerin].\nAufgabe: [was genau soll entstehen?]\nKontext: [wer bin ich, wofür brauche ich es, welche Einschränkungen gibt es?]\nFormat: [z. B. Tabelle, max. 150 Wörter, Du-Form]\nFrag nach, falls dir Informationen fehlen.",
+    "tip": "Der Satz „Frag nach, falls dir Informationen fehlen“ ist der günstigste Qualitätshebel, den es gibt.",
+    "steps": [
+      "Wähle eine echte Aufgabe, die gerade ansteht.",
+      "Fülle die vier Zutaten im Prompt unten aus.",
+      "Vergleiche das Ergebnis mit einer schnellen Ein-Satz-Frage."
+    ]
   },
   {
-    day: 2, kind: "challenge", emoji: "📝", title: "Mini-Briefing: Kontext mitgeben",
-    teaser: "Fünf Sätze über dich machen jede Antwort persönlicher.",
-    lesson: [
+    "day": 2,
+    "kind": "challenge",
+    "emoji": "📝",
+    "title": "Mini-Briefing: Kontext mitgeben",
+    "teaser": "Fünf Sätze über dich machen jede Antwort persönlicher.",
+    "lesson": [
       "Die AI kennt dich nur so gut, wie du dich vorstellst. Ein kurzes Briefing am Gesprächsanfang – Beruf, Ziele, Vorlieben, Tonfall – verändert die Antworten spürbar.",
       "Das Briefing schreibst du einmal und kopierst es künftig vor neue Gespräche. (Tag 16 zeigt dir, wie du es dauerhaft hinterlegst.)"
     ],
-    prompt: "Hier ist mein Hintergrund: [Beruf/Alltag, Ziele, Vorlieben, wie ich Antworten mag]. Behalte das für dieses Gespräch im Hinterkopf. Bestätige kurz und frag mich, was du noch wissen solltest, um mir bessere Antworten zu geben.",
-    tip: "Schreib auch auf, was du NICHT magst (z. B. „keine Floskeln, keine langen Einleitungen“).",
-    challenge: "Stelle dieselbe Alltagsfrage zweimal: einmal ohne, einmal mit Briefing. Wo ist der Unterschied am größten?"
+    "prompt": "Hier ist mein Hintergrund: [Beruf/Alltag, Ziele, Vorlieben, wie ich Antworten mag]. Behalte das für dieses Gespräch im Hinterkopf. Bestätige kurz und frag mich, was du noch wissen solltest, um mir bessere Antworten zu geben.",
+    "tip": "Schreib auch auf, was du NICHT magst (z. B. „keine Floskeln, keine langen Einleitungen“).",
+    "challenge": "Stelle dieselbe Alltagsfrage zweimal: einmal ohne, einmal mit Briefing. Wo ist der Unterschied am größten?",
+    "steps": [
+      "Schreib fünf Sätze über dich: Alltag, Ziele, Vorlieben, Ton.",
+      "Speichere den Text in deinen Notizen.",
+      "Füge ihn vor eine Frage ein und vergleiche die Antworten."
+    ]
   },
   {
-    day: 3, kind: "lern", emoji: "💡", title: "Brainstorming: erst Masse, dann Klasse",
-    teaser: "Mit AI hast du in Minuten 30 Ideen und die Auswahl dazu.",
-    lesson: [
+    "day": 3,
+    "kind": "lern",
+    "emoji": "💡",
+    "title": "Brainstorming: erst Masse, dann Klasse",
+    "teaser": "Mit AI hast du in Minuten 30 Ideen und die Auswahl dazu.",
+    "lesson": [
       "AI ist ein unermüdlicher Ideengeber. Der Trick: Trenne Sammeln und Bewerten. Lass dir zuerst viele, bewusst unterschiedliche Ideen liefern, auch verrückte, und filtere erst danach.",
       "Wenn die Ideen zu brav sind, gib Denkrichtungen vor: „einmal ohne Budget“, „einmal für Kinder“, „einmal das Gegenteil vom Üblichen“. Danach lässt du die besten drei nach deinen Kriterien bewerten."
     ],
-    prompt: "Ich suche Ideen für [Thema/Anlass]. Schritt 1: Nenne 25 Ideen, die sich deutlich voneinander unterscheiden, darunter 5 bewusst ungewöhnliche. Schritt 2: Bewerte sie nach meinen Kriterien: [z. B. Aufwand, Budget, Wow-Effekt]. Schritt 3: Wähle die besten 3 und skizziere jeweils den ersten konkreten Schritt.",
-    tip: "Frag nach dem ersten Schritt: Eine Idee ohne nächsten Schritt bleibt meistens liegen."
+    "prompt": "Ich suche Ideen für [Thema/Anlass]. Schritt 1: Nenne 25 Ideen, die sich deutlich voneinander unterscheiden, darunter 5 bewusst ungewöhnliche. Schritt 2: Bewerte sie nach meinen Kriterien: [z. B. Aufwand, Budget, Wow-Effekt]. Schritt 3: Wähle die besten 3 und skizziere jeweils den ersten konkreten Schritt.",
+    "tip": "Frag nach dem ersten Schritt: Eine Idee ohne nächsten Schritt bleibt meistens liegen.",
+    "steps": [
+      "Nenne das Thema und deine Kriterien.",
+      "Lass erst sammeln, ohne zu bewerten.",
+      "Bewerte dann nach deinen Kriterien und plane den ersten Schritt."
+    ]
   },
   {
-    day: 4, kind: "challenge", emoji: "🎤", title: "Die Interview-Methode",
-    teaser: "Lass die AI zuerst dich befragen, bevor sie antwortet.",
-    lesson: [
+    "day": 4,
+    "kind": "challenge",
+    "emoji": "🎤",
+    "title": "Die Interview-Methode",
+    "teaser": "Lass die AI zuerst dich befragen, bevor sie antwortet.",
+    "lesson": [
       "Statt dir alle Details vorab zu überlegen, drehst du den Spieß um: Die AI interviewt dich. Das fördert Anforderungen zutage, die dir selbst noch nicht bewusst waren.",
       "Besonders stark bei Entscheidungen, Planungen und Texten, die persönlich klingen sollen."
     ],
-    prompt: "Ich möchte [Ziel]. Bevor du antwortest, stell mir bis zu 7 Fragen – eine nach der anderen –, damit du das Ergebnis genau auf mich zuschneiden kannst. Danach liefere die Lösung.",
-    tip: "„Eine nach der anderen“ verhindert den Fragenkatalog, bei dem man sich erschlagen fühlt.",
-    challenge: "Nutze die Methode für etwas, das wirklich ansteht: eine Entscheidung, ein Geschenk, eine Rede, ein Projekt."
+    "prompt": "Ich möchte [Ziel]. Bevor du antwortest, stell mir bis zu 7 Fragen – eine nach der anderen –, damit du das Ergebnis genau auf mich zuschneiden kannst. Danach liefere die Lösung.",
+    "tip": "„Eine nach der anderen“ verhindert den Fragenkatalog, bei dem man sich erschlagen fühlt.",
+    "challenge": "Nutze die Methode für etwas, das wirklich ansteht: eine Entscheidung, ein Geschenk, eine Rede, ein Projekt.",
+    "steps": [
+      "Beschreibe nur dein Ziel in einem Satz.",
+      "Beantworte die Fragen der AI ehrlich und kurz.",
+      "Lass dir am Ende deine Antworten zusammenfassen."
+    ]
   },
   {
-    day: 5, kind: "challenge", emoji: "🎨", title: "Bildprompts: deine Weihnachtskarte",
-    teaser: "Samstags-Special: Bilder erzeugen, die nach deiner Idee aussehen.",
-    lesson: [
+    "day": 5,
+    "kind": "challenge",
+    "emoji": "🎨",
+    "title": "Bildprompts: deine Weihnachtskarte",
+    "teaser": "Samstags-Special: Bilder erzeugen, die nach deiner Idee aussehen.",
+    "lesson": [
       "Bei Bildgeneratoren zählt die Beschreibung: **Motiv**, **Stil** (Aquarell, Foto, Scherenschnitt), **Licht und Stimmung**, **Bildausschnitt** und manchmal, was **nicht** drauf soll.",
       "Ändere beim Nachsteuern immer nur eine Sache. So lernst du, welcher Hebel was bewirkt."
     ],
-    prompt: "Erstelle eine Weihnachtskarte im Stil eines Aquarells: [Motiv, z. B. kleine Hütte im Schnee], warmes Kerzenlicht, sanfte Farben, gemütliche Stimmung, viel freier Platz oben für Text. Keine Schrift im Bild.",
-    tip: "Schrift im Bild ist bei vielen Generatoren noch fehleranfällig. Den Gruß setzt du besser selbst in einem Design-Tool darauf.",
-    challenge: "Erzeuge drei Varianten und ändere jeweils nur einen Parameter (Stil, Licht oder Motiv). Verschick deine Lieblingskarte wirklich."
+    "prompt": "Erstelle eine Weihnachtskarte im Stil eines Aquarells: [Motiv, z. B. kleine Hütte im Schnee], warmes Kerzenlicht, sanfte Farben, gemütliche Stimmung, viel freier Platz oben für Text. Keine Schrift im Bild.",
+    "tip": "Schrift im Bild ist bei vielen Generatoren noch fehleranfällig. Den Gruß setzt du besser selbst in einem Design-Tool darauf.",
+    "challenge": "Erzeuge drei Varianten und ändere jeweils nur einen Parameter (Stil, Licht oder Motiv). Verschick deine Lieblingskarte wirklich.",
+    "steps": [
+      "Beschreibe Motiv, Stil, Licht und Bildausschnitt.",
+      "Erzeuge eine erste Version.",
+      "Ändere pro Runde nur eine Sache."
+    ]
   },
   {
-    day: 6, kind: "challenge", emoji: "🎅", title: "Dein Schreibstil als Profil",
-    teaser: "Nikolaus-Special: Texte, die wie du klingen.",
-    lesson: [
+    "day": 6,
+    "kind": "challenge",
+    "emoji": "🎅",
+    "title": "Dein Schreibstil als Profil",
+    "teaser": "Nikolaus-Special: Texte, die wie du klingen.",
+    "lesson": [
       "Generische AI-Texte erkennt man sofort. Das Gegenmittel: Gib der AI 2–3 echte Texte von dir und lass sie deinen Stil analysieren. Das Ergebnis ist ein Stilprofil, das du jedem künftigen Schreibauftrag voranstellen kannst.",
       "So klingen Mails, Nachrichten und Posts nach dir statt nach Pressemitteilung."
     ],
-    prompt: "Analysiere meine folgenden Texte und beschreibe meinen Schreibstil in 8 Stichpunkten (Satzlänge, Ton, typische Wendungen, Humor, was ich vermeide). Erstelle daraus eine Stilanleitung, die ich künftig vor Schreibaufträge setzen kann.\n\nText 1: [...]\nText 2: [...]\nText 3: [...]",
-    tip: "Nimm Texte, die du wirklich gern geschrieben hast – nicht die, die du schreiben musstest.",
-    challenge: "Lass dir mit deinem Stilprofil einen Nikolausgruß schreiben und bewerte: Würdest du das so abschicken?"
+    "prompt": "Analysiere meine folgenden Texte und beschreibe meinen Schreibstil in 8 Stichpunkten (Satzlänge, Ton, typische Wendungen, Humor, was ich vermeide). Erstelle daraus eine Stilanleitung, die ich künftig vor Schreibaufträge setzen kann.\n\nText 1: [...]\nText 2: [...]\nText 3: [...]",
+    "tip": "Nimm Texte, die du wirklich gern geschrieben hast – nicht die, die du schreiben musstest.",
+    "challenge": "Lass dir mit deinem Stilprofil einen Nikolausgruß schreiben und bewerte: Würdest du das so abschicken?",
+    "steps": [
+      "Such drei Texte heraus, die typisch für dich sind.",
+      "Lass die AI daraus dein Stilprofil schreiben.",
+      "Teste es an einer kurzen Nachricht und korrigiere, was nicht passt."
+    ]
   },
   {
-    day: 7, kind: "lern", emoji: "🧩", title: "Few-Shot: Beispiele statt Beschreibungen",
-    teaser: "Zeigen schlägt Erklären.",
-    lesson: [
+    "day": 7,
+    "kind": "lern",
+    "emoji": "🧩",
+    "title": "Few-Shot: Beispiele statt Beschreibungen",
+    "teaser": "Zeigen schlägt Erklären.",
+    "lesson": [
       "Statt lang zu beschreiben, wie ein Ergebnis aussehen soll, zeig zwei bis drei gute Beispiele. Die AI erkennt Muster in Länge, Ton und Aufbau erstaunlich zuverlässig.",
       "Das nennt sich „Few-Shot Prompting“ und ist eine der robustesten Techniken überhaupt."
     ],
-    prompt: "Ich möchte Texte in genau diesem Stil:\n\nBeispiel 1: [...]\nBeispiel 2: [...]\n\nSchreibe jetzt einen für: [Thema]. Halte dich an Länge, Ton und Aufbau der Beispiele.",
-    tip: "Ein Negativbeispiel („So bitte nicht: …“) schärft das Ergebnis zusätzlich."
+    "prompt": "Ich möchte Texte in genau diesem Stil:\n\nBeispiel 1: [...]\nBeispiel 2: [...]\n\nSchreibe jetzt einen für: [Thema]. Halte dich an Länge, Ton und Aufbau der Beispiele.",
+    "tip": "Ein Negativbeispiel („So bitte nicht: …“) schärft das Ergebnis zusätzlich.",
+    "steps": [
+      "Sammle zwei bis drei gelungene Beispiele.",
+      "Füge sie in den Prompt ein.",
+      "Ergänze ein Negativbeispiel, wenn das Ergebnis noch nicht passt."
+    ]
   },
   {
-    day: 8, kind: "lern", emoji: "🧠", title: "Denken lassen",
-    teaser: "Wann sich Reasoning-Modi lohnen und wann nicht.",
-    lesson: [
+    "day": 8,
+    "kind": "lern",
+    "emoji": "🧠",
+    "title": "Denken lassen",
+    "teaser": "Wann sich Reasoning-Modi lohnen und wann nicht.",
+    "lesson": [
       "Viele Tools bieten einen Denkmodus, in dem die AI vor der Antwort länger überlegt. Das lohnt sich bei Logik, Mathe, Abwägungen, Planung und kniffligen Analysen. Für Umformulieren oder Smalltalk reicht der schnelle Modus.",
       "Auch ohne Denkmodus hilft die Bitte, schrittweise vorzugehen und Annahmen offenzulegen."
     ],
-    prompt: "Denke Schritt für Schritt über folgendes Problem nach: [Problem]. Liste zuerst deine Annahmen und die möglichen Optionen, wäge sie gegeneinander ab und gib dann eine Empfehlung mit Begründung. Markiere, wo du unsicher bist.",
-    tip: "Lies nicht nur das Fazit. Die Annahmen verraten, ob die AI dein Problem richtig verstanden hat."
+    "prompt": "Denke Schritt für Schritt über folgendes Problem nach: [Problem]. Liste zuerst deine Annahmen und die möglichen Optionen, wäge sie gegeneinander ab und gib dann eine Empfehlung mit Begründung. Markiere, wo du unsicher bist.",
+    "tip": "Lies nicht nur das Fazit. Die Annahmen verraten, ob die AI dein Problem richtig verstanden hat.",
+    "steps": [
+      "Wähle ein Problem mit mehreren Optionen.",
+      "Schalte, falls vorhanden, den Denkmodus ein.",
+      "Prüf zuerst die Annahmen, dann das Fazit."
+    ]
   },
   {
-    day: 9, kind: "challenge", emoji: "🥊", title: "Kritischer Sparringspartner",
-    teaser: "Finde die Schwachstellen, bevor es andere tun.",
-    lesson: [
+    "day": 9,
+    "kind": "challenge",
+    "emoji": "🥊",
+    "title": "Kritischer Sparringspartner",
+    "teaser": "Finde die Schwachstellen, bevor es andere tun.",
+    "lesson": [
       "AI ist ein hervorragender Gegenpart, wenn du sie ausdrücklich darum bittest. Mit einem Pre-Mortem stellst du dir vor, das Vorhaben sei gescheitert, und lässt die AI die Gründe suchen.",
       "So findest du Risiken, solange du noch etwas ändern kannst."
     ],
-    prompt: "Ich plane [Vorhaben]. Spiele den kritischen Gegenpart: Nenne die 5 stärksten Einwände und die 3 größten Risiken. Stell dir außerdem vor, das Vorhaben ist in einem Jahr gescheitert: Was waren die wahrscheinlichsten Gründe? Sei fair, aber nicht weichgespült. Zum Schluss: Welche Frage sollte ich beantworten, bevor ich starte?",
-    tip: "Frag danach: „Welche dieser Einwände sind wirklich ernst, welche eher Pedanterie?“",
-    challenge: "Teste es an einem echten Plan: Urlaub, Anschaffung, Jobidee oder Wochenendprojekt."
+    "prompt": "Ich plane [Vorhaben]. Spiele den kritischen Gegenpart: Nenne die 5 stärksten Einwände und die 3 größten Risiken. Stell dir außerdem vor, das Vorhaben ist in einem Jahr gescheitert: Was waren die wahrscheinlichsten Gründe? Sei fair, aber nicht weichgespült. Zum Schluss: Welche Frage sollte ich beantworten, bevor ich starte?",
+    "tip": "Frag danach: „Welche dieser Einwände sind wirklich ernst, welche eher Pedanterie?“",
+    "challenge": "Teste es an einem echten Plan: Urlaub, Anschaffung, Jobidee oder Wochenendprojekt.",
+    "steps": [
+      "Beschreibe dein Vorhaben in drei Sätzen.",
+      "Lass Einwände und ein Pre-Mortem erstellen.",
+      "Entscheide, welche zwei Punkte du wirklich angehst."
+    ]
   },
   {
-    day: 10, kind: "challenge", emoji: "💌", title: "Der Tonfall-Umschreiber",
-    teaser: "Die richtigen Worte für schwierige Nachrichten.",
-    lesson: [
+    "day": 10,
+    "kind": "challenge",
+    "emoji": "💌",
+    "title": "Der Tonfall-Umschreiber",
+    "teaser": "Die richtigen Worte für schwierige Nachrichten.",
+    "lesson": [
       "Eine Absage, eine Erinnerung, ein „Nein“ an Verwandte oder eine knifflige Mail an den Chef: Mit AI formulierst du dieselbe Nachricht in verschiedenen Tonlagen und siehst sofort, was passt.",
       "Beschreibe dazu die Situation, das Ziel und die Beziehung zur anderen Person. Lass dir zwei bis drei Varianten geben, zum Beispiel herzlich, sachlich und knapp-direkt, und mische dir das Beste zusammen."
     ],
-    prompt: "Ich muss [Person/Beziehung] folgendes mitteilen: [Inhalt]. Mein Ziel: [z. B. Beziehung wahren, klar absagen, Frist anmahnen]. Schreibe 3 Varianten: herzlich, sachlich und knapp-direkt. Erkläre in je einem Satz, wann welche Variante passt, und nenne eine Formulierung, die leicht missverstanden werden könnte.",
-    tip: "Sag der AI, was du auf keinen Fall ausdrücken willst (z. B. „nicht vorwurfsvoll“). Das hilft oft mehr als jede positive Vorgabe.",
-    challenge: "Nimm eine Nachricht, die du schon länger vor dir herschiebst, und schick sie heute ab."
+    "prompt": "Ich muss [Person/Beziehung] folgendes mitteilen: [Inhalt]. Mein Ziel: [z. B. Beziehung wahren, klar absagen, Frist anmahnen]. Schreibe 3 Varianten: herzlich, sachlich und knapp-direkt. Erkläre in je einem Satz, wann welche Variante passt, und nenne eine Formulierung, die leicht missverstanden werden könnte.",
+    "tip": "Sag der AI, was du auf keinen Fall ausdrücken willst (z. B. „nicht vorwurfsvoll“). Das hilft oft mehr als jede positive Vorgabe.",
+    "challenge": "Nimm eine Nachricht, die du schon länger vor dir herschiebst, und schick sie heute ab.",
+    "steps": [
+      "Nimm eine Nachricht, die dir schwerfällt.",
+      "Lass drei Tonlagen schreiben.",
+      "Misch dir die beste Fassung zusammen und schick sie ab."
+    ]
   },
   {
-    day: 11, kind: "lern", emoji: "🔭", title: "Recherche mit Quellen-Check",
-    teaser: "Web-Suche und Deep Research richtig einsetzen.",
-    lesson: [
+    "day": 11,
+    "kind": "lern",
+    "emoji": "🔭",
+    "title": "Recherche mit Quellen-Check",
+    "teaser": "Web-Suche und Deep Research richtig einsetzen.",
+    "lesson": [
       "Viele Tools können im Web suchen. Für größere Fragen gibt es oft „Deep Research“: Die AI arbeitet mehrere Minuten, liest viele Seiten und liefert einen Bericht mit Quellen.",
       "Entscheidend ist, wie du fragst: Verlange mehrere unabhängige Quellen, Datumsangaben und eine klare Trennung zwischen Fakten und Einschätzungen."
     ],
-    prompt: "Recherchiere aktuell zu [Thema]. Vergleiche mindestens 3 unabhängige Quellen, nenne Widersprüche zwischen ihnen, gib Links und Veröffentlichungsdatum an und trenne klar zwischen gesicherten Fakten und Einschätzungen. Am Ende: Was ist noch unklar?",
-    tip: "Frag zum Schluss: „Was spricht gegen dieses Ergebnis?“ So bekommst du auch die Gegenseite."
+    "prompt": "Recherchiere aktuell zu [Thema]. Vergleiche mindestens 3 unabhängige Quellen, nenne Widersprüche zwischen ihnen, gib Links und Veröffentlichungsdatum an und trenne klar zwischen gesicherten Fakten und Einschätzungen. Am Ende: Was ist noch unklar?",
+    "tip": "Frag zum Schluss: „Was spricht gegen dieses Ergebnis?“ So bekommst du auch die Gegenseite.",
+    "steps": [
+      "Formuliere eine konkrete Recherchefrage.",
+      "Verlange Quellen mit Datum.",
+      "Öffne mindestens zwei Quellen selbst."
+    ]
   },
   {
-    day: 12, kind: "challenge", emoji: "🍽️", title: "Planen mit Rahmenbedingungen",
-    teaser: "Samstags-Special: das Weihnachtsmenü.",
-    lesson: [
+    "day": 12,
+    "kind": "challenge",
+    "emoji": "🍽️",
+    "title": "Planen mit Rahmenbedingungen",
+    "teaser": "Samstags-Special: das Weihnachtsmenü.",
+    "lesson": [
       "AI planen zu lassen funktioniert am besten, wenn du harte Rahmenbedingungen nennst: Personen, Budget, Zeit, Unverträglichkeiten, vorhandene Ausstattung. Je klarer die Grenzen, desto brauchbarer der Plan.",
       "Verlange immer auch einen Plan B. Bei Planungen ist das der Teil, der im Ernstfall Gold wert ist."
     ],
-    prompt: "Plane ein Weihnachtsmenü für [Anzahl] Personen. Rahmen: Budget [..], Kochzeit am Tag selbst max. [..], Unverträglichkeiten/Vorlieben: [..], vorhandene Geräte: [..]. Liefere: Menüvorschlag, Zeitplan rückwärts ab Essenszeit, Einkaufsliste nach Supermarktbereichen sortiert und einen Plan B, falls etwas schiefgeht.",
-    tip: "Rückwärts planen („ab Essenszeit“) ist ein Trick, der fast jede Planung entspannt.",
-    challenge: "Lass dir den Zeitplan als Checkliste ausgeben und probiere sie wirklich am Weihnachtstag aus."
+    "prompt": "Plane ein Weihnachtsmenü für [Anzahl] Personen. Rahmen: Budget [..], Kochzeit am Tag selbst max. [..], Unverträglichkeiten/Vorlieben: [..], vorhandene Geräte: [..]. Liefere: Menüvorschlag, Zeitplan rückwärts ab Essenszeit, Einkaufsliste nach Supermarktbereichen sortiert und einen Plan B, falls etwas schiefgeht.",
+    "tip": "Rückwärts planen („ab Essenszeit“) ist ein Trick, der fast jede Planung entspannt.",
+    "challenge": "Lass dir den Zeitplan als Checkliste ausgeben und probiere sie wirklich am Weihnachtstag aus.",
+    "steps": [
+      "Nenne Personen, Budget, Zeit und Unverträglichkeiten.",
+      "Lass Menü, Zeitplan und Einkaufsliste erstellen.",
+      "Frag nach einem Plan B."
+    ]
   },
   {
-    day: 13, kind: "challenge", emoji: "📸", title: "Fotos verstehen",
-    teaser: "Sonntags-Special: zeig der AI, worum es geht.",
-    lesson: [
+    "day": 13,
+    "kind": "challenge",
+    "emoji": "📸",
+    "title": "Fotos verstehen",
+    "teaser": "Sonntags-Special: zeig der AI, worum es geht.",
+    "lesson": [
       "Moderne Modelle verstehen Bilder: Kühlschrankinhalt, Pflanze, Fehlermeldung, Wegweiser, handschriftliche Notiz, Diagramm. Ein Foto ersetzt oft drei Absätze Beschreibung.",
       "Wichtig: Lass die AI erst beschreiben, was sie sieht, und dann die Aufgabe lösen. Das deckt Fehldeutungen früh auf."
     ],
-    prompt: "Hier ist ein Foto von [Kühlschrankinhalt/Pflanze/Fehlermeldung/Tabelle]. Beschreibe zuerst, was du siehst. Dann: [Aufgabe, z. B. schlage 3 Rezepte vor / erkläre das Problem / was fehlt mir noch?]. Frag nach, wenn etwas unscharf oder unklar ist.",
-    tip: "Lade keine Fotos fremder Personen oder sensibler Dokumente hoch, wenn du nicht sicher bist, was damit geschieht.",
-    challenge: "Fotografiere deinen Kühlschrank und lass dir ein Abendessen aus dem vorhandenen Inhalt zusammenstellen."
+    "prompt": "Hier ist ein Foto von [Kühlschrankinhalt/Pflanze/Fehlermeldung/Tabelle]. Beschreibe zuerst, was du siehst. Dann: [Aufgabe, z. B. schlage 3 Rezepte vor / erkläre das Problem / was fehlt mir noch?]. Frag nach, wenn etwas unscharf oder unklar ist.",
+    "tip": "Lade keine Fotos fremder Personen oder sensibler Dokumente hoch, wenn du nicht sicher bist, was damit geschieht.",
+    "challenge": "Fotografiere deinen Kühlschrank und lass dir ein Abendessen aus dem vorhandenen Inhalt zusammenstellen.",
+    "steps": [
+      "Mach ein scharfes Foto bei gutem Licht.",
+      "Lass die AI zuerst beschreiben, was sie sieht.",
+      "Stelle dann deine eigentliche Frage."
+    ]
   },
   {
-    day: 14, kind: "lern", emoji: "📄", title: "Dokumente und PDFs",
-    teaser: "Lange Texte in Minuten durchdringen.",
-    lesson: [
+    "day": 14,
+    "kind": "lern",
+    "emoji": "📄",
+    "title": "Dokumente und PDFs",
+    "teaser": "Lange Texte in Minuten durchdringen.",
+    "lesson": [
       "Du kannst Dokumente hochladen oder einfügen und gezielt befragen. Das spart Zeit bei Verträgen, Studien, Anleitungen und Protokollen.",
-      "Gute Aufträge verlangen Belegstellen: Wenn die AI Seitenzahlen oder Zitate nennen muss, kannst du jede Aussage schnell nachprüfen."
+      "Gute Aufträge verlangen Belegstellen: Wenn die AI Seitenzahlen oder Zitate nennen muss, kannst du jede Aussage schnell nachprüfen.",
+      "Für fertige Dateien gibt es oft eigene **Skills**. Bitte ausdrücklich darum, zum Beispiel: „Nutze den Excel-Skill und erstelle daraus eine Tabelle mit allen Fristen.“ So bekommst du eine echte Datei statt nur Text."
     ],
-    prompt: "Ich lade ein Dokument hoch. Liefere: 1) eine Zusammenfassung in 5 Sätzen, 2) die 5 wichtigsten Zahlen oder Fakten mit Seitenangabe, 3) offene Fragen und Risiken, 4) To-dos für mich. Nenne zu jeder Aussage die Belegstelle.",
-    tip: "Stelle nach der Zusammenfassung gezielte Fragen. Die eigentlichen Erkenntnisse stecken meist im Nachfragen."
+    "prompt": "Ich lade ein Dokument hoch. Liefere: 1) eine Zusammenfassung in 5 Sätzen, 2) die 5 wichtigsten Zahlen oder Fakten mit Seitenangabe, 3) offene Fragen und Risiken, 4) To-dos für mich. Nenne zu jeder Aussage die Belegstelle.",
+    "tip": "Stelle nach der Zusammenfassung gezielte Fragen. Die eigentlichen Erkenntnisse stecken meist im Nachfragen.",
+    "steps": [
+      "Lade ein Dokument hoch, das du ohnehin lesen müsstest.",
+      "Verlange eine Zusammenfassung mit Belegstellen.",
+      "Lass dir das Ergebnis als Datei geben und ruf dafür den passenden Skill auf."
+    ]
   },
   {
-    day: 15, kind: "challenge", emoji: "📊", title: "Tabellen und Daten auswerten",
-    teaser: "Aus Zahlenkolonnen werden Antworten.",
-    lesson: [
+    "day": 15,
+    "kind": "challenge",
+    "emoji": "📊",
+    "title": "Tabellen und Daten auswerten",
+    "teaser": "Aus Zahlenkolonnen werden Antworten.",
+    "lesson": [
       "Mit CSV- oder Excel-Dateien kann die AI Auffälligkeiten finden, Auswertungen rechnen und Diagramme erstellen. Wichtig ist, erst einen Überblick zu verlangen, bevor es an die Fragen geht.",
       "Und: Rechne Stichproben nach. Bei Zahlen gilt besonders, dass vertrauen gut und prüfen besser ist."
     ],
-    prompt: "Hier ist meine Tabelle. Verschaffe dir zuerst einen Überblick (Spalten, Auffälligkeiten, fehlende Werte). Dann beantworte: [Frage]. Erstelle ein passendes Diagramm und erkläre in 3 Sätzen, was es zeigt – und was es nicht beweist.",
-    tip: "Der Zusatz „was es nicht beweist“ schützt vor vorschnellen Schlüssen.",
-    challenge: "Nimm eigene Daten: Haushaltsbuch, Laufzeiten, Lesehistorie. Welche Frage hättest du dir vorher nie gestellt?"
+    "prompt": "Hier ist meine Tabelle. Verschaffe dir zuerst einen Überblick (Spalten, Auffälligkeiten, fehlende Werte). Dann beantworte: [Frage]. Erstelle ein passendes Diagramm und erkläre in 3 Sätzen, was es zeigt – und was es nicht beweist.",
+    "tip": "Der Zusatz „was es nicht beweist“ schützt vor vorschnellen Schlüssen.",
+    "challenge": "Nimm eigene Daten: Haushaltsbuch, Laufzeiten, Lesehistorie. Welche Frage hättest du dir vorher nie gestellt?",
+    "steps": [
+      "Exportiere eine Tabelle als CSV- oder Excel-Datei.",
+      "Lass zuerst einen Überblick erstellen.",
+      "Stelle eine Frage und lass ein Diagramm zeichnen."
+    ]
   },
   {
-    day: 16, kind: "lern", emoji: "⚙️", title: "Custom Instructions, Memory, Projekte",
-    teaser: "Die AI dauerhaft auf dich einstellen.",
-    lesson: [
+    "day": 16,
+    "kind": "lern",
+    "emoji": "⚙️",
+    "title": "Custom Instructions, Memory, Projekte",
+    "teaser": "Die AI dauerhaft auf dich einstellen.",
+    "lesson": [
       "Die meisten Tools bieten eigene Anweisungen, ein Gedächtnis und Projekte mit Dateien und Vorgaben. Damit musst du nicht jedes Mal von vorn erklären, wer du bist und wie du es magst.",
-      "Die Funktionen heißen je nach Tool unterschiedlich. Suche in den Einstellungen nach „Anweisungen“, „Personalisierung“ oder „Projekte“."
+      "Die Funktionen heißen je nach Tool unterschiedlich. Suche in den Einstellungen nach „Anweisungen“, „Personalisierung“ oder „Projekte“.",
+      "Der Unterschied zu **Skills** (Tag 17): Eigene Anweisungen gelten immer. Skills kommen nur dann zum Einsatz, wenn eine bestimmte Aufgabe ansteht, oder wenn du sie ausdrücklich aufrufst."
     ],
-    prompt: "Antworte auf Deutsch, direkt und ohne Floskeln. Wenn meine Frage unklar ist, frag zuerst nach. Gib bei Fakten Quellen an. Bei Entscheidungen: Pro und Contra und eine klare Empfehlung. Widersprich mir, wenn ich falsch liege.",
-    tip: "Halte die Anweisungen kurz und prüfe das Gedächtnis ab und zu: Altes und Überholtes darf raus."
+    "prompt": "Antworte auf Deutsch, direkt und ohne Floskeln. Wenn meine Frage unklar ist, frag zuerst nach. Gib bei Fakten Quellen an. Bei Entscheidungen: Pro und Contra und eine klare Empfehlung. Widersprich mir, wenn ich falsch liege.",
+    "tip": "Halte die Anweisungen kurz und prüfe das Gedächtnis ab und zu: Altes und Überholtes darf raus.",
+    "steps": [
+      "Öffne die Einstellungen deines Tools.",
+      "Trage deine dauerhaften Anweisungen ein.",
+      "Prüfe nach einer Woche, was du anpassen willst."
+    ]
   },
   {
-    day: 17, kind: "challenge", emoji: "🤖", title: "Den eigenen Assistenten bauen",
-    teaser: "Ein Spezialist für genau deine Wiederholungsaufgabe.",
-    lesson: [
-      "Was du regelmäßig tust – Mails beantworten, Wochenplan, Rezepte, Lernkarten –, kannst du als eigenen Assistenten einrichten (je nach Tool: Projekt, Custom GPT, Gem oder ähnlich).",
-      "Das Beste: Die AI schreibt die Anleitung für den Assistenten selbst, wenn du sie interviewen lässt."
+    "day": 17,
+    "kind": "challenge",
+    "emoji": "🧰",
+    "title": "Skills: Fähigkeiten zum Mitnehmen",
+    "teaser": "Einmal beibringen, immer wieder nutzen und gezielt aufrufen.",
+    "lesson": [
+      "**Skills** sind kleine Fähigkeitspakete für die AI: ein Ordner mit einer Datei namens SKILL.md, darin eine Anleitung und bei Bedarf Vorlagen, Beispiele oder kleine Skripte. Die AI lädt einen Skill, sobald deine Aufgabe zu seiner Beschreibung passt. Das Format ist ein offener Standard und wird inzwischen von mehreren Tools gelesen, zum Beispiel von Claude und ChatGPT.",
+      "Viele Tools bringen fertige Skills mit, etwa zum Erstellen von Word-, Excel-, PowerPoint- oder PDF-Dateien. Du kannst einen Skill auch **ausdrücklich aufrufen**: mit seinem Namen im Prompt („Nutze den Skill …“) oder, je nach Tool, per Kurzbefehl wie /skill-name. Das ist zuverlässiger, als darauf zu hoffen, dass die AI ihn von selbst wählt.",
+      "Eigene Skills lohnen sich für alles, was du regelmäßig auf dieselbe Art erledigt haben willst: Antworten auf Mails, dein Wochenplan, Rezeptkarten oder Protokolle. Am einfachsten lässt du den Skill von der AI schreiben. In Claude gibt es dafür sogar einen eigenen Skill-Creator."
     ],
-    prompt: "Hilf mir, eine Anleitung (System-Prompt) für einen Assistenten zu schreiben, der [wiederkehrende Aufgabe] übernimmt. Frag mich nach Zielgruppe, Ton, Format und Grenzen und liefere dann eine fertige Anleitung, die ich in ein Projekt oder einen eigenen Assistenten einfügen kann.",
-    tip: "Teste jeden neuen Assistenten mit drei kniffligen Fällen, bevor du dich auf ihn verlässt.",
-    challenge: "Baue einen Assistenten für eine Aufgabe, die dich jede Woche nervt, und nutze ihn eine Woche lang."
+    "prompt": "Nutze den Skill-Creator und hilf mir, einen eigenen Skill für [wiederkehrende Aufgabe] zu bauen. Frag mich nach Zweck, Auslöser (wann soll der Skill greifen?), Ablauf in Schritten, Ton und je einem guten und einem schlechten Beispiel. Erstelle danach die SKILL.md mit Name und Beschreibung und erkläre mir, wie ich den Skill hochlade und ausdrücklich aufrufe.",
+    "tip": "Die Beschreibung entscheidet, wann ein Skill greift. Schreib hinein, was er tut und wann er genutzt werden soll, zum Beispiel: „Nutze diesen Skill, wenn ich um eine Antwort auf eine Kundenmail bitte.“",
+    "challenge": "Bau einen Skill für eine Aufgabe, die dich jede Woche Zeit kostet, und ruf ihn eine Woche lang ausdrücklich beim Namen auf.",
+    "steps": [
+      "Schau in den Einstellungen nach, welche Skills es schon gibt (oft unter „Fähigkeiten“ oder „Skills“).",
+      "Ruf einen vorhandenen Skill ausdrücklich beim Namen auf, zum Beispiel für eine Excel-Datei.",
+      "Bau dir mit dem Prompt unten einen eigenen Skill.",
+      "Lade ihn hoch und teste ihn mit drei echten Aufgaben."
+    ]
   },
   {
-    day: 18, kind: "lern", emoji: "🎙️", title: "Sprachmodus und Diktieren",
-    teaser: "Sprechen ist oft schneller als Tippen.",
-    lesson: [
+    "day": 18,
+    "kind": "lern",
+    "emoji": "🎙️",
+    "title": "Sprachmodus und Diktieren",
+    "teaser": "Sprechen ist oft schneller als Tippen.",
+    "lesson": [
       "Beim Sprechen denkst du freier. Diktiere unsortierte Gedanken, und lass die AI Ordnung hineinbringen. Auch der Sprachmodus für Gespräche ist stark: zum Brainstorming, für Sprachübungen oder zum Üben von Gesprächen.",
       "Gerade unterwegs oder beim Spazierengehen entstehen so die besten Ideen."
     ],
-    prompt: "Ich spreche gleich meine Gedanken zu [Thema] unsortiert ein. Ordne sie danach in: Kernaussagen, offene Fragen und nächste Schritte. Behalte meine Wortwahl bei, wo es sinnvoll ist.",
-    tip: "Für Fremdsprachen: Bitte die AI, dich zu korrigieren, aber erst am Ende, damit der Redefluss bleibt."
+    "prompt": "Ich spreche gleich meine Gedanken zu [Thema] unsortiert ein. Ordne sie danach in: Kernaussagen, offene Fragen und nächste Schritte. Behalte meine Wortwahl bei, wo es sinnvoll ist.",
+    "tip": "Für Fremdsprachen: Bitte die AI, dich zu korrigieren, aber erst am Ende, damit der Redefluss bleibt.",
+    "steps": [
+      "Starte den Sprachmodus oder die Diktierfunktion.",
+      "Sprich zwei Minuten frei drauflos.",
+      "Lass die AI ordnen und nächste Schritte ableiten."
+    ]
   },
   {
-    day: 19, kind: "challenge", emoji: "🎓", title: "Lernen mit der AI",
-    teaser: "Samstags-Special: Tutor statt Textlieferant.",
-    lesson: [
+    "day": 19,
+    "kind": "challenge",
+    "emoji": "🎓",
+    "title": "Lernen mit der AI",
+    "teaser": "Samstags-Special: Tutor statt Textlieferant.",
+    "lesson": [
       "Passives Lesen bleibt schlecht hängen. Lass dich lieber abfragen: Die AI erklärt in Schritten, fragt nach, korrigiert und stellt ein Quiz. Besonders wirksam ist die Feynman-Methode: Du erklärst, die AI sucht die Lücken.",
       "So wird die AI vom Antwortautomaten zum geduldigen Lernpartner."
     ],
-    prompt: "Erkläre mir [Thema] so, als hätte ich kein Vorwissen, aber großes Interesse, in 5 Schritten. Stell mir nach jedem Schritt eine Verständnisfrage und warte auf meine Antwort. Am Ende: ein Quiz mit 5 Fragen, steigend schwer.",
-    tip: "Sag am Ende: „Erkläre ich es dir jetzt in eigenen Worten, und du suchst die Lücken.“",
-    challenge: "Wähle ein Thema, das dich schon lange reizt, und lerne es an diesem Wochenende in 30 Minuten an."
+    "prompt": "Erkläre mir [Thema] so, als hätte ich kein Vorwissen, aber großes Interesse, in 5 Schritten. Stell mir nach jedem Schritt eine Verständnisfrage und warte auf meine Antwort. Am Ende: ein Quiz mit 5 Fragen, steigend schwer.",
+    "tip": "Sag am Ende: „Erkläre ich es dir jetzt in eigenen Worten, und du suchst die Lücken.“",
+    "challenge": "Wähle ein Thema, das dich schon lange reizt, und lerne es an diesem Wochenende in 30 Minuten an.",
+    "steps": [
+      "Wähle ein Thema, das dich neugierig macht.",
+      "Lass dich Schritt für Schritt erklären und abfragen.",
+      "Erkläre es am Ende selbst in eigenen Worten."
+    ]
   },
   {
-    day: 20, kind: "lern", emoji: "🛠️", title: "Agenten und Connectoren",
-    teaser: "Sonntags-Special: wenn die AI nicht nur redet, sondern handelt.",
-    lesson: [
+    "day": 20,
+    "kind": "lern",
+    "emoji": "🛠️",
+    "title": "Agenten und Connectoren",
+    "teaser": "Sonntags-Special: wenn die AI nicht nur redet, sondern handelt.",
+    "lesson": [
       "Ein Chatbot antwortet, ein Agent erledigt mehrstufige Aufgaben: suchen, Dateien erstellen, Tools bedienen, je nach Einrichtung auch auf Kalender, Mails oder Dokumente zugreifen (über sogenannte Connectoren).",
       "Wichtig sind klare Ziele, begrenzte Rechte und ein prüfender Blick aufs Ergebnis. Starte mit Aufgaben, die nur lesen und nichts verändern."
     ],
-    prompt: "Ziel: [gewünschtes Ergebnis]. Erledige das in Schritten. Zeig mir zuerst deinen Plan und warte auf mein OK. Sende, lösche oder bezahle nichts ohne meine ausdrückliche Bestätigung. Am Ende: eine Zusammenfassung, was du getan hast.",
-    tip: "Gib Agenten nur so viele Zugriffsrechte, wie die Aufgabe wirklich braucht."
+    "prompt": "Ziel: [gewünschtes Ergebnis]. Erledige das in Schritten. Zeig mir zuerst deinen Plan und warte auf mein OK. Sende, lösche oder bezahle nichts ohne meine ausdrückliche Bestätigung. Am Ende: eine Zusammenfassung, was du getan hast.",
+    "tip": "Gib Agenten nur so viele Zugriffsrechte, wie die Aufgabe wirklich braucht.",
+    "steps": [
+      "Wähle eine Aufgabe, die nur liest und nichts verändert.",
+      "Lass dir zuerst den Plan zeigen.",
+      "Gib erst danach dein OK."
+    ]
   },
   {
-    day: 21, kind: "challenge", emoji: "💻", title: "Vibe Coding",
-    teaser: "Ein Mini-Tool bauen, ohne programmieren zu können.",
-    lesson: [
+    "day": 21,
+    "kind": "challenge",
+    "emoji": "💻",
+    "title": "Vibe Coding",
+    "teaser": "Ein Mini-Tool bauen, ohne programmieren zu können.",
+    "lesson": [
       "Du kannst der AI sagen, was du brauchst, und sie baut dir eine kleine Webseite oder ein Tool: Rechner, Zufallsgenerator, Tippspiel, Checkliste. Das nennt man Vibe Coding.",
-      "Kleiner Spoiler: Dieser Adventskalender ist genau so entstanden."
+      "Kleiner Spoiler: Dieser Adventskalender ist genau so entstanden.",
+      "Viele Tools haben eigene **Skills** für Gestaltung oder Webseiten. Nenne sie ausdrücklich, zum Beispiel „Nutze den Design-Skill“. Das Ergebnis sieht dann meist deutlich durchdachter aus."
     ],
-    prompt: "Baue mir eine einfache einzelne HTML-Seite: [Idee, z. B. Haushaltsrechner, Spiele-Zufallsgenerator, Wichtel-Auslosung]. Design: [Stil]. Funktion: [Details]. Erkläre mir danach in einfachen Worten, wie ich die Datei öffne und was ich anpassen kann.",
-    tip: "Arbeite in kleinen Schritten: Erst läuft es, dann wird es schön. Bei Änderungen: „Ändere nur X, alles andere bleibt.“",
-    challenge: "Baue etwas Kleines, das dir im Alltag nützt, und öffne es im Browser."
+    "prompt": "Baue mir eine einfache einzelne HTML-Seite: [Idee, z. B. Haushaltsrechner, Spiele-Zufallsgenerator, Wichtel-Auslosung]. Design: [Stil]. Funktion: [Details]. Erkläre mir danach in einfachen Worten, wie ich die Datei öffne und was ich anpassen kann.",
+    "tip": "Arbeite in kleinen Schritten: Erst läuft es, dann wird es schön. Bei Änderungen: „Ändere nur X, alles andere bleibt.“",
+    "challenge": "Baue etwas Kleines, das dir im Alltag nützt, und öffne es im Browser.",
+    "steps": [
+      "Beschreibe dein Mini-Tool in drei Sätzen.",
+      "Lass eine einzelne HTML-Datei bauen, gern mit einem Design-Skill.",
+      "Ändere danach immer nur eine Sache auf einmal."
+    ]
   },
   {
-    day: 22, kind: "lern", emoji: "🔒", title: "Datenschutz und Sicherheit",
-    teaser: "Was in den Chat darf und was besser nicht.",
-    lesson: [
+    "day": 22,
+    "kind": "lern",
+    "emoji": "🔒",
+    "title": "Datenschutz und Sicherheit",
+    "teaser": "Was in den Chat darf und was besser nicht.",
+    "lesson": [
       "Vorsicht bei Passwörtern, Ausweis- und Kontodaten, sensiblen Gesundheitsinfos anderer und vertraulichen Firmendaten. Schau in die Einstellungen deines Tools: Wird mit deinen Chats trainiert? Gibt es temporäre Chats?",
       "Neu hinzu kommt „Prompt Injection“: Versteckte Anweisungen in Webseiten oder Dateien können eine AI täuschen. Sei deshalb vorsichtig, wenn eine AI fremde Inhalte liest und gleichzeitig Rechte hat."
     ],
-    prompt: "Ich möchte folgenden Text mit dir bearbeiten, aber ohne persönliche Daten. Ersetze Namen, Adressen, Zahlen und Firmenbezeichnungen durch Platzhalter wie [PERSON_1] und liste mir die Ersetzungen separat auf, damit ich sie nachher zurücktauschen kann.\n\nText: [...]",
-    tip: "Arbeitest du beruflich mit AI, kläre vorher die Regeln deines Arbeitgebers."
+    "prompt": "Ich möchte folgenden Text mit dir bearbeiten, aber ohne persönliche Daten. Ersetze Namen, Adressen, Zahlen und Firmenbezeichnungen durch Platzhalter wie [PERSON_1] und liste mir die Ersetzungen separat auf, damit ich sie nachher zurücktauschen kann.\n\nText: [...]",
+    "tip": "Arbeitest du beruflich mit AI, kläre vorher die Regeln deines Arbeitgebers.",
+    "steps": [
+      "Überleg, welche Daten du gerade teilst.",
+      "Prüfe die Datenschutz-Einstellungen deines Tools.",
+      "Anonymisiere sensible Texte mit dem Prompt unten."
+    ]
   },
   {
-    day: 23, kind: "lern", emoji: "⚖️", title: "Kritisches Denken",
-    teaser: "Der Ja-Sager-Effekt und wer die Verantwortung trägt.",
-    lesson: [
+    "day": 23,
+    "kind": "lern",
+    "emoji": "⚖️",
+    "title": "Kritisches Denken",
+    "teaser": "Der Ja-Sager-Effekt und wer die Verantwortung trägt.",
+    "lesson": [
       "AI-Modelle neigen dazu, dir zuzustimmen und deine Sicht zu bestätigen. Das fühlt sich gut an, hilft aber nicht. Frag deshalb bewusst neutral oder fordere die Gegenposition an.",
       "Bei Gesundheit, Recht und Finanzen ist die AI eine gute Vorbereitung auf das Gespräch mit Fachleuten, aber kein Ersatz dafür. Die Verantwortung für das Ergebnis bleibt bei dir."
     ],
-    prompt: "Hier ist meine Einschätzung: [...]. Sei kein Ja-Sager. Argumentiere zuerst die Gegenposition so stark wie möglich, dann sag mir ehrlich, was an meiner Sicht trägt und was nicht.",
-    tip: "Bei wichtigen Fragen: erst selbst eine Meinung bilden, dann die AI fragen. So bleibt dein eigenes Urteil trainiert."
+    "prompt": "Hier ist meine Einschätzung: [...]. Sei kein Ja-Sager. Argumentiere zuerst die Gegenposition so stark wie möglich, dann sag mir ehrlich, was an meiner Sicht trägt und was nicht.",
+    "tip": "Bei wichtigen Fragen: erst selbst eine Meinung bilden, dann die AI fragen. So bleibt dein eigenes Urteil trainiert.",
+    "steps": [
+      "Schreib deine eigene Einschätzung auf.",
+      "Lass die AI die Gegenposition stark machen.",
+      "Entscheide selbst, was davon trägt."
+    ]
   },
   {
-    day: 24, kind: "challenge", emoji: "🎁", title: "Dein Prompt-Schatz für 2027",
-    teaser: "Heiligabend: aus 23 Türchen wird deine persönliche Werkzeugkiste.",
-    lesson: [
+    "day": 24,
+    "kind": "challenge",
+    "emoji": "🎁",
+    "title": "Dein Prompt-Schatz für 2027",
+    "teaser": "Heiligabend: aus 23 Türchen wird deine persönliche Werkzeugkiste.",
+    "lesson": [
       "Zum Abschluss sammelst du, was bei dir funktioniert hat. Eine persönliche Prompt-Bibliothek spart dir künftig Zeit und macht aus Einzeltricks eine Gewohnheit.",
-      "Ordne nach Alltag, Arbeit, Kreativität und Lernen und lass dir von der AI zeigen, welche Lücken du 2027 noch füllen könntest."
+      "Ordne nach Alltag, Arbeit, Kreativität und Lernen und lass dir von der AI zeigen, welche Lücken du 2027 noch füllen könntest.",
+      "Und dein wichtigster Prompt kann ein **Skill** werden (siehe Tag 17). Dann musst du ihn nie wieder kopieren, sondern rufst ihn einfach beim Namen auf."
     ],
-    prompt: "Hier sind meine 5 liebsten Prompts aus dem AI-Bytes-Adventskalender und was ich damit gemacht habe: [...]. Hilf mir, daraus eine persönliche Prompt-Bibliothek zu bauen, mit Titel, Anwendungsfall, Vorlage und Tipp, sortiert nach Alltag, Arbeit, Kreativität und Lernen. Schlage 5 Lücken vor, die ich 2027 ausprobieren sollte.",
-    tip: "Pflege die Bibliothek: Alle paar Monate aussortieren, verbessern und neue Funde ergänzen.",
-    challenge: "Lege deine Bibliothek an einem festen Ort ab (Notizen-App, Dokument) und ergänze jede Woche einen Prompt."
+    "prompt": "Hier sind meine 5 liebsten Prompts aus dem AI-Bytes-Adventskalender und was ich damit gemacht habe: [...]. Hilf mir, daraus eine persönliche Prompt-Bibliothek zu bauen, mit Titel, Anwendungsfall, Vorlage und Tipp, sortiert nach Alltag, Arbeit, Kreativität und Lernen. Schlage 5 Lücken vor, die ich 2027 ausprobieren sollte.\nWandle zum Schluss meinen wichtigsten Prompt in einen Skill um: eine SKILL.md mit Name, Beschreibung (was er tut und wann er greifen soll) und Ablauf.",
+    "tip": "Pflege die Bibliothek: Alle paar Monate aussortieren, verbessern und neue Funde ergänzen.",
+    "challenge": "Lege deine Bibliothek an einem festen Ort ab (Notizen-App, Dokument) und ergänze jede Woche einen Prompt.",
+    "steps": [
+      "Such deine fünf liebsten Prompts aus dem Kalender heraus.",
+      "Lass daraus eine Prompt-Bibliothek bauen.",
+      "Mach aus dem wichtigsten Prompt einen eigenen Skill."
+    ]
   }
 ];
 </script>
@@ -809,6 +1062,10 @@ window.DAYS = [
   var seed = 1225;
   function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
   function rr(a, b) { return a + rnd() * (b - a); }
+  var G = 1, FINALE = false, OPTS = {};
+  function thr(a, b) { var v = Math.sin(a * 12.9898 + b * 78.233) * 43758.5453; return v - Math.floor(v); }
+  var seed2 = 4711;
+  function rnd2() { seed2 = (seed2 * 48271) % 2147483647; return (seed2 - 1) / 2147483646; }
   function pick(a) { return a[Math.floor(rnd() * a.length)]; }
   function shade(h, f) {
     h = h.replace("#", "");
@@ -841,7 +1098,10 @@ window.DAYS = [
     return o.map(function (v) { v = Math.max(0, Math.min(255, Math.round(v))); return (v < 16 ? "0" : "") + v.toString(16); }).join("");
   }
   function nightify(str) {
-    return str.replace(/(fill|stroke)="(\*?)#([0-9a-fA-F]{6})"/g, function (m, attr, star, hex) { return attr + '="#' + (star ? hex : nightHex(hex)) + '"'; });
+    return str.replace(/(fill|stroke)="(\*?)#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})"/g, function (m, attr, star, hex) {
+      if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+      return attr + '="#' + (star ? hex : nightHex(hex)) + '"';
+    });
   }
 
   // ---------- Sammelbehälter ----------
@@ -898,7 +1158,13 @@ window.DAYS = [
     s += poly(outer, fr);
     s += poly(pane, lit ? (arched ? "*#f6b04e" : "*#ffd27a") : "#56657a");
     if (lit) { glows.push(poly(frect(F, uc - ww / 2 - 0.1, vc - wh / 2 - 0.1, uc + ww / 2 + 0.1, vc + wh / 2 + 0.1), "#ffb240")); }
-    if (lit && !arched && rnd() < 0.22) {
+    if (lit && !arched) {
+      var dec = rnd2(), cc = F(uc, vc - wh * 0.05);
+      if (dec < 0.1) s += circ(add(cc, 0, -2.5), 2, "#4a2f1c") + '<rect x="' + f1(cc[0] - 3.2) + '" y="' + f1(cc[1] - 0.6) + '" width="6.4" height="5" rx="2" fill="#4a2f1c"/>';
+      else if (dec < 0.16) s += ell(add(cc, 0, 3), 4, 1.4, "#2f5d3f") + [-3, -1, 1, 3].map(function (o) { return line(add(cc, o, 2.6), add(cc, o, 0.4), "#f4efe6", 1) + circ(add(cc, o, 0), 0.7, "*#ffe08a"); }).join("");
+      else if (dec < 0.2) s += ell(add(cc, 0, 3), 3, 1.6, "#1d1d24") + circ(add(cc, 2.4, 1), 1.4, "#1d1d24") + poly([add(cc, 1.6, 0), add(cc, 2, -1.4), add(cc, 2.6, 0)], "#1d1d24");
+    }
+    if (lit && !arched && rnd() < 0.22 && thr(uc * 7 + vc, F(0, 0)[0]) < G) {
       s += line(F(uc - ww * 0.42, vc - wh / 2 + 0.05), F(uc + ww * 0.42, vc - wh / 2 + 0.05), "#3a2416", 1.6);
       for (var k = 0; k < 5; k++) { var t = k / 4, cu = uc - ww * 0.36 + ww * 0.72 * t, cv = vc - wh / 2 + 0.1 + Math.sin(t * Math.PI) * wh * 0.32; s += circ(F(cu, cv), 1, "*#fff6d0"); }
     }
@@ -967,7 +1233,7 @@ window.DAYS = [
     // Eiszapfen
     eave.forEach(function (p, i) { if (i % 2 === 0) { var L = rr(3, 9); s += poly([add(p, -1.6, 0), add(p, 1.6, 0), add(p, 0, L)], "#eef6ff"); } });
     // Lichterkette
-    if (o.lights) eave.forEach(function (p, i) {
+    if (o.lights && thr(o.x, o.y) < 0.15 + G * 0.9) eave.forEach(function (p, i) {
       var c = ["#ffdf8a", "#ff6b5b", "#ffd166", "#8fe3a8", "#ffe9b8"][i % 5];
       s += circ(add(p, 0, 3), 2.1, "*" + c); glows.push(circ(add(p, 0, 3), 6, c));
     });
@@ -995,7 +1261,7 @@ window.DAYS = [
     s += faceDetails(FL, "L", w, h, o, true);
     s += faceDetails(FR, "R", d, h, o, false);
     if (o.extra) s += o.extra(FL, FR);
-    if (!o.church && rnd() < 0.32) {
+    if (!o.church && rnd() < 0.32 && thr(o.y, o.x) < G) {
       var hs = FL(w * rr(0.2, 0.8), h - 0.12);
       s += line(add(hs, 0, -12), hs, "#2d2a2a", 1);
       s += '<use href="#star" x="' + f1(hs[0] - 7) + '" y="' + f1(hs[1] - 2) + '" width="14" height="14" fill="*#fff0c2" stroke="*#ffcf6e" stroke-width=".6"/>';
@@ -1036,8 +1302,9 @@ window.DAYS = [
   }
 
   // ---------- Markt ----------
-  function stall(x, y, col, label, day) {
+  function stall(x, y, col, label, day, carbo) {
     var w = 1.3, d = 1.1, s = "";
+    if (carbo) return carbonara(x, y, col, label);
     occupy(x, y, w, d); shadowBox(x, y, w, d, 1.2);
     s += box(x, y, 0, w, d, 0.55, "#8b5a3c");
     var FL = faceL(x, y, w, d, 0);
@@ -1053,7 +1320,7 @@ window.DAYS = [
       s += poly([P(a, y + d / 2, h + rh), P(b, y + d / 2, h + rh), P(b, y + d + ov, h), P(a, y + d + ov, h)], i % 2 ? "#f4ede2" : col);
     }
     s += poly([P(x - ov, y + d / 2, h + rh), P(x + w + ov, y + d / 2, h + rh), P(x + w + ov, y + d * 0.8, h + rh * 0.4), P(x - ov, y + d * 0.8, h + rh * 0.35)], "#f8fafd", 'opacity=".92"');
-    for (var e = 0; e <= 6; e++) { var p = P(x - ov + (w + 2 * ov) * e / 6, y + d + ov, h - 0.03); s += circ(p, 1.8, "*#ffe3a0"); glows.push(circ(p, 6, "#ffcf70")); }
+    if (G > 0.12) for (var e = 0; e <= 6; e++) { var p = P(x - ov + (w + 2 * ov) * e / 6, y + d + ov, h - 0.03); s += circ(p, 1.8, "*#ffe3a0"); glows.push(circ(p, 6, "#ffcf70")); }
     s += poly(frect(FL, 0.06, 0.72, w - 0.06, 1.02), "#f1e3c3", 'stroke="#6b4428" stroke-width="1"');
     s += ftext("L", FL(0.12, 0.8), label, 8, "#5a2e1a", 'font-family="Georgia,serif" font-style="italic"', "start");
     if (day) {
@@ -1061,6 +1328,40 @@ window.DAYS = [
       s += ftext("L", FL(w - 0.17, 0.8), "€", 8, "#5a2e1a", 'font-family="Georgia,serif"');
     }
     item(x + w / 2 + y + d / 2, s);
+  }
+
+  function carbonara(x, y, col, label) {
+    var w = 1.1, d = 0.95, back = "", s = "", h = 1.62, rh = 0.35, ov = 0.12;
+    shadowBox(x, y, w, d, 1.2);
+    // Rückwand mit Regal (hinter Jochen)
+    var FB = faceL(x, y - 0.04, w, 0.04, 0);
+    back += poly(frect(FB, 0, 0, w, 1.62), "#6b4429") + line(FB(0.1, 0.95), FB(w - 0.1, 0.95), "#4a2c18", 1.5);
+    for (var j = 0; j < 4; j++) back += ell(FB(0.2 + j * 0.22, 1.0), 3, 2, ["#e8d7a8", "#c9a777", "#f4efe6", "#d9b06a", "#e8d7a8"][j]);
+    back += poly([P(x + w, y, 0), P(x + w, y + 0.5, 0), P(x + w, y + 0.5, 1.62), P(x + w, y, 1.62)], "#5b3a26");
+    item(x + w / 2 + y + d / 2 - 0.3, back);
+    META.carbonaraSpot = [x + 0.5, y + 0.52, 0, 0];
+    // Theke, Pfosten, Dach (vor Jochen)
+    s += box(x, y + 0.72, 0, w, d - 0.72, 0.45, "#8b5a3c");
+    var FL = faceL(x, y, w, d, 0);
+    s += poly(frect(FL, 0.08, 0.06, w - 0.08, 0.3), "#f1e3c3", 'stroke="#6b4428" stroke-width="1"');
+    s += ftext("L", FL(w / 2, 0.14), label, 7.5, "#5a2e1a", 'font-family="Georgia,serif" font-style="italic"');
+    var pot = P(x + 0.9, y + 0.84, 0.45);
+    s += ell(add(pot, 0, -4), 7, 3, "#3a3a40") + '<rect x="' + f1(pot[0] - 7) + '" y="' + f1(pot[1] - 4) + '" width="14" height="6" fill="#2b2b30"/>' + ell(add(pot, 0, -4), 5.5, 2.2, "#e8d7a8");
+    s += '<g class="smoke">' + circ(add(pot, 0, -12), 5, "#e8edf3", 'opacity=".35"') + circ(add(pot, 3, -22), 7, "#e8edf3", 'opacity=".22"') + "</g>";
+    s += ell(P(x + 0.2, y + 0.84, 0.47), 6, 2.4, "#f4efe6") + ell(P(x + 0.2, y + 0.84, 0.5), 4, 1.5, "#e8c86a");
+    [[x + 0.05, y + d - 0.05], [x + w - 0.05, y + d - 0.05], [x + w - 0.05, y + 0.05]].forEach(function (q) { s += line(P(q[0], q[1], 0.45), P(q[0], q[1], 1.62), "#5b3a26", 2.4); });
+    s += poly([P(x, y + d / 2, h + rh), P(x + w, y + d / 2, h + rh), P(x + w, y, h), P(x, y, h)], shade(col, -0.2));
+    s += poly([P(x + w, y, h), P(x + w, y + d, h), P(x + w, y + d / 2, h + rh)], "#7a4a2c");
+    for (var i = 0; i < 6; i++) {
+      var a = x - ov + (w + 2 * ov) * i / 6, b = x - ov + (w + 2 * ov) * (i + 1) / 6;
+      s += poly([P(a, y + d / 2, h + rh), P(b, y + d / 2, h + rh), P(b, y + d + ov, h), P(a, y + d + ov, h)], i % 2 ? "#f4ede2" : "#2f6a4c");
+    }
+    s += poly([P(x - ov, y + d / 2, h + rh), P(x + w + ov, y + d / 2, h + rh), P(x + w + ov, y + d * 0.8, h + rh * 0.4), P(x - ov, y + d * 0.8, h + rh * 0.35)], "#f8fafd", 'opacity=".92"');
+    if (G > 0.12) for (var e = 0; e <= 6; e++) { var p = P(x - ov + (w + 2 * ov) * e / 6, y + d + ov, h - 0.03); s += circ(p, 1.8, "*#ffe3a0"); glows.push(circ(p, 6, "#ffcf70")); }
+    var FR = faceR(x, y, w, d, 0);
+    s += poly(frect(FR, 0.1, 0.95, d - 0.1, 1.28), "#f1e3c3", 'stroke="#6b4428" stroke-width="1"');
+    s += ftext("R", FR(d / 2, 1.04), "Carbonara", 8, "#5a2e1a", 'font-family="Georgia,serif" font-style="italic"');
+    item(x + w / 2 + y + d / 2 + 0.3, s);
   }
 
   function bigTree(x, y) {
@@ -1082,7 +1383,8 @@ window.DAYS = [
     for (var l = 0; l < 70; l++) {
       var tt = rnd(), yy = b[1] - 30 - H * 0.88 * tt, ww = 88 * (1 - tt * 0.8) * rr(-0.9, 0.9);
       var c = pick(["#ffe9a8", "#ffe9a8", "#ff6b5b", "#ffd166", "#9ad7ff"]);
-      s += circ([b[0] + ww, yy], 2.2, "*" + c, 'class="tw" style="animation-delay:' + f1(rr(0, 3)) + 's"'); glows.push(circ([b[0] + ww, yy], 6, c));
+      var del = f1(rr(0, 3)); if (l / 70 > 0.3 + 0.7 * G) continue;
+      s += circ([b[0] + ww, yy], 2.2, "*" + c, 'class="tw" style="animation-delay:' + del + 's"'); glows.push(circ([b[0] + ww, yy], 6, c));
     }
     for (var o = 0; o < 14; o++) {
       var t2 = rr(0.05, 0.8), yo = b[1] - 30 - H * 0.88 * t2, wo = 80 * (1 - t2 * 0.8) * rr(-0.85, 0.85);
@@ -1124,8 +1426,9 @@ window.DAYS = [
       if (snowy) s += poly([[b[0], top], [b[0] - wd * 0.62, top + (bot - top) * 0.62], [b[0] - wd * 0.15, top + (bot - top) * 0.5], [b[0] + wd * 0.2, top + (bot - top) * 0.42]], "#f1f5f9", 'opacity=".88"');
     }
     if (lit) for (var l = 0; l < 12; l++) {
-      var tt = rnd(), ly = b[1] - 8 - H * 0.85 * tt, lx = W * (1 - tt * 0.8) * rr(-0.8, 0.8), lc = pick(["#ffe9a8", "#ff6b5b", "#ffd166", "#9ad7ff"]);
-      s += circ([b[0] + lx, ly], 1.4, "*" + lc, 'class="tw" style="animation-delay:' + f1(rr(0, 3)) + 's"'); glows.push(circ([b[0] + lx, ly], 4, lc));
+      var tt = rnd(), ly = b[1] - 8 - H * 0.85 * tt, lx = W * (1 - tt * 0.8) * rr(-0.8, 0.8), lc = pick(["#ffe9a8", "#ff6b5b", "#ffd166", "#9ad7ff"]), dl = f1(rr(0, 3));
+      if (thr(x, y) >= G) continue;
+      s += circ([b[0] + lx, ly], 1.4, "*" + lc, 'class="tw" style="animation-delay:' + dl + 's"'); glows.push(circ([b[0] + lx, ly], 4, lc));
     }
     item(x + y, s);
   }
@@ -1324,12 +1627,13 @@ window.DAYS = [
     item(x + y, ell(add(p, 0, -2), r * 30, r * 13, "#f7f9fc") + ell(add(p, r * 8, 0), r * 22, r * 8, "#dbe4ee", 'opacity=".7"') + ell(add(p, -r * 6, -5), r * 14, r * 6, "#ffffff"));
   }
 
-  function banner(kind, x, y, len, text) {
-    var s = "", F, a, b2;
+  function banner(kind, x, y, len, text, from) {
+    var s = "", F, a, b2, show = G >= (from || 0);
     if (kind === "R") { F = faceR(x, y, 0, len, 1.75); a = [x, y + len + 0.1]; b2 = [x, y - 0.1]; }
     else { F = faceL(x, y, len, 0, 1.75); a = [x - 0.1, y]; b2 = [x + len + 0.1, y]; }
     s += line(P(a[0], a[1], 0), P(a[0], a[1], 2.25), "#2d2a2a", 2.5) + line(P(b2[0], b2[1], 0), P(b2[0], b2[1], 2.25), "#2d2a2a", 2.5);
     occupy(a[0] - 0.1, a[1] - 0.1, 0.2, 0.2); occupy(b2[0] - 0.1, b2[1] - 0.1, 0.2, 0.2);
+    if (!show) { item((a[0] + b2[0]) / 2 + (a[1] + b2[1]) / 2 + 0.3, s); return; }
     s += poly(frect(F, 0, 0, len, 0.36), "#2b1d14", 'stroke="#c9a14a" stroke-width="1"');
     s += ftext(kind, F(len / 2, 0.1), text, 10, "*#ffe3a0", 'font-family="Georgia,serif" font-style="italic"');
     glows.push(poly(frect(F, 0.1, 0.05, len - 0.1, 0.32), "#ffcf70", 'opacity=".5"'));
@@ -1337,16 +1641,227 @@ window.DAYS = [
     item((a[0] + b2[0]) / 2 + (a[1] + b2[1]) / 2 + 0.3, s);
   }
 
+  // ---------- Wimmel-Details ----------
+  function findFree(areas, r) {
+    for (var t = 0; t < 300; t++) {
+      var a = areas[t % areas.length], x = rr(a[0], a[1]), y = rr(a[2], a[3]), sp = P(x, y, 0);
+      if (sp[0] < 30 || sp[0] > 1570 || sp[1] < 60 || sp[1] > 1120) continue;
+      if (free(x, y, r)) return [x, y];
+    }
+    return null;
+  }
+  function g(p, inner) { return '<g transform="translate(' + f1(p[0]) + "," + f1(p[1]) + ')">' + inner + "</g>"; }
+  function lightReindeer(x, y, flip) {
+    occupy(x - 0.3, y - 0.3, 0.6, 0.6);
+    var d = "M-9,-10 Q-11,-15 -6,-15 L6,-15 L9,-17 L12,-22 L16,-21 L15,-19 L11,-18 L8,-12 L7,-10 Z M-7,-10 L-8,0 M-3,-10 L-3,0 M3,-10 L3,0 M6,-10 L7,0 M12,-22 L10,-28 M10,-28 L8,-30 M10,-28 L13,-31 M13,-22 L15,-28 M15,-28 L18,-29 M-9,-13 L-12,-15";
+    var tf = flip ? ' transform="scale(-1,1)"' : "";
+    var p = P(x, y, 0);
+    glows.push(g(p, '<path d="' + d + '"' + tf + ' fill="none" stroke="#ffe9a8" stroke-width="4"/>'));
+    item(x + y, g(p, '<path d="' + d + '"' + tf + ' fill="none" stroke="*#fff4cf" stroke-width="1.3" stroke-linejoin="round"/>'));
+  }
+  function krippe(x, y) {
+    var w = 1.4, d = 0.9, s = "";
+    occupy(x - 0.1, y - 0.1, w + 0.2, d + 0.5); shadowBox(x, y, w, d, 1.0);
+    s += poly([P(x, y, 0.02), P(x + w, y, 0.02), P(x + w, y + d, 0.02), P(x, y + d, 0.02)], "#9a7a44");
+    s += poly(frect(faceL(x, y - 0.06, w, 0.06, 0), 0, 0, w, 0.9), "#6b4a30");
+    s += poly(frect(faceR(x, y, w, d, 0), 0, 0, d, 0.85), "#5b3d28");
+    for (var u = 0.15; u < w; u += 0.2) s += line(P(x + u, y, 0), P(x + u, y, 0.9), "#5a3d27", 0.8);
+    var donkey = P(x + 0.3, y + 0.25, 0), ox = P(x + 1.1, y + 0.25, 0);
+    s += ell(add(donkey, 0, -6), 6, 3.5, "#7a7268") + circ(add(donkey, -6, -9), 2.6, "#7a7268") + line(add(donkey, -7, -11), add(donkey, -8, -15), "#7a7268", 1.4);
+    s += ell(add(ox, 0, -6), 7, 4, "#8a6a4a") + circ(add(ox, 7, -8), 3, "#8a6a4a");
+    var mary = P(x + 0.45, y + 0.6, 0), jos = P(x + 1.05, y + 0.55, 0), crib = P(x + 0.75, y + 0.62, 0);
+    if (G >= 0.5) s += poly([add(mary, -4, 0), add(mary, 4, 0), add(mary, 0, -13)], "#3d5c9a") + circ(add(mary, 0, -14), 2.4, "#e8c4a0") + '<path d="M' + f1(mary[0] - 3) + "," + f1(mary[1] - 14) + ' a3,3 0 0 1 6,0z" fill="#3d5c9a"/>';
+    if (G >= 0.5) s += poly([add(jos, -4, 0), add(jos, 4, 0), add(jos, 0, -15)], "#6b4a30") + circ(add(jos, 0, -16), 2.4, "#d9b08a") + line(add(jos, 5, 0), add(jos, 6, -18), "#4a3020", 1.2);
+    s += '<rect x="' + f1(crib[0] - 5) + '" y="' + f1(crib[1] - 5) + '" width="10" height="4" fill="#8a6237"/>';
+    if (FINALE) { s += circ(add(crib, 0, -6), 2.2, "*#fff1c4"); glows.push(circ(add(crib, 0, -6), 9, "#ffe7a8")); }
+    s += poly([P(x - 0.1, y - 0.12, 1.05), P(x + w + 0.12, y - 0.12, 1.05), P(x + w + 0.12, y + d + 0.12, 0.8), P(x - 0.1, y + d + 0.12, 0.8)], "#f4f7fb");
+    s += line(P(x - 0.1, y + d + 0.12, 0.79), P(x + w + 0.12, y + d + 0.12, 0.79), "#6b4a30", 2.5);
+    var st = P(x + w / 2, y + d + 0.12, 1.55);
+    s += line(P(x + w / 2, y + d + 0.12, 0.8), st, "#4a3020", 1.5);
+    if (G >= 0.75) { s += '<use href="#star" x="' + f1(st[0] - 7) + '" y="' + f1(st[1] - 7) + '" width="14" height="14" fill="*#ffe08a"/>'; glows.push(circ(st, 16, "#ffd98a")); }
+    item(x + w / 2 + y + d / 2 + 0.3, s);
+  }
+  function treeLot(x, y) {
+    occupy(x - 0.1, y - 0.1, 2.0, 1.5);
+    var s = "";
+    s += line(P(x, y, 0.3), P(x + 1.8, y, 0.3), "#8a6142", 1.5) + line(P(x, y, 0.3), P(x, y + 1.3, 0.3), "#8a6142", 1.5);
+    for (var i = 0; i < 4; i++) { var a = P(x + 0.3 + i * 0.35, y + 1.05, 0.08); s += ell(a, 9, 3.5, "#2c5e45") + line(add(a, -8, -2), add(a, 8, 2), "#d9dde3", 0.7) + line(add(a, -8, 2), add(a, 8, -2), "#d9dde3", 0.7); }
+    item(x + y + 0.5, s);
+    [[0.3, 0.3], [0.75, 0.25], [1.2, 0.3], [1.6, 0.35], [0.5, 0.65], [1.05, 0.7], [1.5, 0.75]].forEach(function (q) { tree(x + q[0], y + q[1], rr(0.38, 0.5), true); });
+    var sp = faceL(x + 1.85, y + 1.3, 0.9, 0.02, 0.55), s2 = "";
+    s2 += line(P(x + 2.3, y + 1.32, 0), P(x + 2.3, y + 1.32, 0.95), "#6b4428", 2);
+    s2 += poly(frect(sp, 0, 0, 0.9, 0.3), "#d9a066", 'stroke="#6b4428" stroke-width="1"');
+    s2 += ftext("L", sp(0.45, 0.08), "Christbäume", 7.5, "#4a2c18", 'font-family="Georgia,serif" font-style="italic"');
+    item(x + 2.3 + y + 1.4, s2);
+    person(x + 2.1, y + 0.9);
+  }
+  function horseSleigh(x, y) {
+    occupy(x - 0.1, y - 0.1, 2.3, 0.7);
+    var s = "";
+    s += line(P(x - 0.1, y + 0.55, 0.02), P(x + 1.0, y + 0.55, 0.02), "#3a2a20", 2) + line(P(x - 0.1, y, 0.02), P(x + 1.0, y, 0.02), "#3a2a20", 2);
+    s += box(x, y, 0.12, 0.9, 0.55, 0.28, "#9e2b31");
+    var seat1 = P(x + 0.25, y + 0.3, 0.4), seat2 = P(x + 0.6, y + 0.3, 0.4);
+    [seat1, seat2].forEach(function (q, i) { s += '<rect x="' + f1(q[0] - 4) + '" y="' + f1(q[1] - 11) + '" width="8" height="10" rx="3" fill="' + (i ? "#2e4a62" : "#6b4f3a") + '"/>' + circ(add(q, 0, -13.5), 3, pick(SKIN)) + '<path d="M' + f1(q[0] - 3.2) + "," + f1(q[1] - 14) + ' a3.2,3.4 0 0 1 6.4,0z" fill="' + (i ? "#c0392b" : "#e8e0d0") + '"/>'; });
+    s += poly([P(x + 0.05, y + 0.55, 0.38), P(x + 0.85, y + 0.55, 0.38), P(x + 0.85, y + 0.55, 0.2), P(x + 0.05, y + 0.55, 0.2)], "#3d5c45");
+    var lan = P(x + 0.95, y + 0.05, 0.75); s += circ(lan, 2, "*#ffd98a"); glows.push(circ(lan, 9, "#ffd27a"));
+    var h = P(x + 1.55, y + 0.28, 0);
+    s += line(P(x + 0.9, y + 0.15, 0.25), P(x + 1.35, y + 0.2, 0.45), "#3a2a20", 1.2) + line(P(x + 0.9, y + 0.4, 0.25), P(x + 1.35, y + 0.35, 0.45), "#3a2a20", 1.2);
+    s += line(add(h, -8, -2), add(h, -9, 6), "#3b2a20", 2.2) + line(add(h, -3, -1), add(h, -3, 7), "#3b2a20", 2.2) + line(add(h, 6, 2), add(h, 7, 10), "#3b2a20", 2.2) + line(add(h, 10, 3), add(h, 12, 11), "#3b2a20", 2.2);
+    s += '<path d="M' + f1(h[0] - 11) + "," + f1(h[1] - 4) + " q12,-8 24,2 q2,6 -4,8 q-10,2 -20,-4z" + '" fill="#5b3a26"/>';
+    s += '<path d="M' + f1(h[0] + 10) + "," + f1(h[1] - 2) + " l6,-10 l6,2 l-4,4 l-4,8z" + '" fill="#5b3a26"/>' + line(add(h, 14, -12), add(h, 11, -4), "#2b1d14", 2);
+    s += circ(add(h, 2, -5), 1.5, "#d8b25a") + circ(add(h, -4, -5), 1.5, "#d8b25a");
+    item(x + 1.1 + y + 0.3, s);
+  }
+  function carousel(x, y) {
+    occupy(x - 0.7, y - 0.7, 1.4, 1.4);
+    var p = P(x, y, 0), s = "", r = 28;
+    shadows.push(ell(add(p, 20, 4), 36, 12, "#000"));
+    s += ell(add(p, 0, 2), r, r * 0.5, "#6b4a30") + ell(p, r, r * 0.5, "#c9a777");
+    for (var i = 0; i < 6; i++) {
+      var a = i / 6 * Math.PI * 2, hx = p[0] + Math.cos(a) * r * 0.7, hy = p[1] + Math.sin(a) * r * 0.35;
+      s += line([hx, hy - 4], [hx, p[1] - 40], "#d8b25a", 1);
+      s += ell([hx, hy - 9], 5, 2.5, pick(["#f4efe6", "#c0392b", "#3d5c9a", "#d8b25a"])) + circ([hx + 4, hy - 12], 1.8, "#f4efe6");
+    }
+    s += line(p, add(p, 0, -44), "#d8b25a", 3);
+    var top = add(p, 0, -64), cols = ["#b8262f", "#f4efe6"];
+    for (var k = 0; k < 8; k++) {
+      var a1 = k / 8 * Math.PI, a2 = (k + 1) / 8 * Math.PI;
+      s += poly([top, [p[0] - Math.cos(a1) * (r + 4), p[1] - 40 + Math.sin(a1) * 6], [p[0] - Math.cos(a2) * (r + 4), p[1] - 40 + Math.sin(a2) * 6]], cols[k % 2]);
+    }
+    s += poly([top, add(top, -12, 10), add(top, 12, 10)], "#f4f7fb");
+    if (G > 0.25) for (var l = 0; l <= 12; l++) { var aa = l / 12 * Math.PI, q = [p[0] - Math.cos(aa) * (r + 4), p[1] - 40 + Math.sin(aa) * 6]; s += circ(q, 1.6, "*#ffe3a0"); glows.push(circ(q, 5, "#ffd27a")); }
+    s += circ(top, 3, "*#ffd166");
+    item(x + y + 0.7, s);
+  }
+  function santaPerson(x, y) {
+    occupy(x - 0.15, y - 0.15, 0.3, 0.3);
+    var p = P(x, y, 0), s = "";
+    s += ell(add(p, 5, 1), 6, 2.4, "#000", 'opacity=".18"');
+    s += '<rect x="' + f1(p[0] - 3) + '" y="' + f1(p[1] - 7) + '" width="6" height="7" fill="#222"/>';
+    s += '<rect x="' + f1(p[0] - 5.5) + '" y="' + f1(p[1] - 21) + '" width="11" height="15" rx="4.5" fill="#b8262f"/><rect x="' + f1(p[0] - 5.5) + '" y="' + f1(p[1] - 11) + '" width="11" height="2" fill="#2b2b2b"/>';
+    s += circ(add(p, 0, -24), 3.5, "#f1c9a5") + '<path d="M' + f1(p[0] - 3.5) + "," + f1(p[1] - 23) + ' q3.5,7 7,0z" fill="#f4f1ea"/>';
+    s += '<path d="M' + f1(p[0] - 4) + "," + f1(p[1] - 25.5) + ' q4,-9 9,-3 l-5,3z" fill="#b8262f"/>' + circ(add(p, 5, -28.5), 1.4, "#f4f1ea");
+    s += line(add(p, 5, -17), add(p, 9, -13), "#b8262f", 2) + circ(add(p, 10, -12), 1.8, "#d8b25a");
+    item(x + y, s);
+  }
+  function snowballFight(x, y) {
+    occupy(x - 0.4, y - 0.4, 2.2, 1.6);
+    item(x + y + 0.3, box(x, y + 0.5, 0, 0.9, 0.25, 0.25, "#eef2f7"));
+    person(x + 0.2, y + 0.35, true); person(x + 0.7, y + 0.3, true);
+    person(x + 1.6, y + 1.1, true); person(x + 1.9, y + 0.8, true);
+    var a = P(x + 0.5, y + 0.4, 0.7), b = P(x + 1.7, y + 1.0, 0.7), s = "";
+    for (var i = 1; i < 5; i++) { var t = i / 5; s += circ([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t - Math.sin(t * Math.PI) * 18 - (i % 2) * 6], 1.9, "#f4f7fb"); }
+    item(x + y + 2.5, s);
+  }
+  function sledKid(x, y) {
+    occupy(x - 0.2, y - 0.2, 0.7, 0.4);
+    item(x + y, box(x, y, 0.05, 0.5, 0.25, 0.06, "#a8322f") + line(P(x - 0.05, y + 0.25, 0.01), P(x + 0.55, y + 0.25, 0.01), "#3a2a20", 1.4));
+    person(x + 0.25, y + 0.15, true);
+  }
+  function cat(x, y, z) {
+    var p = P(x, y, z);
+    item(x + y + 0.5, ell(add(p, 0, -2.5), 3.2, 2.2, "#16161c") + circ(add(p, 3, -5), 1.8, "#16161c") + poly([add(p, 2, -6.4), add(p, 2.6, -8.4), add(p, 3.3, -6.6)], "#16161c") + poly([add(p, 3.4, -6.6), add(p, 4.3, -8.4), add(p, 4.6, -6.2)], "#16161c") + '<path d="M' + f1(p[0] - 3) + "," + f1(p[1] - 2.5) + ' q-4,-1 -3,-6" stroke="#16161c" stroke-width="1.2" fill="none"/>');
+  }
+  function dogWalker(x, y) {
+    occupy(x - 0.15, y - 0.15, 0.7, 0.3);
+    person(x, y);
+    var d = P(x + 0.45, y + 0.05, 0), c = pick(["#7a5236", "#d8c4a0", "#2b2b30", "#a8865a"]);
+    item(x + y + 0.45, line(add(P(x, y, 0), 3, -12), add(d, -3, -6), "#2b2b30", 0.8) + ell(add(d, 0, -5), 5, 2.6, c) + circ(add(d, 5, -7), 2.3, c) + line(add(d, -3, -3), add(d, -3, 0), c, 1.5) + line(add(d, 3, -3), add(d, 3, 0), c, 1.5) + line(add(d, -5, -6), add(d, -8, -9), c, 1.2));
+  }
+  function lanternWalker(x, y) {
+    occupy(x - 0.15, y - 0.15, 0.3, 0.3);
+    person(x, y, rnd() < 0.5);
+    var l = add(P(x, y, 0), 6, -10);
+    item(x + y + 0.01, line(add(l, 0, -6), l, "#2b2b30", 0.8) + circ(l, 2.2, "*#ffcf6e"));
+    glows.push(circ(l, 10, "#ffc766"));
+  }
+  function steam(x, y, z) {
+    var sp = P(x, y, z);
+    item(x + y + 0.9, '<g class="smoke" style="animation-delay:' + f1(rr(0, 5)) + 's">' + circ(add(sp, 0, -4), 5, "#e8edf3", 'opacity=".35"') + circ(add(sp, 4, -14), 7, "#e8edf3", 'opacity=".25"') + circ(add(sp, 1, -26), 9, "#e8edf3", 'opacity=".15"') + "</g>");
+  }
+  function details() {
+    var TOWN = [[-1, 28, -1, 28]], q;
+    // Krippe bei der Kirche
+    q = findFree([[16.4, 18.0, 0.0, 2.2], [22.2, 24.0, 0.2, 2.0], [16.2, 18.0, 8.2, 8.6]], 0.8); if (q) krippe(q[0], q[1]);
+    // Christbaumverkauf am Ortsrand
+    q = findFree([[-3.5, -1.5, 9.2, 10.4], [26.5, 29, 9.0, 10.2], [26.2, 29, 15.0, 16.5], [-3, -1, 15.0, 16.5]], 1.2); if (q) treeLot(q[0], q[1]);
+    // Pferdeschlitten auf der Hauptstraße
+    q = findFree([[-5, 7, 12.2, 13.2]], 0.9); if (q) horseSleigh(q[0], q[1]);
+    // Kinderkarussell
+    q = findFree([[25.5, 29, 11.4, 14.6], [11.5, 14.5, 25, 28.5], [25.5, 29, 11.4, 14.6]], 0.9); if (q) carousel(q[0], q[1]);
+    // Schneeballschlacht, Rodelkinder
+    q = findFree([[-2, 28, -2, 28]], 1.0); if (q) snowballFight(q[0], q[1]);
+    for (var i = 0; i < 6; i++) { q = findFree(TOWN, 0.5); if (q) sledKid(q[0], q[1]); }
+    // Leuchtende Rentier-Figuren in Gärten
+    for (var r = 0; r < 5; r++) { q = findFree(TOWN, 0.45); var fl = rnd() < 0.5; if (q && r / 5 < G) lightReindeer(q[0], q[1], fl); else if (q) occupy(q[0] - 0.3, q[1] - 0.3, 0.6, 0.6); }
+    // Weihnachtsmänner (Vorsicht: nicht Jochen!)
+    for (var k = 0; k < 3; k++) { q = findFree([[9.2, 16.8, 9.2, 16.8], [-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30]], 0.25); if (q) santaPerson(q[0], q[1]); }
+    // Hundespaziergänger, Laternenläufer
+    for (var dw = 0; dw < 10; dw++) { q = findFree([[-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30], [9.2, 16.8, 9.2, 16.8]], 0.3); if (q) dogWalker(q[0], q[1]); }
+    for (var lw = 0; lw < 14; lw++) { q = findFree([[-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30], [9.2, 16.8, 9.2, 16.8], [-1, 28, -1, 28]], 0.25); if (q) lanternWalker(q[0], q[1]); }
+    // Sternsinger
+    q = findFree([[15.5, 17.6, 7.6, 8.8], [21.4, 23, 8.6, 9.3]], 0.6);
+    if (q) [[0, 0], [0.3, 0.12], [0.6, 0.15], [0.9, 0.1], [1.15, -0.05]].forEach(function (o, i) { if (i === 2) lanternWalker(q[0] + o[0], q[1] + o[1]); else person(q[0] + o[0], q[1] + o[1], i === 0); });
+    // Katzen auf Zäunen
+    [[7.3, 8.95], [18.6, 21.0], [1.4, 23.2], [4.2, 5.6]].forEach(function (c) { cat(c[0], c[1], 0.4); });
+    // Plätze für die goldenen Bonus-Sterne (fest)
+    META.stars = [];
+    [[[-1, 6, 16, 24]], [[18, 27, -1, 6]], [[0, 8, 0, 8]], [[17, 27, 17, 27]], [[8, 17, 18, 27]]].forEach(function (ar) {
+      var qq = findFree(ar, 0.3); if (qq) { occupy(qq[0] - 0.15, qq[1] - 0.15, 0.3, 0.3); META.stars.push(P(qq[0], qq[1], 0.05)); }
+    });
+    // Dampf über Glühwein und Punsch
+    steam(9.95, 16.15, 1.75); steam(11.55, 16.15, 1.75);
+    // Extra Schneemänner
+    for (var sm = 0; sm < 3; sm++) {
+      q = findFree(TOWN, 0.4); if (!q) continue;
+      occupy(q[0] - 0.25, q[1] - 0.25, 0.5, 0.5);
+      var p = P(q[0], q[1], 0);
+      item(q[0] + q[1], circ(add(p, 0, -8), 9, "url(#snowball)") + circ(add(p, 0, -21), 6.5, "url(#snowball)") + poly([add(p, 0, -21), add(p, 6, -20), add(p, 0, -19.5)], "#f08a24") + '<rect x="' + f1(p[0] - 5) + '" y="' + f1(p[1] - 30) + '" width="10" height="3" fill="' + pick(["#c0392b", "#2f5f9e", "#3f8a5f"]) + '"/>');
+    }
+  }
+
+  // ---------- Herbert, der Dackel ----------
+  function herbert(x, y, flip) {
+    var p = P(x, y, 0), k = flip ? -1 : 1;
+    var s = ell(add(p, 3, 1), 9, 2.5, "#000", 'opacity=".2"');
+    s += '<g transform="translate(' + f1(p[0]) + "," + f1(p[1]) + ") scale(" + k + ',1)">';
+    s += line([-6, -3], [-6, 0], "#5b3720", 1.8) + line([-3, -3], [-3, 0], "#5b3720", 1.8) + line([4, -3], [4, 0], "#5b3720", 1.8) + line([7, -3], [7, 0], "#5b3720", 1.8);
+    s += '<rect x="-9" y="-8" width="19" height="6" rx="3" fill="#7a4a2a"/>';
+    s += '<path d="M-9,-6 q-5,-2 -6,-7" stroke="#7a4a2a" stroke-width="1.6" fill="none" stroke-linecap="round"/>';
+    s += '<path d="M8,-7 q2,-5 7,-4 l3,2 q-1,3 -5,3 z" fill="#7a4a2a"/>' + ell([10, -7], 1.8, 3.2, "#5b3720") + circ([17.6, -5.5], 1, "#1a1010") + circ([12.8, -9], 0.8, "#1a1010");
+    s += '<path d="M6,-8 q2,3 4,0 l0,2.4 q-2,2 -4,0z" fill="#b8262f"/>';
+    s += "</g>";
+    item(x + y - 0.01, s);
+    return [p[0] + 4 * k, p[1] - 5];
+  }
+
   // ---------- Jochen ----------
   var FACE = '<circle cx="-6" cy="-6" r="2.4" fill="#2b1d33"/><circle cx="6" cy="-6" r="2.4" fill="#2b1d33"/><path d="M-6,3 q6,7 12,0" stroke="#2b1d33" stroke-width="2.2" fill="none" stroke-linecap="round"/>';
   var COSTUMES = {
-    santa: { f: '<path d="M-22,-14 C-27,10 -33,28 -31,42 C-29,54 -14,58 0,58 C14,58 29,54 31,42 C33,28 27,10 22,-14 Z" fill="#b8262f"/><rect x="-31" y="26" width="62" height="7" fill="#2b2b2b"/><rect x="-5" y="25" width="10" height="9" fill="none" stroke="#d8b25a" stroke-width="2"/><path d="M-31,46 C-20,56 20,56 31,46 L31,52 C20,62 -20,62 -31,52Z" fill="#f4f1ea"/><path d="M-18,-3 C-21,18 -10,32 0,34 C10,32 21,18 18,-3 C10,5 -10,5 -18,-3Z" fill="#f4f1ea"/><use href="#jSanta"/>' },
-    elf: { f: '<path d="M-22,-12 C-27,12 -32,28 -30,42 L-24,56 L-12,48 L0,58 L12,48 L24,56 L30,42 C32,28 27,12 22,-12Z" fill="#2f6a4c"/><rect x="-30" y="22" width="60" height="6" fill="#5b3a26"/><path d="M-22,-12 l6,8 l6,-8 l6,8 l6,-8 l6,8 l6,-8 l6,8" fill="none" stroke="#c0392b" stroke-width="3"/><path d="M-20,-14 l-13,-9 l9,13z M20,-14 l13,-9 l-9,13z" fill="#e9c9a8"/><use href="#jElf"/>' },
-    schnee: { f: '<circle cx="0" cy="34" r="31" fill="#f4f7fb"/><circle cx="0" cy="-6" r="25" fill="#f4f7fb"/>' + FACE + '<path d="M0,-2 l15,3 l-15,3z" fill="#f08a24"/><circle cx="0" cy="22" r="3" fill="#222"/><circle cx="0" cy="36" r="3" fill="#222"/><use href="#jScarf"/><rect x="-17" y="-36" width="34" height="6" fill="#222"/><rect x="-11" y="-60" width="22" height="25" fill="#222"/><rect x="-11" y="-45" width="22" height="5" fill="#c0392b"/>' },
+    santa: { f: '<path d="M-25,4 C-29,18 -33,30 -31,42 C-29,54 -14,58 0,58 C14,58 29,54 31,42 C33,30 29,18 25,4 Z" fill="#9e2b31"/><rect x="-31" y="28" width="62" height="6" fill="#2b2b2b"/><rect x="-5" y="27" width="10" height="8" fill="none" stroke="#b8913a" stroke-width="2"/><path d="M-31,46 C-20,56 20,56 31,46 L31,52 C20,62 -20,62 -31,52Z" fill="#d8d4cb"/><path d="M-12,7 C-13,18 -6,24 0,25 C6,24 13,18 12,7 C6,11 -6,11 -12,7Z" fill="#d8d4cb"/><use href="#jSanta"/>' },
+    elf: { f: '<path d="M-25,4 C-29,18 -32,30 -30,42 L-24,56 L-12,48 L0,58 L12,48 L24,56 L30,42 C32,30 29,18 25,4Z" fill="#2f6a4c"/><rect x="-30" y="28" width="60" height="6" fill="#5b3a26"/><path d="M-24,5 l6,8 l6,-8 l6,8 l6,-8 l6,8 l6,-8 l6,8" fill="none" stroke="#a8323a" stroke-width="3"/><path d="M-20,-14 l-13,-9 l9,13z M20,-14 l13,-9 l-9,13z" fill="#d9b898"/><use href="#jElf"/>' },
+    schnee: { f: '<circle cx="0" cy="40" r="25" fill="#dfe5ee"/><circle cx="0" cy="34" r="2.6" fill="#222"/><circle cx="0" cy="46" r="2.6" fill="#222"/><path d="M0,-2 l15,3 l-15,3z" fill="#d07a2a"/><use href="#jScarf"/><rect x="-17" y="-36" width="34" height="6" fill="#222"/><rect x="-11" y="-60" width="22" height="25" fill="#222"/><rect x="-11" y="-45" width="22" height="5" fill="#a8323a"/>' },
     rentier: { f: '<path d="M-26,10 C-31,24 -32,34 -30,44 C-27,55 -14,58 0,58 C14,58 27,55 30,44 C32,34 31,24 26,10 C14,16 -14,16 -26,10Z" fill="#a8744a"/><ellipse cx="0" cy="38" rx="13" ry="13" fill="#d1a678"/><ellipse cx="-21" cy="-34" rx="9" ry="4" fill="#a8744a" transform="rotate(-30 -21 -34)"/><ellipse cx="21" cy="-34" rx="9" ry="4" fill="#a8744a" transform="rotate(30 21 -34)"/><use href="#jAntlers"/><circle cx="0" cy="-1" r="4.5" fill="#ff4b3a"/>' },
-    engel: { b: '<use href="#jWings"/>', f: '<path d="M-22,-16 C-28,10 -36,40 -37,57 L37,57 C36,40 28,10 22,-16Z" fill="#f4f1ea"/><rect x="-26" y="12" width="52" height="5" fill="#d8b25a"/><path d="M-22,-16 C-10,-8 10,-8 22,-16" fill="none" stroke="#d8b25a" stroke-width="3"/><use href="#jHalo"/>' },
-    tanne: { f: '<polygon points="0,-78 -20,-34 -12,-34 -27,6 -18,6 -33,56 33,56 18,6 27,6 12,-34 20,-34" fill="#3f8a5f"/><polygon points="0,-78 20,-34 12,-34 27,6 18,6 33,56 0,56" fill="#2f6e4b"/><ellipse cx="0" cy="-4" rx="20" ry="17" fill="#8a58ad"/>' + FACE + '<circle cx="-14" cy="30" r="4" fill="#ff6b5b"/><circle cx="13" cy="40" r="4" fill="#ffd166"/><circle cx="10" cy="20" r="3.5" fill="#9ad7ff"/><circle cx="-8" cy="46" r="3.5" fill="#ffd166"/><use href="#star" x="-10" y="-90" width="20" height="20" fill="#ffd166"/>' },
-    geschenk: { f: '<rect x="-37" y="0" width="74" height="58" fill="#6e2129"/><rect x="-6" y="0" width="12" height="58" fill="#8a6a34"/><rect x="-37" y="26" width="74" height="8" fill="#8a6a34"/><rect x="-41" y="-6" width="82" height="11" fill="#5a1a21"/><rect x="-6" y="-6" width="12" height="11" fill="#7a5c2c"/><path d="M-14,-6 q-14,-12 -18,-2 q4,6 18,2 M14,-6 q14,-12 18,-2 q-4,6 -18,2" fill="#8a6a34"/>' },
+    engel: { b: '<use href="#jWings"/>', f: '<path d="M-25,4 C-30,20 -36,42 -37,57 L37,57 C36,42 30,20 25,4Z" fill="#d8d4cb"/><rect x="-28" y="22" width="56" height="5" fill="#b8963f"/><path d="M-25,4 C-12,12 12,12 25,4" fill="none" stroke="#b8963f" stroke-width="3"/><use href="#jHalo"/>' },
+    koch: { f: '<path d="M-14,4 h28 l7,52 h-42z" fill="#d8d4cb"/><path d="M-10,-1 l10,9 l10,-9z" fill="#b8262f"/><path d="M-15,-34 h30 v-8 a9,9 0 0 0 -4,-15 a10,10 0 0 0 -11,-5 a10,10 0 0 0 -11,5 a9,9 0 0 0 -4,15z" fill="#d8d4cb"/>' },
+    fest: { f: '<use href="#jSanta"/><use href="#jScarf"/>' },
+    herbert: { f: '<use href="#jBobble"/><use href="#jScarf"/><g><line x1="40" y1="44" x2="40" y2="56" stroke="#5b3720" stroke-width="5"/><line x1="52" y1="44" x2="52" y2="56" stroke="#5b3720" stroke-width="5"/><line x1="74" y1="44" x2="74" y2="56" stroke="#5b3720" stroke-width="5"/><line x1="84" y1="44" x2="84" y2="56" stroke="#5b3720" stroke-width="5"/><rect x="32" y="30" width="60" height="18" rx="9" fill="#7a4a2a"/><path d="M32,36 q-14,-4 -16,-18" stroke="#7a4a2a" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M86,32 q6,-16 22,-12 l9,6 q-3,9 -15,9 z" fill="#7a4a2a"/><ellipse cx="92" cy="30" rx="5" ry="10" fill="#5b3720"/><circle cx="116" cy="27" r="3" fill="#1a1010"/><circle cx="101" cy="22" r="2.4" fill="#1a1010"/><path d="M80,30 q6,9 12,0 l0,7 q-6,6 -12,0z" fill="#9e2b31"/><path d="M24,12 Q50,0 84,30" stroke="#3a2a20" stroke-width="2" fill="none"/></g>' },
+    lebkuchen: { f: '<path d="M-25,4 C-29,18 -33,30 -31,42 C-29,54 -14,58 0,58 C14,58 29,54 31,42 C33,30 29,18 25,4 Z" fill="#a8683a"/><path d="M-28,32 l6,-5 l6,5 l6,-5 l6,5 l6,-5 l6,5 l6,-5 l6,5" stroke="#d8d0c0" stroke-width="2.5" fill="none"/><circle cx="0" cy="14" r="3" fill="#a8323a"/><circle cx="0" cy="22" r="3" fill="#3f7a55"/><path d="M-19,-30 q19,-11 38,0" stroke="#d8d0c0" stroke-width="2.5" fill="none"/>' },
+    nussknacker: { f: '<path d="M-25,4 C-29,18 -31,32 -30,44 L-26,58 H26 L30,44 C31,32 29,18 25,4Z" fill="#9e2b31"/><rect x="-30" y="30" width="60" height="6" fill="#d8d0c0"/><circle cx="0" cy="14" r="2.5" fill="#b8913a"/><circle cx="0" cy="22" r="2.5" fill="#b8913a"/><circle cx="0" cy="44" r="2.5" fill="#b8913a"/><rect x="-16" y="-72" width="32" height="38" rx="4" fill="#1d1d24"/><rect x="-16" y="-42" width="32" height="5" fill="#b8913a"/><path d="M-10,3 q10,-6 20,0 q-10,5 -20,0z" fill="#d8d0c0"/>' },
+    eisbaer: { f: '<path d="M-25,0 C-30,20 -33,32 -31,42 C-29,55 -14,58 0,58 C14,58 29,55 31,42 C33,32 30,20 25,0 C14,6 -14,6 -25,0Z" fill="#c9cdd3"/><ellipse cx="0" cy="36" rx="13" ry="14" fill="#dcdfe3"/><path d="M-20,-30 q20,-14 40,0" stroke="#c9cdd3" stroke-width="4" fill="none"/><circle cx="-20" cy="-32" r="7" fill="#c9cdd3"/><circle cx="20" cy="-32" r="7" fill="#c9cdd3"/>' },
+    pinguin: { f: '<path d="M-26,-8 C-30,14 -33,30 -31,42 C-29,55 -14,58 0,58 C14,58 29,55 31,42 C33,30 30,14 26,-8 C14,2 -14,2 -26,-8Z" fill="#26262e"/><ellipse cx="0" cy="30" rx="16" ry="24" fill="#d8d8d2"/><path d="M-6,0 l6,6 l6,-6z" fill="#c9822a"/><path d="M-14,56 l-6,4 h10z M14,56 l6,4 h-10z" fill="#c9822a"/>' },
+    zuckerstange: { f: '<path d="M-25,6 C-29,18 -33,30 -31,42 C-29,54 -14,58 0,58 C14,58 29,54 31,42 C33,30 29,18 25,6Z" fill="#ddd7cc"/><g clip-path="url(#coatClip)"><path d="M-34,16 l68,-18 v9 l-68,18z M-34,32 l68,-18 v9 l-68,18z M-34,48 l68,-18 v9 l-68,18z M-34,64 l68,-18 v9 l-68,18z" fill="#a8262f"/></g><path d="M-8,-36 v-18 a12,12 0 0 1 24,0 v6" stroke="#ddd7cc" stroke-width="7" fill="none"/><path d="M-8,-36 v-18 a12,12 0 0 1 24,0 v6" stroke="#a8262f" stroke-width="7" stroke-dasharray="5 6" fill="none"/>' },
+    stern: { b: '<path d="M0,-74 L17,-30 L64,-28 L27,3 L40,52 L0,26 L-40,52 L-27,3 L-64,-28 L-17,-30Z" fill="#a8873a"/><path d="M0,-74 L17,-30 L64,-28 L27,3 L0,8 Z" fill="#b8963f"/>' },
+    kerze: { f: '<rect x="-24" y="8" width="48" height="50" rx="4" fill="#d9cdb2"/><path d="M-24,10 q6,10 10,0 q4,12 10,0 q6,8 10,0 q5,10 10,0" fill="#e6dcc6"/><path d="M0,-64 q-7,10 0,18 q7,-8 0,-18z" fill="#b8742a"/>' },
+    nikolaus: { f: '<path d="M-25,4 C-30,20 -36,42 -37,57 L37,57 C36,42 30,20 25,4Z" fill="#8e2a30"/><rect x="-5" y="6" width="10" height="50" fill="#b8913a"/><path d="M-16,-34 L-14,-62 L0,-76 L14,-62 L16,-34Z" fill="#a8262f"/><path d="M0,-74 v38 M-11,-50 h22" stroke="#b8913a" stroke-width="3"/><path d="M-12,7 C-13,18 -6,24 0,25 C6,24 13,18 12,7 C6,11 -6,11 -12,7Z" fill="#d8d4cb"/><path d="M40,58 V-40 a10,10 0 0 0 -16,-6" stroke="#b8913a" stroke-width="4" fill="none"/>' },
+    eule: { f: '<path d="M-25,0 C-30,20 -33,32 -31,42 C-29,55 -14,58 0,58 C14,58 29,55 31,42 C33,32 30,20 25,0 C14,6 -14,6 -25,0Z" fill="#6e5236"/><path d="M-14,22 q4,4 8,0 M-2,28 q4,4 8,0 M8,20 q4,4 8,0 M-10,38 q4,4 8,0 M4,42 q4,4 8,0" stroke="#4e3a26" stroke-width="2" fill="none"/><path d="M-18,-30 l-8,-16 l16,10z M18,-30 l8,-16 l-16,10z" fill="#6e5236"/>' },
+    tasse: { f: '<rect x="-30" y="14" width="60" height="44" rx="8" fill="#8e2a30"/><path d="M30,22 q20,2 18,18 q-2,14 -18,12" stroke="#8e2a30" stroke-width="7" fill="none"/><path d="M-30,24 h60" stroke="#d8d0c0" stroke-width="3"/><path d="M-22,42 l4,-6 l4,6 l4,-6 l4,6 M6,42 l4,-6 l4,6 l4,-6 l4,6" stroke="#d8d0c0" stroke-width="2" fill="none"/><ellipse cx="0" cy="14" rx="30" ry="6" fill="#5e1a20"/>' },
+    ski: { f: '<path d="M-25,4 C-29,18 -33,30 -31,42 C-29,54 -14,58 0,58 C14,58 29,54 31,42 C33,30 29,18 25,4 Z" fill="#2f5583"/><path d="M-20,-28 a20,18 0 0 1 40,0z" fill="#a8323a"/><rect x="-18" y="-26" width="36" height="8" rx="4" fill="#33333c"/><rect x="-14" y="-25" width="28" height="6" rx="3" fill="#5f7590"/><path d="M-44,60 l80,-6 M-40,64 l84,-4" stroke="#a8873a" stroke-width="3"/>' },
+    schlittschuh: { f: '<use href="#jScarf"/><path d="M-22,-24 a22,22 0 0 1 44,0" stroke="#4e4078" stroke-width="3" fill="none"/><circle cx="-23" cy="-18" r="7" fill="#b87a92"/><circle cx="23" cy="-18" r="7" fill="#b87a92"/><path d="M-20,44 h16 v12 h-16z M4,44 h16 v12 h-16z" fill="#d6d0c4"/><path d="M-22,60 h20 M2,60 h20" stroke="#7a7a84" stroke-width="2"/>' },
+    hirte: { f: '<path d="M-25,4 C-30,20 -36,42 -37,57 L37,57 C36,42 30,20 25,4Z" fill="#7e6240"/><rect x="-27" y="24" width="54" height="5" fill="#4e3622"/><path d="M-22,-28 C-22,-46 22,-46 22,-28 L25,-12 C16,-20 -16,-20 -25,-12Z" fill="#c9bb9c"/><path d="M-20,-32 q20,-8 40,0" stroke="#6e5236" stroke-width="3" fill="none"/><path d="M40,58 V-30 a10,10 0 0 1 16,-4" stroke="#6e5236" stroke-width="4" fill="none"/>' },
+    koenig: { f: '<path d="M-25,4 C-30,20 -36,42 -37,57 L37,57 C36,42 30,20 25,4Z" fill="#4e3478"/><path d="M-25,4 C-29,20 -34,42 -35,57 L-27,57 C-26,42 -22,20 -18,6Z M25,4 C29,20 34,42 35,57 L27,57 C26,42 22,20 18,6Z" fill="#d6d0c4"/><path d="M-16,-34 v-16 l8,8 l8,-12 l8,12 l8,-8 v16z" fill="#b8913a"/><circle cx="0" cy="-44" r="2.5" fill="#8e2a30"/><rect x="-6" y="24" width="12" height="10" rx="2" fill="#b8913a"/>' },
+    tanne: { f: '<polygon points="-16,-6 16,-6 27,20 19,20 34,56 -34,56 -19,20 -27,20" fill="#3a7a55"/><polygon points="0,-6 16,-6 27,20 19,20 34,56 0,56" fill="#2c6646"/><circle cx="-14" cy="34" r="4" fill="#b8423a"/><circle cx="13" cy="44" r="4" fill="#b8913a"/><circle cx="9" cy="14" r="3.5" fill="#4f7fa8"/><circle cx="-8" cy="48" r="3.5" fill="#b8913a"/><polygon points="0,-82 -14,-44 14,-44" fill="#3a7a55"/><use href="#star" x="-8" y="-92" width="16" height="16" fill="#b8963f"/>' },
+    geschenk: { f: '<rect x="-36" y="16" width="72" height="42" fill="#6e2129"/><rect x="-6" y="16" width="12" height="42" fill="#8a6a34"/><rect x="-36" y="34" width="72" height="7" fill="#8a6a34"/><rect x="-40" y="10" width="80" height="10" fill="#5a1a21"/><rect x="-6" y="10" width="12" height="10" fill="#7a5c2c"/><path d="M-14,10 q-14,-12 -18,-2 q4,6 18,2 M14,10 q14,-12 18,-2 q-4,6 -18,2" fill="#8a6a34"/>' },
   };
   // Verstecke: [x, y, z, Tiefen-Verschiebung]
   var JSPOTS = [
@@ -1375,11 +1890,12 @@ window.DAYS = [
     [8.49, 9.76, 0, 0],
     [15.67, 24.72, 0, 0]
   ];
+  function nightUses(str) { return str.replace(/<use href="#j/g, '<use filter="url(#nightFull)" href="#j'); }
   function jochen(js, costume) {
     var p = P(js[0], js[1], js[2]), sc = 0.285, c = COSTUMES[costume] || COSTUMES.santa, s = "";
     if (!js[2]) s += ell(add(p, 4, 0), 9, 3, "#000", 'opacity=".22"');
     var ty = p[1] - 54 * sc;
-    s += '<g class="jochen-fig" transform="translate(' + f1(p[0]) + " " + f1(ty) + ") scale(" + sc + ')">' + (c.b || "") + '<use href="#jBody" filter="url(#nightBody)"/>' + (c.f || "") + "</g>";
+    s += '<g class="jochen-fig" transform="translate(' + f1(p[0]) + " " + f1(ty) + ") scale(" + sc + ')">' + nightUses(c.b || "") + '<use href="#jBody" filter="url(#nightBody)"/>' + nightUses(c.f || "") + "</g>";
     item(js[0] + js[1] + (js[3] || 0) - 0.02, s);
     return [p[0], ty + 4 * sc];
   }
@@ -1387,7 +1903,8 @@ window.DAYS = [
   // ---------- Aufbau ----------
   function build(root, opts) {
     opts = opts || {};
-    seed = 1225; ground = []; items = []; shadows = []; glows = []; spots = {}; occ = []; guards = [];
+    OPTS = opts; G = opts.growth == null ? 1 : opts.growth; FINALE = !!opts.finale;
+    seed = 1225; seed2 = 4711; ground = []; items = []; shadows = []; glows = []; spots = {}; occ = []; guards = [];
 
     // Boden
     ground.push('<rect x="-50" y="-50" width="1700" height="1250" fill="#eaf0f6"/>');
@@ -1478,7 +1995,7 @@ window.DAYS = [
     stall(16.0, 15.6, "#2f6a4c", "Bratwurst");
     bigTree(13, 13);
     // Girlanden über dem Platz
-    [[9.3, 10.4, 16.7, 10.4], [9.3, 15.6, 16.7, 15.6]].forEach(function (gl) {
+    if (G > 0.2) [[9.3, 10.4, 16.7, 10.4], [9.3, 15.6, 16.7, 15.6]].forEach(function (gl) {
       var a = P(gl[0], gl[1], 1.6), b = P(gl[2], gl[3], 1.6), s = '<path d="M' + f1(a[0]) + "," + f1(a[1]) + " Q" + f1((a[0] + b[0]) / 2) + "," + f1((a[1] + b[1]) / 2 + 26) + " " + f1(b[0]) + "," + f1(b[1]) + '" stroke="#2d2a2a" stroke-width="1" fill="none"/>';
       for (var i = 1; i < 18; i++) { var t = i / 18, x = (1 - t) * (1 - t) * a[0] + 2 * (1 - t) * t * (a[0] + b[0]) / 2 + t * t * b[0], y = (1 - t) * (1 - t) * a[1] + 2 * (1 - t) * t * ((a[1] + b[1]) / 2 + 26) + t * t * b[1]; var c = ["#ffe3a0", "#ff6b5b", "#ffd166", "#9ad7ff"][i % 4]; s += circ([x, y + 2], 1.9, "*" + c); glows.push(circ([x, y + 2], 6, c)); }
       item(gl[1] + 13 + 0.9, s);
@@ -1498,9 +2015,9 @@ window.DAYS = [
     churchSign(17.75, 7.85, 22);
     signpost(11.75, 21.15, 23);
 
-    banner("R", 7.6, 11.95, 2.1, "Frohe Weihnachten");
-    banner("L", 11.95, 19.0, 2.1, "Weihnachtsmarkt");
-    banner("R", 20.0, 11.95, 2.1, "Fröhliche Weihnacht");
+    banner("R", 7.6, 11.95, 2.1, "Frohe Weihnachten", 0.3);
+    banner("L", 11.95, 19.0, 2.1, "Weihnachtsmarkt", 0);
+    banner("R", 20.0, 11.95, 2.1, "Fröhliche Weihnacht", 0.6);
 
     // Täusch-Fässer und -Kisten
     [[10.7, 10.75, 37], [16.0, 10.75, 48], [8.8, 15.2, 29], [17.4, 15.9, 56], [4.5, 17.3, 33], [20.5, 12.25, 71], [25.2, 13.75, 26], [14.4, 17.2, 41]].forEach(function (d, i) { if (i % 2) decoyCrate(d[0], d[1], d[2]); else decoyBarrel(d[0], d[1], d[2]); });
@@ -1530,6 +2047,7 @@ window.DAYS = [
       var sp2 = P(wx, wy, 0); if (sp2[0] < -40 || sp2[0] > 1640 || sp2[1] < 30 || sp2[1] > 1230) continue;
       if (rnd() < 0.72) tree(wx, wy, rr(0.8, 1.35), rnd() < 0.85);
     }
+    occupy(16.1, 11.25, 1.3, 1.15); // Platz für Jochens Carbonara-Hütte
     // Menschen
     var placed = 0, tries = 0;
     while (placed < 150 && tries < 6000) {
@@ -1544,9 +2062,43 @@ window.DAYS = [
       occupy(px - 0.12, py - 0.12, 0.24, 0.24); person(px, py, rnd() < 0.2); placed++;
     }
 
+    // ---------- Wimmel-Details (eigener Zufalls-Seed) ----------
+    seed = 777;
+    JSPOTS.forEach(function (j) { guards.push([j[0], j[1]]); });
+    carbonara(16.2, 11.35, "#2f6a4c", "Jochens Carbonara");
+    details();
+
+    // Finale: alle versammeln sich am Baum
+    if (FINALE) {
+      seed = 2412;
+      for (var fp2 = 0, ft = 0; fp2 < 45 && ft < 2000; ft++) {
+        var a2 = rr(0, Math.PI * 2), rad = rr(1.3, 3.4), fx3 = 13 + Math.cos(a2) * rad, fy3 = 13 + Math.sin(a2) * rad;
+        if (!free(fx3, fy3, 0.15)) continue; occupy(fx3 - 0.1, fy3 - 0.1, 0.2, 0.2); person(fx3, fy3, rnd() < 0.25); fp2++;
+      }
+      if (OPTS.name) {
+        var Fb = faceL(10.2, 16.95, 5.6, 0, 1.9), sb = "";
+        sb += line(P(10.1, 16.95, 0), P(10.1, 16.95, 2.4), "#2d2a2a", 2.5) + line(P(15.9, 16.95, 0), P(15.9, 16.95, 2.4), "#2d2a2a", 2.5);
+        sb += poly(frect(Fb, 0, 0, 5.6, 0.42), "#2b1d14", 'stroke="#c9a14a" stroke-width="1.2"');
+        sb += ftext("L", Fb(2.8, 0.11), "Frohe Weihnachten, " + OPTS.name, 13, "*#ffe3a0", 'font-family="Georgia,serif" font-style="italic"');
+        for (var bi = 0; bi <= 24; bi++) { var bq = Fb(5.6 * bi / 24, 0.42); sb += circ(add(bq, 0, -1), 1.6, "*" + ["#ffe3a0", "#ff6b5b", "#ffd166"][bi % 3]); glows.push(circ(bq, 5, "#ffd27a")); }
+        glows.push(poly(frect(Fb, 0.2, 0.05, 5.4, 0.37), "#ffcf70", 'opacity=".5"'));
+        item(13 + 16.95 + 0.4, sb);
+      }
+    }
+
+    // Herbert (an Heiligabend als Begleiter neben Jochen)
+    var hpos = null;
+    if (FINALE) hpos = herbert(12.55, 14.55, false);
+
     // Jochen
     var jpos = null;
-    if (opts.jochen) jpos = jochen(JSPOTS[opts.jochen.spot % JSPOTS.length], opts.jochen.costume);
+    if (opts.jochen) {
+      var js = JSPOTS[opts.jochen.spot % JSPOTS.length], jc = opts.jochen.costume;
+      if (FINALE) { js = [12.05, 14.35, 0, 0]; jc = "fest"; }
+      else if (jc === "koch" && META.carbonaraSpot) js = META.carbonaraSpot;
+      jpos = jochen(js, jc);
+    }
+    META.herbert = hpos;
 
     items.sort(function (a, b) { return a.k - b.k; });
     // Glitzernder Schnee im Mondlicht
@@ -1612,18 +2164,35 @@ window.DAYS = [
   }
   function daysUntilDec1() { return Math.round((Date.UTC(YEAR, 11, 1) - Date.UTC(now.y, now.m - 1, now.d)) / 86400000); }
 
+  // ---------- Tagesparameter: Wachstum, Finale, Wetter ----------
+  function growth() {
+    if (previewAll || now.y > YEAR || params.get("finale")) return 1;
+    if (now.y === YEAR && now.m === 12) return Math.min(1, now.d / 24);
+    return 0.08;
+  }
+  var FINALE = !!params.get("finale") || now.y > YEAR || (now.y === YEAR && now.m === 12 && now.d >= 24);
+  var WEATHER_PLAN = ["schnee", "klar", "schnee", "nebel", "dicht", "schnee", "vollmond", "klar", "schnee", "dicht", "nebel", "schnee",
+    "vollmond", "klar", "schnee", "dicht", "schnee", "nebel", "klar", "schnee", "vollmond", "dicht", "klar", "schnee"];
+  var WEATHER_INFO = {
+    schnee: ["❄️", "Leichter Schneefall"], klar: ["✨", "Klare Sternennacht"], dicht: ["🌨️", "Dichtes Schneetreiben"],
+    nebel: ["🌫️", "Nebel über dem Dorf"], vollmond: ["🌕", "Vollmondnacht"]
+  };
+  var WEATHER = params.get("wetter") || (now.y === YEAR && now.m === 12 && now.d <= 24 ? WEATHER_PLAN[now.d - 1] : WEATHER_PLAN[((dayNum % 24) + 24) % 24]);
+  if (FINALE && !params.get("wetter")) WEATHER = "schnee";
+  if (!WEATHER_INFO[WEATHER]) WEATHER = "schnee";
+
   // ---------- Speicher ----------
   var state;
   function storageKey() { return "ai-bytes-adventskalender-" + YEAR + (previewAll || params.get("today") ? "-test" : ""); }
   function loadState() {
-    state = { opened: {}, done: {}, jochen: {} };
+    state = { opened: {}, done: {}, jochen: {}, herbert: {}, album: {}, stars: {} };
     try {
       var raw = localStorage.getItem(storageKey());
-      if (raw) { var p = JSON.parse(raw); state.opened = p.opened || {}; state.done = p.done || {}; state.jochen = p.jochenDays || {}; }
+      if (raw) { var p = JSON.parse(raw); state.opened = p.opened || {}; state.done = p.done || {}; state.jochen = p.jochenDays || {}; state.herbert = p.herbertDays || {}; state.album = p.album || {}; state.stars = p.stars || {}; }
     } catch (e) { /* ignorieren */ }
   }
   function save() {
-    try { localStorage.setItem(storageKey(), JSON.stringify({ opened: state.opened, done: state.done, jochenDays: state.jochen })); } catch (e) { /* ignorieren */ }
+    try { localStorage.setItem(storageKey(), JSON.stringify({ opened: state.opened, done: state.done, jochenDays: state.jochen, herbertDays: state.herbert, album: state.album, stars: state.stars })); } catch (e) { /* ignorieren */ }
   }
   loadState();
 
@@ -1682,10 +2251,26 @@ window.DAYS = [
       "rentier": "Das Geweih ist schwerer als gedacht. Ich trage es mit Fassung.",
       "engel": "Ich schwebe nicht wirklich. Aber ich bin ganz zufrieden mit dem Platz, an dem ich stehe.",
       "tanne": "Ein paar Nadeln pieksen. Dafür hat man als Baum seine Ruhe.",
-      "geschenk": "Es ist eng hier drin, aber erstaunlich gemütlich. Schön, dass du vorbeischaust."
+      "geschenk": "Es ist eng hier drin, aber erstaunlich gemütlich. Schön, dass du vorbeischaust.",
+      "herbert": "Herbert und ich sind nur auf einem kleinen Abendspaziergang. Er hat dich zuerst gesehen.",
+      "lebkuchen": "Ich rieche ein bisschen nach Zimt. Daran könnte ich mich gewöhnen.",
+      "nussknacker": "Der Hut ist hoch, und der Schnurrbart kitzelt. Ich stehe trotzdem gern hier.",
+      "eisbaer": "Als Eisbär friert man nicht. Das ist der Hauptgrund, warum ich ihn heute trage.",
+      "pinguin": "Watscheln ist entspannender, als man denkt.",
+      "zuckerstange": "Rot-weiß gestreift. Ich finde, das beruhigt.",
+      "stern": "Ich wollte heute einfach mal ein Stern sein. Ein leiser, versteht sich.",
+      "kerze": "Ich brenne nicht wirklich. Aber ich wärme gern von innen.",
+      "nikolaus": "Nikolaus ist ein großer Name. Ich mache das Beste daraus.",
+      "eule": "Nachts sieht man mehr, als man denkt. Du offenbar auch.",
+      "tasse": "Ich sitze in einer Tasse. Es ist warm und ruhig hier. Mehr brauche ich gerade nicht.",
+      "ski": "Ich fahre nicht wirklich Ski. Aber die Brille steht mir.",
+      "schlittschuh": "Ich drehe meine Runden langsam. Hinfallen gehört dazu.",
+      "hirte": "Ich hüte heute nichts Bestimmtes. Nur die Ruhe.",
+      "koenig": "Eine Krone ist schwerer, als sie aussieht. Ich trage sie mit Gelassenheit.",
+      "koch": "Du hast mich am Herd erwischt. Carbonara braucht Geduld und keine Sahne. Das sage ich jedem, der fragt."
   };
   var JOCHEN_SAYS = [
-      "Hallo {name}. Ich bin Jochen. Ich begleite dich durch den Advent, ganz in Ruhe, ein Türchen nach dem anderen. Heute geht es um gute Prompts.",
+      "Hallo {name}. Ich bin Jochen. Ich begleite dich durch den Advent, ganz in Ruhe, ein Türchen nach dem anderen. Herbert, mein Dackel, ist auch dabei. Heute geht es um gute Prompts.",
       "Ich finde, man darf ruhig sagen, wer man ist. Bei mir ist das schnell erzählt: Ich mag den Dezember. Und die AI mag es, wenn du ihr ein bisschen von dir erzählst.",
       "Viele Ideen auf einmal sind mir manchmal zu viel. Darum mag ich es, erst zu sammeln und dann in Ruhe auszusortieren.",
       "Mir stellt selten jemand Fragen. Ich habe mich damit arrangiert. Heute darf die AI dich fragen, das finde ich schön.",
@@ -1696,23 +2281,30 @@ window.DAYS = [
       "Kritik nehme ich nicht persönlich. Meistens steckt etwas Nützliches darin, auch wenn sie von einer AI kommt.",
       "Manche Nachrichten sind schwer zu schreiben. Mit dem richtigen Ton wird es meistens gar nicht so schlimm, wie man denkt.",
       "Ich glaube nicht alles, was ich höre. Ich schaue lieber zweimal hin. Damit bin ich bisher gut gefahren.",
-      "An Weihnachten esse ich, was auf den Tisch kommt. Einen Plan zu haben, beruhigt trotzdem.",
+      "An Weihnachten esse ich, was auf den Tisch kommt. Am liebsten wäre es Carbonara, aber das sage ich nicht laut. Einen Plan zu haben, beruhigt trotzdem.",
       "Heute geht es um Fotos. Ich werde selten fotografiert, wahrscheinlich wegen der Kostüme. Das ist in Ordnung.",
       "Lange Texte lese ich in kleinen Stücken. Die AI liest sie am Stück. Jeder, wie er kann.",
       "Zahlen beruhigen mich. Sie sind, was sie sind. Ganz besonders die, die du heute im Dorf gefunden hast.",
       "Die AI muss nicht alles über dich wissen. Aber das, was sie weiß, darf ruhig stimmen.",
-      "Ich mag Dinge, die sich wiederholen. Ein eigener Assistent dafür wäre mir trotzdem recht.",
-      "Ich rede nicht viel. Wenn, dann meistens beim Spazierengehen. Vielleicht geht es dir ähnlich.",
+      "Ich mag Dinge, die sich wiederholen. Herbert auch, vor allem Spaziergänge. Ein eigener Skill dafür wäre mir trotzdem recht.",
+      "Ich rede nicht viel. Wenn, dann meistens beim Spazierengehen mit Herbert. Er hört gut zu.",
       "Lernen geht bei mir langsam. Ich habe gemerkt, dass das völlig reicht.",
       "Agenten erledigen Aufgaben für dich. Ich finde, man darf auch mal etwas abgeben.",
       "Ich hätte nie gedacht, dass man ohne Programmieren etwas bauen kann. Ich freue mich still mit dir, wenn es klappt.",
       "Ich gebe nicht viel von mir preis. Das ist kein Misstrauen, eher Gewohnheit. Bei der AI ist das eine gute Gewohnheit.",
       "Ich nicke nicht zu allem. Das macht mich nicht unfreundlicher, nur ehrlicher. Morgen ist Heiligabend.",
-      "Frohe Weihnachten, {name}. Danke, dass du jeden Tag vorbeigeschaut hast. Ich war gern dabei, egal in welchem Kostüm."
+      "Frohe Weihnachten, {name}. Danke, dass du jeden Tag vorbeigeschaut hast. Herbert und ich waren gern dabei, egal in welchem Kostüm. Heute verstecken wir uns nicht."
   ];
+  // Ein eigenes Kostüm für jeden Adventstag (Tag 24: Heiligabend)
+  var ROTATION = ["schnee", "elf", "lebkuchen", "rentier", "herbert", "nikolaus", "tanne", "pinguin", "nussknacker", "eule", "zuckerstange", "koch",
+    "eisbaer", "kerze", "ski", "geschenk", "tasse", "schlittschuh", "stern", "hirte", "engel", "koenig", "santa", "fest"];
+  var COSTUME_NAMES = { santa: "Weihnachtsmann", elf: "Wichtel", schnee: "Schneemann", rentier: "Rentier", engel: "Engel", tanne: "Tannenbaum", geschenk: "Geschenk", koch: "Carbonara-Koch", herbert: "Mit Herbert", fest: "Heiligabend",
+    lebkuchen: "Lebkuchenmann", nussknacker: "Nussknacker", eisbaer: "Eisbär", pinguin: "Pinguin", zuckerstange: "Zuckerstange", stern: "Stern",
+    kerze: "Kerze", nikolaus: "Nikolaus", eule: "Eule", tasse: "Glühweintasse", ski: "Skifahrer", schlittschuh: "Schlittschuhläufer", hirte: "Hirte", koenig: "König" };
   function jochenToday() {
-    var n = Math.max(0, dayNum) + jochenShift, count = window.JOCHEN_SPOT_COUNT || 24, cos = window.JOCHEN_COSTUMES || ["santa"];
-    return { spot: (n * 5) % count, costume: cos[n % cos.length] };
+    var n = Math.max(0, dayNum) + jochenShift, count = window.JOCHEN_SPOT_COUNT || 24, cos = ROTATION;
+    var ci = (now.y === YEAR && now.m === 12 && now.d <= 24 && !jochenShift) ? now.d - 1 : n % 23;
+    return { spot: (n * 5) % count, costume: cos[ci] };
   }
   function jochenKey() { return dateKey + (jochenShift ? "#" + jochenShift : ""); }
   function updateJochen() {
@@ -1721,16 +2313,19 @@ window.DAYS = [
     $("jochenCount").textContent = found ? "🍆 Jochen heute gefunden ✓ · an " + total + (total === 1 ? " Tag" : " Tagen") + " entdeckt"
       : "🍆 Wo steckt Jochen heute?" + (total ? " · schon an " + total + (total === 1 ? " Tag" : " Tagen") + " entdeckt" : "");
     var g = $("spots").querySelector(".jochen-hit"); if (g) g.classList.toggle("found", found);
+    var sc0 = 0; for (var i = 0; i < 5; i++) if (state.stars[i]) sc0++;
+    $("starCount").textContent = "⭐ Goldene Sterne: " + sc0 + " von 5";
   }
 
   // ---------- Wimmelbild ----------
-  var NS = "http://www.w3.org/2000/svg", layer = $("spots"), fx = $("fx"), SPOTS = {}, JPOS = null, JC = null;
+  var NS = "http://www.w3.org/2000/svg", layer = $("spots"), fx = $("fx"), SPOTS = {}, JPOS = null, JC = null, HPOS = null;
+  var STAR_DAYS = [3, 8, 13, 18, 22];
   function svgEl(n, a) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); return e; }
   var META = {};
   function buildWorld() {
     JC = jochenToday();
     var res = { spots: {}, jochen: null };
-    try { res = window.buildScene($("world"), { jochen: JC }); } catch (e) { if (window.console) console.error(e); }
+    try { res = window.buildScene($("world"), { jochen: JC, growth: growth(), finale: FINALE, name: cfg.name }); } catch (e) { if (window.console) console.error(e); }
     SPOTS = res.spots || {}; JPOS = res.jochen; META = res.meta || {};
   }
   function renderSpots() {
@@ -1753,6 +2348,14 @@ window.DAYS = [
       j.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onJochen(); } });
       layer.appendChild(j);
     }
+    (META.stars || []).forEach(function (p, i) {
+      if (state.stars[i] || !isUnlocked(STAR_DAYS[i])) return;
+      var st = svgEl("g", { "class": "bonus-star", tabindex: "0", role: "button", "aria-label": "Goldener Stern" });
+      var u = svgEl("use", { href: "#star", x: p[0] - 6, y: p[1] - 12, width: 12, height: 12, fill: "#e8c25a", stroke: "#8a6a2a", "stroke-width": "0.6" });
+      st.appendChild(u); st.appendChild(svgEl("circle", { "class": "hit", cx: p[0], cy: p[1] - 6, r: 11 }));
+      st.addEventListener("click", function () { if (!dragMoved) onStar(i, st, p); });
+      layer.appendChild(st);
+    });
     updateJochen();
   }
   function syncSpot(day) {
@@ -1782,10 +2385,19 @@ window.DAYS = [
     if (first) { burstAt(SPOTS[day].c[0], SPOTS[day].c[1]); setTimeout(function () { openModal(day); }, 750); } else openModal(day);
   }
   function onJochen() {
-    var k = jochenKey(), first = !state.jochen[k];
-    state.jochen[k] = true; save(); updateJochen();
-    toast((JOCHEN_MSG[JC.costume] || "Ah, da bist du.") + " Morgen bin ich woanders.");
-    if (first) burstAt(JPOS[0], JPOS[1]);
+    var k = jochenKey(), first = !state.jochen[k], c = FINALE ? "fest" : JC.costume;
+    state.jochen[k] = true;
+    var newCos = !state.album[c]; if (newCos) state.album[c] = dateKey;
+    save(); updateJochen();
+    if (FINALE) toast("Heute verstecke ich mich nicht. Herbert und ich wollten einfach dabei sein. Frohe Weihnachten.");
+    else toast((JOCHEN_MSG[c] || "Ah, da bist du.") + " Morgen bin ich woanders." + (newCos ? " (Neu im Album: " + COSTUME_NAMES[c] + ")" : ""));
+    if (first) { burstAt(JPOS[0], JPOS[1]); Sound.chime(); if (c === "herbert" || c === "fest") setTimeout(Sound.woof, 500); }
+  }
+  function onStar(i, el, p) {
+    state.stars[i] = true; save(); el.remove(); burstAt(p[0], p[1] - 6); Sound.chime(); updateJochen();
+    var n = 0; for (var k = 0; k < 5; k++) if (state.stars[k]) n++;
+    if (n === 5) setTimeout(openBonus, 700);
+    else toast("Ein goldener Stern! Noch " + (5 - n) + (5 - n === 1 ? " Stern" : " Sterne") + ", dann wartet eine Nachricht auf dich.");
   }
 
   // ---------- Zoom & Verschieben ----------
@@ -1889,10 +2501,14 @@ window.DAYS = [
     $("mJochen").textContent = (JOCHEN_SAYS[day - 1] || "").replace(/\{name\}/g, cfg.name || "du");
     var l = $("mLesson"); l.textContent = "";
     d.lesson.forEach(function (para) { var p = document.createElement("p"); richText(p, para); l.appendChild(p); });
+    var ol = $("mSteps"); ol.textContent = "";
+    (d.steps || []).forEach(function (t) { var li = document.createElement("li"); li.textContent = t; ol.appendChild(li); });
+    show("mStepsBox", !!(d.steps && d.steps.length));
     $("mPrompt").textContent = d.prompt; $("mCopy").textContent = "Kopieren";
     $("mTip").textContent = d.tip || ""; show("mTipBox", !!d.tip);
     $("mChallenge").textContent = d.challenge || ""; show("mChallengeBox", !!d.challenge);
     var last = day === 24;
+    if (last && typeof SURPRISES !== "undefined") { setTimeout(function () { SURPRISES.glocken(); SURPRISES.lichtershow(); }, 400); }
     if (last) $("mFinal").textContent = (cfg.name ? "Liebe " + cfg.name + ",\n\n" : "") + (cfg.finalMessage || "") + (cfg.from ? "\n\nDein " + cfg.from : "");
     show("mFinalBox", last);
     syncDone();
@@ -1924,6 +2540,96 @@ window.DAYS = [
     }
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fallback); else fallback();
   });
+
+  // ---------- Kostüm-Album ----------
+  function costumeSVG(key, dark) {
+    var C = (window.JOCHEN_COSTUME_SVG || {})[key] || {};
+    var inner = ((C.b || "") + '<use href="#jBody"/>' + (C.f || "")).replace(/"\*#/g, '"#');
+    return '<svg viewBox="' + (key === "herbert" ? "-50 -100 175 165" : "-55 -100 110 165") + '" aria-hidden="true">' + (dark ? '<g filter="url(#albumDark)">' + inner + "</g>" : inner) + "</svg>";
+  }
+  function openAlbum() {
+    var grid2 = $("albumGrid"); grid2.innerHTML = "";
+    var keys = ROTATION, found = 0;
+    keys.forEach(function (k, idx) {
+      var has = !!state.album[k]; if (has) found++;
+      var d = document.createElement("div"); d.className = "album-card" + (has ? " has" : "");
+      var when = has ? state.album[k].split("-") : null;
+      d.innerHTML = '<div class="album-day">Tag ' + (idx + 1) + "</div>" + (has ? costumeSVG(k, false) : '<div class="album-q">?</div>') +
+        '<div class="album-name">' + (has ? COSTUME_NAMES[k] : "&nbsp;") + "</div>" +
+        '<div class="album-date">' + (has ? "gefunden am " + when[2] + "." + when[1] + "." : "noch nicht entdeckt") + "</div>";
+      grid2.appendChild(d);
+    });
+    var sn = 0; for (var i = 0; i < 5; i++) if (state.stars[i]) sn++;
+    $("albumInfo").textContent = found + " von " + keys.length + " Verkleidungen entdeckt · " + sn + " von 5 goldenen Sternen";
+    var dlg = $("album"); if (dlg.showModal) { try { dlg.showModal(); } catch (e) { dlg.setAttribute("open", ""); } } else dlg.setAttribute("open", "");
+  }
+  $("albumBtn").addEventListener("click", openAlbum);
+  $("albumClose").addEventListener("click", function () { var d = $("album"); if (d.close) d.close(); d.removeAttribute("open"); });
+  function openBonus() {
+    $("bonusText").textContent = (cfg.name ? "Liebe " + cfg.name + ",\n\n" : "") + (cfg.bonusMessage || "") + (cfg.from ? "\n\nDein " + cfg.from : "");
+    var d = $("bonus"); if (d.showModal) { try { d.showModal(); } catch (e) { d.setAttribute("open", ""); } } else d.setAttribute("open", "");
+  }
+  $("bonusClose").addEventListener("click", function () { var d = $("bonus"); if (d.close) d.close(); d.removeAttribute("open"); });
+
+  // ---------- Töne (selbst erzeugt, standardmäßig aus) ----------
+  var Sound = (function () {
+    var ctx = null, on = false, master, windNode, musicTimer;
+    try { on = localStorage.getItem("ai-bytes-sound") === "1"; } catch (e) { /* ignorieren */ }
+    function ensure() {
+      if (ctx) return true;
+      var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+      ctx = new AC(); master = ctx.createGain(); master.gain.value = 0.5; master.connect(ctx.destination); return true;
+    }
+    function tone(freq, t0, dur, vol, type) {
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = type || "sine"; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g); g.connect(master); o.start(t0); o.stop(t0 + dur + 0.05);
+    }
+    function bell(f, t0, vol) { [1, 2, 2.4, 3, 4.2].forEach(function (m, i) { tone(f * m, t0, 3.2 - i * 0.4, vol / (i + 1.5)); }); }
+    function noiseBuf() { var b = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), d = b.getChannelData(0), last = 0; for (var i = 0; i < d.length; i++) { last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02; d[i] = last * 3.5; } return b; }
+    function startAmbient() {
+      if (!ctx || windNode) return;
+      var src = ctx.createBufferSource(); src.buffer = noiseBuf(); src.loop = true;
+      var lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 500;
+      var g = ctx.createGain(); g.gain.value = 0.05; src.connect(lp); lp.connect(g); g.connect(master); src.start(); windNode = { src: src, g: g };
+      var melody = [392, 523, 523, 523, 587, 659, 659, 659, 659, 587, 659, 698, 494, 587, 523];
+      var lens = [0.5, 0.75, 0.25, 1, 0.5, 0.75, 0.25, 1, 0.5, 0.5, 0.5, 1, 1, 0.5, 1.5];
+      function playMusic() {
+        if (!on) return; var t = ctx.currentTime + 0.1;
+        melody.forEach(function (f, i) { tone(f, t, lens[i] * 0.9, 0.025, "triangle"); t += lens[i] * 0.55; });
+        musicTimer = setTimeout(playMusic, 45000 + Math.random() * 30000);
+      }
+      musicTimer = setTimeout(playMusic, 6000);
+    }
+    function stopAmbient() { if (windNode) { try { windNode.src.stop(); } catch (e) { /* ignorieren */ } windNode = null; } clearTimeout(musicTimer); }
+    var api = {
+      isOn: function () { return on; },
+      toggle: function () {
+        on = !on; try { localStorage.setItem("ai-bytes-sound", on ? "1" : "0"); } catch (e) { /* ignorieren */ }
+        if (on && ensure()) { ctx.resume && ctx.resume(); startAmbient(); api.chime(); } else stopAmbient();
+        return on;
+      },
+      chime: function () { if (!on || !ensure()) return; var t = ctx.currentTime; tone(1046, t, 0.8, 0.08); tone(1568, t + 0.12, 1.0, 0.06); },
+      bells: function () { if (!on || !ensure()) return; var t = ctx.currentTime; [392, 330, 294, 262, 392, 330].forEach(function (f, i) { bell(f, t + i * 0.7, 0.09); }); },
+      woof: function () {
+        if (!on || !ensure()) return; var t = ctx.currentTime;
+        [0, 0.22].forEach(function (d) {
+          var o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sawtooth";
+          o.frequency.setValueAtTime(420, t + d); o.frequency.exponentialRampToValueAtTime(180, t + d + 0.12);
+          var bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 700;
+          g.gain.setValueAtTime(0.0001, t + d); g.gain.exponentialRampToValueAtTime(0.12, t + d + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + d + 0.14);
+          o.connect(bp); bp.connect(g); g.connect(master); o.start(t + d); o.stop(t + d + 0.2);
+        });
+      },
+      wind: function (ms) { if (!on || !windNode) return; var g = windNode.g.gain, t = ctx.currentTime; g.setTargetAtTime(0.16, t, 0.6); g.setTargetAtTime(0.05, t + ms / 1000, 1.5); }
+    };
+    return api;
+  })();
+  function syncSoundBtn() { $("soundBtn").textContent = Sound.isOn() ? "🔈 Ton an" : "🔇 Ton aus"; }
+  $("soundBtn").addEventListener("click", function () { Sound.toggle(); syncSoundBtn(); });
+  syncSoundBtn();
+  if (Sound.isOn()) { var resumeOnce = function () { Sound.toggle(); Sound.toggle(); syncSoundBtn(); window.removeEventListener("pointerdown", resumeOnce); }; window.addEventListener("pointerdown", resumeOnce); }
 
   // ---------- Testmodus-Button ----------
   var adminBtn = $("adminBtn"), panel = $("adminPanel"), pinInput = $("adminPin"), moveBtn = $("jochenMove");
@@ -1986,8 +2692,16 @@ window.DAYS = [
     var x0 = -w, x1 = 1600 + w, ms = 55000 + Math.random() * 35000, f = startFrac || 0;
     animate(g, [{ transform: "translate(" + (x0 + (x1 - x0) * f) + "px," + y + "px)" }, { transform: "translate(" + x1 + "px," + (y - 40) + "px)" }], ms * (1 - f), function () { g.remove(); });
   }
-  function scheduleClouds() { setTimeout(function () { if (!document.hidden) cloud(0); scheduleClouds(); }, 22000 + Math.random() * 38000); }
-  cloud(0.35); scheduleClouds();
+  var cloudFactor = { klar: 3, vollmond: 1.6, schnee: 1, dicht: 0.6, nebel: 1.4 }[WEATHER] || 1;
+  function scheduleClouds() { setTimeout(function () { if (!document.hidden) cloud(0); scheduleClouds(); }, (22000 + Math.random() * 38000) * cloudFactor); }
+  if (WEATHER !== "klar") cloud(0.35);
+  if (WEATHER === "dicht") cloud(0.7);
+  scheduleClouds();
+  // Wetter-Überlagerung
+  if (WEATHER === "nebel") cloudsG.appendChild(svgEl("rect", { x: -50, y: -50, width: 1700, height: 1250, fill: "url(#fogGrad)", "class": "fog" }));
+  if (WEATHER === "vollmond") cloudsG.appendChild(svgEl("rect", { x: -50, y: -50, width: 1700, height: 1250, fill: "#a9bbf0", opacity: "0.16", style: "mix-blend-mode:screen" }));
+  if (WEATHER === "klar") cloudsG.appendChild(svgEl("rect", { x: -50, y: -50, width: 1700, height: 1250, fill: "#7f95d8", opacity: "0.07", style: "mix-blend-mode:screen" }));
+
 
   // ---------- Überraschungen ----------
   function P(x, y, z) { return window.SCENE_P ? window.SCENE_P(x, y, z) : [800, 500]; }
@@ -2014,6 +2728,7 @@ window.DAYS = [
       animate(g, [{ transform: "translate(" + x + "px," + y + "px)", opacity: 0 }, { opacity: 1, offset: 0.15 }, { transform: "translate(" + (x + 420) + "px," + (y + 150) + "px)", opacity: 0 }], 1400, function () { g.remove(); });
     },
     glocken: function () {
+      Sound.bells();
       var t = META.tower; if (!t) return;
       var glow = svgEl("circle", { cx: t[0], cy: t[1] + 60, r: 40, fill: "#ffd98a", opacity: "0", filter: "url(#softGlow)" });
       eventsG.appendChild(glow);
@@ -2036,7 +2751,7 @@ window.DAYS = [
       var w = $("world"); w.classList.add("lightshow");
       setTimeout(function () { w.classList.remove("lightshow"); }, 6000);
     },
-    schneegestoeber: function () { if (window.__snowBurst) window.__snowBurst(9000); }
+    schneegestoeber: function () { if (window.__snowBurst) window.__snowBurst(9000); Sound.wind(9000); }
   };
   var lastSurprise = "";
   function surprise() {
@@ -2062,16 +2777,16 @@ window.DAYS = [
       x.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     size(); window.addEventListener("resize", size);
-    var n = 700;
-    for (var i = 0; i < n; i++) { var z = Math.random(); fl.push({ x: Math.random() * VW, y: Math.random() * VH, z: z, r: 0.5 + z * 1.9, s: 0.25 + z * 0.9, p: Math.random() * 6.28 }); }
+    var n = 700, share = { klar: 0, vollmond: 0.18, schnee: 0.6, nebel: 0.3, dicht: 1 }[WEATHER];
+    for (var i = 0; i < n; i++) { var z = Math.random(); fl.push({ x: Math.random() * VW, y: i > n * share ? -5 : Math.random() * VH, z: z, r: 0.5 + z * 1.9, s: 0.25 + z * 0.9, p: Math.random() * 6.28 }); }
     (function tick() {
-      t += 0.005; var burst = Date.now() < burstUntil; wind = Math.sin(t) * 0.35 + 0.15 + (burst ? 1.6 : 0);
+      t += 0.005; var burst = Date.now() < burstUntil; wind = Math.sin(t) * 0.35 + 0.15 + (burst ? 1.6 : 0) + (WEATHER === "dicht" ? 0.9 : 0);
       var k = svg.getBoundingClientRect().width / VW, ox = sc.scrollLeft, oy = sc.scrollTop;
       if (Math.abs(sc.clientHeight - H) > 2 || Math.abs(sc.clientWidth - W) > 2) size();
       x.clearRect(0, 0, W, H);
       for (var i = 0; i < fl.length; i++) {
         var f = fl[i];
-        if (!burst && i > n * 0.6 && f.y < 0) continue;
+        if (!burst && i > n * share && f.y < 0) continue;
         f.y += f.s * (burst ? 1.8 : 1); f.p += 0.02; f.x += wind * (0.4 + f.z) + Math.sin(f.p) * 0.2;
         if (f.y > VH + 4) { f.y = -4; f.x = Math.random() * VW; }
         if (f.x > VW + 4) f.x = -4; if (f.x < -4) f.x = VW + 4;
