@@ -363,10 +363,22 @@ footer { color: var(--muted); }
 
 .greeting { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; line-height: 1.4; }
 .jochen-mini { margin-right: 0; }
+
+/* Nacht & Schneefall */
+.scene-scroll { background: #1b2340; }
+.scene-snow { position: absolute; z-index: 2; left: 16px; top: 16px; pointer-events: none; border-radius: 2px; }
+.zoom { z-index: 4; }
+.spot .ring { fill: rgba(255,209,102,.22); stroke: #ffd166; }
+
+/* Überraschungen */
+.ev-sleigh { cursor: pointer; }
+.ev-note { font-family: Georgia, serif; }
+.ev-fox { animation: foxhop .35s ease-in-out infinite; }
+@keyframes foxhop { 50% { transform: translateY(-3px); } }
+#world.lightshow .tw { animation: tw .45s steps(2) infinite; animation-delay: 0s !important; }
 </style>
 </head>
 <body data-theme="lebkuchen">
-  <canvas id="snow" aria-hidden="true"></canvas>
   <div class="lights" id="lights" aria-hidden="true"></div>
 
   <header class="hero">
@@ -386,44 +398,49 @@ footer { color: var(--muted); }
 
   <main>
     <div class="scene-wrap">
-      <p class="howto">Im Weihnachtsdorf sind 24 Zahlen versteckt, an Häusern, Ständen, Schildern und sogar im Schnee. Such die Zahl des heutigen Tages und tipp sie an. Vorsicht: Nicht jede Zahl im Dorf gehört zum Kalender.<br>Und irgendwo steckt <b>Jochen</b>, der fröhlichste Weihnachtsfan der Welt. Jeden Tag verkleidet er sich neu und sucht sich ein anderes Versteck.</p>
+      <p class="howto">Es ist Nacht im Weihnachtsdorf, und es schneit. Irgendwo zwischen Fenstern, Laternen und Lichterketten sind 24 Zahlen versteckt: an Häusern, Ständen, Schildern und sogar im Schnee. Such die Zahl des heutigen Tages und tipp sie an. Vorsicht: Die meisten Zahlen im Dorf gehören nicht zum Kalender.<br>Und irgendwo steckt <b>Jochen</b>. Er ist ein stiller Genießer, mag den Advent sehr und nimmt die Dinge, wie sie kommen, auch die Kostüme, in die er jeden Tag schlüpft. Achte auf sein Lächeln.</p>
       <div class="scene-frame">
         <div class="zoom" aria-label="Zoom">
           <button type="button" id="zoomIn" aria-label="Hineinzoomen">+</button>
           <button type="button" id="zoomOut" aria-label="Herauszoomen">−</button>
         </div>
+        <canvas class="scene-snow" id="sceneSnow" aria-hidden="true"></canvas>
         <div class="scene-scroll" id="sceneScroll">
-          <svg class="scene" id="scene" viewBox="0 0 1600 1150" role="img" aria-label="Wimmelbild: ein verschneites Weihnachtsdorf von schräg oben mit versteckten Zahlen">
+          <svg class="scene" id="scene" viewBox="0 0 1600 1150" role="img" aria-label="Wimmelbild: ein verschneites Weihnachtsdorf bei Nacht von schräg oben mit versteckten Zahlen">
             <defs>
               <linearGradient id="ice" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#d7ecf7"/><stop offset=".5" stop-color="#b9dbee"/><stop offset="1" stop-color="#cfe6f3"/>
+                <stop offset="0" stop-color="#3e5a86"/><stop offset=".5" stop-color="#2f4a75"/><stop offset="1" stop-color="#3a5682"/>
               </linearGradient>
               <radialGradient id="snowball" cx=".35" cy=".3" r=".75">
-                <stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#eef3f8"/><stop offset="1" stop-color="#c9d5e2"/>
+                <stop offset="0" stop-color="#8d9bc8"/><stop offset=".7" stop-color="#6573a6"/><stop offset="1" stop-color="#46527f"/>
               </radialGradient>
               <radialGradient id="lampGlow"><stop offset="0" stop-color="#ffd27a" stop-opacity=".9"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>
               <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#dfe8f3" stop-opacity=".75"/><stop offset=".22" stop-color="#dfe8f3" stop-opacity=".15"/><stop offset=".4" stop-color="#dfe8f3" stop-opacity="0"/>
+                <stop offset="0" stop-color="#070b1c" stop-opacity=".7"/><stop offset=".25" stop-color="#070b1c" stop-opacity=".2"/><stop offset=".45" stop-color="#070b1c" stop-opacity="0"/>
               </linearGradient>
               <radialGradient id="vignette" cx=".5" cy=".55" r=".75">
-                <stop offset=".6" stop-color="#1a2233" stop-opacity="0"/><stop offset="1" stop-color="#1a2233" stop-opacity=".38"/>
+                <stop offset=".5" stop-color="#05081a" stop-opacity="0"/><stop offset="1" stop-color="#05081a" stop-opacity=".6"/>
               </radialGradient>
+              <linearGradient id="shoot" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+              <filter id="nightBody" color-interpolation-filters="sRGB"><feColorMatrix values=".4645 .0165 .0165 0 .0176  .0195 .5035 .0195 0 .026  .03 .03 .64 0 .0525  0 0 0 1 0"/></filter>
+              <filter id="cloudBlur" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="16"/></filter>
+              <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
               <filter id="shadowBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="4"/></filter>
-              <filter id="glowBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="4"/></filter>
+              <filter id="glowBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="5"/></filter>
               <filter id="snowTex" x="0" y="0" width="100%" height="100%">
                 <feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="2" seed="4"/>
-                <feColorMatrix values="0 0 0 0 .55  0 0 0 0 .62  0 0 0 0 .74  0 0 0 .22 0"/>
+                <feColorMatrix values="0 0 0 0 .1  0 0 0 0 .14  0 0 0 0 .3  0 0 0 .3 0"/>
               </filter>
               <symbol id="star" viewBox="-10 -10 20 20" overflow="visible">
                 <path d="M0,-10 L2.9,-3.1 L9.5,-3.1 L4.2,1.2 L5.9,8.1 L0,4 L-5.9,8.1 L-4.2,1.2 L-9.5,-3.1 L-2.9,-3.1 Z"/>
               </symbol>
               <linearGradient id="aub" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#9b6bb8"/><stop offset="1" stop-color="#5e3577"/>
+                <stop offset="0" stop-color="#8a5ca6"/><stop offset=".55" stop-color="#6e4290"/><stop offset="1" stop-color="#4f2a66"/>
               </linearGradient>
               <g id="jBody">
                 <path d="M-21,12 l-10,-8 M21,12 l10,-8" stroke="#6e4290" stroke-width="7" stroke-linecap="round"/>
                 <path d="M0,-40 C14,-40 18,-28 20,-10 C24,14 30,26 28,38 C26,50 14,54 0,54 C-14,54 -26,50 -28,38 C-30,26 -24,14 -20,-10 C-18,-28 -14,-40 0,-40Z" fill="url(#aub)"/>
-                <path d="M-14,-30 C-12,-20 -14,0 -18,14" stroke="#b58ad0" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>
+                <path d="M-14,-30 C-12,-20 -14,0 -18,14" stroke="#9a72b6" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".22"/>
                 <path d="M0,-42 q-2,-12 7,-22" stroke="#6f8f3a" stroke-width="6" fill="none" stroke-linecap="round"/>
                 <g fill="#6f8f3a"><ellipse cx="-11" cy="-37" rx="9" ry="5" transform="rotate(25 -11 -37)"/><ellipse cx="11" cy="-37" rx="9" ry="5" transform="rotate(-25 11 -37)"/><ellipse cx="0" cy="-40" rx="8" ry="5"/><ellipse cx="-5" cy="-33" rx="6" ry="4"/><ellipse cx="6" cy="-33" rx="6" ry="4"/></g>
                 <circle cx="-6" cy="-6" r="2.4" fill="#2b1d33"/><circle cx="6" cy="-6" r="2.4" fill="#2b1d33"/>
@@ -441,6 +458,8 @@ footer { color: var(--muted); }
               <g id="jNight"><path d="M-19,-33 C-16,-56 10,-62 34,-48 C20,-46 18,-42 19,-33Z" fill="#5d6fb3"/><rect x="-21" y="-39" width="42" height="8" rx="4" fill="#fff"/><circle cx="34" cy="-48" r="5" fill="#fff"/></g>
             </defs>
             <g id="world"></g>
+            <g id="clouds" pointer-events="none"></g>
+            <g id="events"></g>
             <g id="spots"></g>
             <g id="fx"></g>
           </svg>
@@ -814,8 +833,19 @@ window.DAYS = [
   }
   function tcenter(kind, pt, size) { var m = MAT[kind], oy = -size * 0.36; return [pt[0] + m[2] * oy, pt[1] + m[3] * oy]; }
 
+  // ---------- Nacht ----------
+  function nightHex(h) {
+    var r = parseInt(h.substr(0, 2), 16), g = parseInt(h.substr(2, 2), 16), b = parseInt(h.substr(4, 2), 16);
+    var l = (r + g + b) / 3; r = r * 0.8 + l * 0.2; g = g * 0.8 + l * 0.2; b = b * 0.8 + l * 0.2;
+    var o = [r * 0.33 + 6, g * 0.39 + 9, b * 0.6 + 18];
+    return o.map(function (v) { v = Math.max(0, Math.min(255, Math.round(v))); return (v < 16 ? "0" : "") + v.toString(16); }).join("");
+  }
+  function nightify(str) {
+    return str.replace(/(fill|stroke)="(\*?)#([0-9a-fA-F]{6})"/g, function (m, attr, star, hex) { return attr + '="#' + (star ? hex : nightHex(hex)) + '"'; });
+  }
+
   // ---------- Sammelbehälter ----------
-  var ground, items, shadows, glows, spots, occ, guards;
+  var ground, items, shadows, glows, spots, occ, guards, META = {};
   function item(k, s) { items.push({ k: k, s: s }); }
   function occupy(x, y, w, d) { occ.push([x, y, x + w, y + d]); }
   function free(x, y, r) {
@@ -866,8 +896,12 @@ window.DAYS = [
     var outer = frect(F, uc - ww / 2 - 0.04, vc - wh / 2 - 0.05, uc + ww / 2 + 0.04, vc + wh / 2 + 0.05);
     var pane = frect(F, uc - ww / 2, vc - wh / 2, uc + ww / 2, vc + wh / 2);
     s += poly(outer, fr);
-    s += poly(pane, lit ? (arched ? "#f6b04e" : "#ffcf6e") : "#56657a");
+    s += poly(pane, lit ? (arched ? "*#f6b04e" : "*#ffd27a") : "#56657a");
     if (lit) { glows.push(poly(frect(F, uc - ww / 2 - 0.1, vc - wh / 2 - 0.1, uc + ww / 2 + 0.1, vc + wh / 2 + 0.1), "#ffb240")); }
+    if (lit && !arched && rnd() < 0.22) {
+      s += line(F(uc - ww * 0.42, vc - wh / 2 + 0.05), F(uc + ww * 0.42, vc - wh / 2 + 0.05), "#3a2416", 1.6);
+      for (var k = 0; k < 5; k++) { var t = k / 4, cu = uc - ww * 0.36 + ww * 0.72 * t, cv = vc - wh / 2 + 0.1 + Math.sin(t * Math.PI) * wh * 0.32; s += circ(F(cu, cv), 1, "*#fff6d0"); }
+    }
     s += line(F(uc, vc - wh / 2), F(uc, vc + wh / 2), fr, 1.4) + line(F(uc - ww / 2, vc + wh * 0.1), F(uc + ww / 2, vc + wh * 0.1), fr, 1.4);
     s += line(F(uc - ww / 2 - 0.05, vc - wh / 2 - 0.06), F(uc + ww / 2 + 0.05, vc - wh / 2 - 0.06), "#fbfdff", 2.2);
     return s;
@@ -935,7 +969,7 @@ window.DAYS = [
     // Lichterkette
     if (o.lights) eave.forEach(function (p, i) {
       var c = ["#ffdf8a", "#ff6b5b", "#ffd166", "#8fe3a8", "#ffe9b8"][i % 5];
-      s += circ(add(p, 0, 3), 2.1, c); glows.push(circ(add(p, 0, 3), 5, c));
+      s += circ(add(p, 0, 3), 2.1, "*" + c); glows.push(circ(add(p, 0, 3), 6, c));
     });
     // Schornstein + Rauch
     if (!o.church) {
@@ -949,6 +983,7 @@ window.DAYS = [
     return s;
   }
   function house(o) {
+    if (!o.plate && o.door && !o.church && rnd() < 0.85) o.plate = 25 + Math.floor(rnd() * 74);
     o.col = o.col || WALLS[o.c || 0]; o.tile = o.tile || TILES[(o.c || 0) % TILES.length];
     var x = o.x, y = o.y, w = o.w, d = o.d, h = o.h, rh = o.rh || (o.r === "x" ? d : w) * 0.42 + 0.15, s = "";
     occupy(x, y, w, d); shadowBox(x, y, w, d, h + rh * 0.5);
@@ -960,6 +995,12 @@ window.DAYS = [
     s += faceDetails(FL, "L", w, h, o, true);
     s += faceDetails(FR, "R", d, h, o, false);
     if (o.extra) s += o.extra(FL, FR);
+    if (!o.church && rnd() < 0.32) {
+      var hs = FL(w * rr(0.2, 0.8), h - 0.12);
+      s += line(add(hs, 0, -12), hs, "#2d2a2a", 1);
+      s += '<use href="#star" x="' + f1(hs[0] - 7) + '" y="' + f1(hs[1] - 2) + '" width="14" height="14" fill="*#fff0c2" stroke="*#ffcf6e" stroke-width=".6"/>';
+      glows.push(circ(add(hs, 0, 5), 13, "#ffd27a"));
+    }
     s += roof(o, rh);
     s += poly([P(x - 0.05, y + d + 0.22, 0), P(x + w + 0.22, y + d + 0.22, 0), P(x + w + 0.22, y - 0.05, 0), P(x + w, y, 0.08), P(x + w, y + d, 0.1), P(x, y + d, 0.08)], "#f4f7fb");
     item(x + w / 2 + y + d / 2, s);
@@ -985,8 +1026,8 @@ window.DAYS = [
     s += windowAt(FL, 0.8, 1.75, 0.22, 0.5, true, true) + windowAt(FR, 0.8, 1.75, 0.22, 0.5, true, true);
     s += poly(frect(FL, 0.55, 3.3, 1.05, 3.9), "#3a3a3a") + poly(frect(FR, 0.55, 3.3, 1.05, 3.9), "#2e2e2e");
     var clock = []; for (var i = 0; i < 16; i++) { var a = i / 16 * Math.PI * 2; clock.push(FL(0.8 + Math.cos(a) * 0.32, 2.75 + Math.sin(a) * 0.32)); }
-    s += poly(clock, "#f3ead2", 'stroke="#c9a14a" stroke-width="2"') + line(FL(0.8, 2.75), FL(0.8, 2.98), "#222", 1.8) + line(FL(0.8, 2.75), FL(0.96, 2.75), "#222", 1.8);
-    var apex = P(tx + tw / 2, ty + tw / 2, th + 2.6);
+    s += poly(clock, "*#f6e7b8", 'stroke="#c9a14a" stroke-width="2"'); glows.push(poly(clock, "#ffd98a")) + line(FL(0.8, 2.75), FL(0.8, 2.98), "#222", 1.8) + line(FL(0.8, 2.75), FL(0.96, 2.75), "#222", 1.8);
+    var apex = P(tx + tw / 2, ty + tw / 2, th + 2.6); META.tower = apex;
     s += poly([P(tx - 0.1, ty + tw + 0.1, th), P(tx + tw + 0.1, ty + tw + 0.1, th), apex], "#5f8f7e");
     s += poly([P(tx + tw + 0.1, ty - 0.1, th), P(tx + tw + 0.1, ty + tw + 0.1, th), apex], "#456e60");
     s += poly([P(tx - 0.1, ty + tw + 0.1, th), P(tx + tw * 0.4, ty + tw + 0.1, th), add(apex, 0, 30)], "#f2f6fa", 'opacity=".85"');
@@ -1012,7 +1053,7 @@ window.DAYS = [
       s += poly([P(a, y + d / 2, h + rh), P(b, y + d / 2, h + rh), P(b, y + d + ov, h), P(a, y + d + ov, h)], i % 2 ? "#f4ede2" : col);
     }
     s += poly([P(x - ov, y + d / 2, h + rh), P(x + w + ov, y + d / 2, h + rh), P(x + w + ov, y + d * 0.8, h + rh * 0.4), P(x - ov, y + d * 0.8, h + rh * 0.35)], "#f8fafd", 'opacity=".92"');
-    for (var e = 0; e <= 6; e++) { var p = P(x - ov + (w + 2 * ov) * e / 6, y + d + ov, h - 0.03); s += circ(p, 1.8, "#ffe3a0"); glows.push(circ(p, 5, "#ffcf70")); }
+    for (var e = 0; e <= 6; e++) { var p = P(x - ov + (w + 2 * ov) * e / 6, y + d + ov, h - 0.03); s += circ(p, 1.8, "*#ffe3a0"); glows.push(circ(p, 6, "#ffcf70")); }
     s += poly(frect(FL, 0.06, 0.72, w - 0.06, 1.02), "#f1e3c3", 'stroke="#6b4428" stroke-width="1"');
     s += ftext("L", FL(0.12, 0.8), label, 8, "#5a2e1a", 'font-family="Georgia,serif" font-style="italic"', "start");
     if (day) {
@@ -1041,7 +1082,7 @@ window.DAYS = [
     for (var l = 0; l < 70; l++) {
       var tt = rnd(), yy = b[1] - 30 - H * 0.88 * tt, ww = 88 * (1 - tt * 0.8) * rr(-0.9, 0.9);
       var c = pick(["#ffe9a8", "#ffe9a8", "#ff6b5b", "#ffd166", "#9ad7ff"]);
-      s += circ([b[0] + ww, yy], 2.2, c, 'class="tw" style="animation-delay:' + f1(rr(0, 3)) + 's"'); glows.push(circ([b[0] + ww, yy], 6, c));
+      s += circ([b[0] + ww, yy], 2.2, "*" + c, 'class="tw" style="animation-delay:' + f1(rr(0, 3)) + 's"'); glows.push(circ([b[0] + ww, yy], 6, c));
     }
     for (var o = 0; o < 14; o++) {
       var t2 = rr(0.05, 0.8), yo = b[1] - 30 - H * 0.88 * t2, wo = 80 * (1 - t2 * 0.8) * rr(-0.85, 0.85);
@@ -1052,9 +1093,9 @@ window.DAYS = [
     s += circ(orn, 11, "#b8262f") + circ(add(orn, -3, -4), 3, "#ffffff", 'opacity=".5"') + line(add(orn, 0, -11), add(orn, 0, -16), "#d8b25a", 2);
     s += ftext("S", add(orn, 0, 3.5), "20", 9.5, "#ffd9c9", 'font-weight="700" class="num" font-family="Georgia,serif"');
     spots[20] = { c: orn, r: 14 };
-    var st = [b[0], b[1] - 20 - H - 6];
+    var st = [b[0], b[1] - 20 - H - 6]; META.star = st;
     glows.push(circ(st, 22, "#ffd166"));
-    s += '<use href="#star" x="' + f1(st[0] - 14) + '" y="' + f1(st[1] - 14) + '" width="28" height="28" fill="#ffd166" stroke="#d39a2a" stroke-width=".6"/>';
+    s += '<use href="#star" x="' + f1(st[0] - 14) + '" y="' + f1(st[1] - 14) + '" width="28" height="28" fill="*#ffd166" stroke="*#d39a2a" stroke-width=".6"/>';
     // Geschenke
     var gifts = [[x + 0.35, y + 0.55, "#b8262f"], [x - 0.65, y + 0.6, "#2f5f9e"], [x + 0.75, y - 0.2, "#3f8a5f"], [x - 0.1, y + 0.85, "#d8b25a"]];
     gifts.forEach(function (g, i) {
@@ -1071,7 +1112,7 @@ window.DAYS = [
     item(x + y + 0.9, s);
   }
 
-  function tree(x, y, sc, snowy) {
+  function tree(x, y, sc, snowy, lit) {
     var b = P(x, y, 0), H = 58 * sc, W = H * 0.42, s = "";
     shadows.push(ell(add(b, H * 0.35, 3), H * 0.42, H * 0.13, "#000"));
     s += '<rect x="' + f1(b[0] - 2.5) + '" y="' + f1(b[1] - 8) + '" width="5" height="9" fill="#5b3a26"/>';
@@ -1081,6 +1122,10 @@ window.DAYS = [
       s += poly([[b[0], top], [b[0] - wd, bot], [b[0], bot + 2]], "#2c5e45");
       s += poly([[b[0], top], [b[0] + wd, bot], [b[0], bot + 2]], "#1d4433");
       if (snowy) s += poly([[b[0], top], [b[0] - wd * 0.62, top + (bot - top) * 0.62], [b[0] - wd * 0.15, top + (bot - top) * 0.5], [b[0] + wd * 0.2, top + (bot - top) * 0.42]], "#f1f5f9", 'opacity=".88"');
+    }
+    if (lit) for (var l = 0; l < 12; l++) {
+      var tt = rnd(), ly = b[1] - 8 - H * 0.85 * tt, lx = W * (1 - tt * 0.8) * rr(-0.8, 0.8), lc = pick(["#ffe9a8", "#ff6b5b", "#ffd166", "#9ad7ff"]);
+      s += circ([b[0] + lx, ly], 1.4, "*" + lc, 'class="tw" style="animation-delay:' + f1(rr(0, 3)) + 's"'); glows.push(circ([b[0] + lx, ly], 4, lc));
     }
     item(x + y, s);
   }
@@ -1107,10 +1152,15 @@ window.DAYS = [
     var p0 = P(x, y, 0), p1 = P(x, y, 1.9), s = "";
     occupy(x - 0.1, y - 0.1, 0.2, 0.2);
     s += line(p0, add(p1, 0, 6), "#2d2a2a", 3) + ell(p0, 4, 2, "#2d2a2a");
-    s += poly([add(p1, -5, -6), add(p1, 5, -6), add(p1, 4, 6), add(p1, -4, 6)], "#ffe2a0", 'stroke="#2d2a2a" stroke-width="1.5"');
+    s += poly([add(p1, -5, -6), add(p1, 5, -6), add(p1, 4, 6), add(p1, -4, 6)], "*#ffe9b8", 'stroke="#2d2a2a" stroke-width="1.5"');
     s += poly([add(p1, -7, -6), add(p1, 0, -12), add(p1, 7, -6)], "#2d2a2a") + poly([add(p1, -5, -8), add(p1, 0, -12), add(p1, 3, -9)], "#f4f7fb");
     s += '<path d="M' + f1(p1[0] - 2) + "," + f1(p1[1] + 14) + " l2,-4 l2,4z" + '" fill="#c0392b"/>';
-    glows.push(circ(p1, 30, "url(#lampGlow)"));
+    glows.push(circ(p1, 30, "url(#lampGlow)")); ground.push(ell(p0, 52, 26, "*#9a7a44", 'opacity=".55" style="mix-blend-mode:screen"') + ell(p0, 28, 14, "*#b8924f", 'opacity=".5" style="mix-blend-mode:screen"'));
+    if (!day && rnd() < 0.45) {
+      var q0 = P(x, y, 0.95), dn = 25 + Math.floor(rnd() * 40);
+      s += '<rect x="' + f1(q0[0] - 8) + '" y="' + f1(q0[1] - 7) + '" width="16" height="11" rx="1.5" fill="#2f4a3a" stroke="#d8c9a3" stroke-width="1"/>';
+      s += ftext("S", add(q0, 0, 2), dn, 8, "#f1e7cf", 'font-weight="700" font-family="Arial,sans-serif"');
+    }
     if (day) {
       var q = P(x, y, 0.95);
       s += '<rect x="' + f1(q[0] - 8) + '" y="' + f1(q[1] - 7) + '" width="16" height="11" rx="1.5" fill="#2f4a3a" stroke="#d8c9a3" stroke-width="1"/>';
@@ -1127,6 +1177,24 @@ window.DAYS = [
     s += poly(frect(FB, 0, 0, 0.9, 0.34), "#8a5f3f") + line(FB(0, 0.17), FB(0.9, 0.17), "#6d4429", 1);
     s += poly([P(x, y, 0.28), P(x + 0.9, y, 0.28), P(x + 0.9, y + 0.28, 0.28), P(x, y + 0.28, 0.28)], "#f4f7fb");
     if (day) { s += poly(frect(FB, 0.35, 0.06, 0.55, 0.28), "#c9a14a"); s += numText(day, "L", FB(0.45, 0.1), 7.5, "#3a2a20", 'font-family="Georgia,serif"'); guards.push([x + 0.45, y + 0.3]); }
+    item(x + y + 0.5, s);
+  }
+  function decoyBarrel(x, y, n) {
+    if (!free(x, y, 0.25)) return;
+    occupy(x - 0.2, y - 0.2, 0.4, 0.4);
+    var p = P(x, y, 0), s = "";
+    s += '<path d="M' + f1(p[0] - 8) + "," + f1(p[1] - 20) + " v18 a8,3.5 0 0 0 16,0 v-18z" + '" fill="#7a4a2a"/>';
+    s += line(add(p, -8, -5), add(p, 8, -5), "#3a2a20", 1.6) + line(add(p, -8, -16), add(p, 8, -16), "#3a2a20", 1.6);
+    s += ell(add(p, 0, -20), 8, 3.4, "#5b3720") + ell(add(p, -1, -20.5), 6, 2.4, "#f4f7fb");
+    s += ftext("S", add(p, 0, -7.5), n, 9, "#f1dfbd", 'font-weight="700" font-family="Georgia,serif"');
+    item(x + y, s);
+  }
+  function decoyCrate(x, y, n) {
+    if (!free(x, y, 0.3)) return;
+    occupy(x, y, 0.5, 0.5); shadowBox(x, y, 0.5, 0.5, 0.42);
+    var s = box(x, y, 0, 0.5, 0.5, 0.42, "#b0844f"), FL = faceL(x, y, 0.5, 0.5, 0);
+    s += poly([P(x, y, 0.42), P(x + 0.5, y, 0.42), P(x + 0.5, y + 0.5, 0.42), P(x, y + 0.5, 0.42)], "#f4f7fb");
+    s += ftext("L", FL(0.25, 0.1), n, 10, "#4a2f1a", 'font-weight="700" font-family="Courier New,monospace"');
     item(x + y + 0.5, s);
   }
   function barrel(x, y, day) {
@@ -1256,48 +1324,62 @@ window.DAYS = [
     item(x + y, ell(add(p, 0, -2), r * 30, r * 13, "#f7f9fc") + ell(add(p, r * 8, 0), r * 22, r * 8, "#dbe4ee", 'opacity=".7"') + ell(add(p, -r * 6, -5), r * 14, r * 6, "#ffffff"));
   }
 
+  function banner(kind, x, y, len, text) {
+    var s = "", F, a, b2;
+    if (kind === "R") { F = faceR(x, y, 0, len, 1.75); a = [x, y + len + 0.1]; b2 = [x, y - 0.1]; }
+    else { F = faceL(x, y, len, 0, 1.75); a = [x - 0.1, y]; b2 = [x + len + 0.1, y]; }
+    s += line(P(a[0], a[1], 0), P(a[0], a[1], 2.25), "#2d2a2a", 2.5) + line(P(b2[0], b2[1], 0), P(b2[0], b2[1], 2.25), "#2d2a2a", 2.5);
+    occupy(a[0] - 0.1, a[1] - 0.1, 0.2, 0.2); occupy(b2[0] - 0.1, b2[1] - 0.1, 0.2, 0.2);
+    s += poly(frect(F, 0, 0, len, 0.36), "#2b1d14", 'stroke="#c9a14a" stroke-width="1"');
+    s += ftext(kind, F(len / 2, 0.1), text, 10, "*#ffe3a0", 'font-family="Georgia,serif" font-style="italic"');
+    glows.push(poly(frect(F, 0.1, 0.05, len - 0.1, 0.32), "#ffcf70", 'opacity=".5"'));
+    for (var i = 0; i <= 12; i++) { var q = F(len * i / 12, 0.36); s += circ(add(q, 0, -1), 1.5, "*" + ["#ffe3a0", "#ff6b5b", "#ffd166"][i % 3]); glows.push(circ(q, 4, "#ffd27a")); }
+    item((a[0] + b2[0]) / 2 + (a[1] + b2[1]) / 2 + 0.3, s);
+  }
+
   // ---------- Jochen ----------
+  var FACE = '<circle cx="-6" cy="-6" r="2.4" fill="#2b1d33"/><circle cx="6" cy="-6" r="2.4" fill="#2b1d33"/><path d="M-6,3 q6,7 12,0" stroke="#2b1d33" stroke-width="2.2" fill="none" stroke-linecap="round"/>';
   var COSTUMES = {
-    santa: { f: '<use href="#jSanta"/>' },
-    elf: { f: '<use href="#jElf"/>' },
-    schnee: { f: '<use href="#jBobble"/><use href="#jScarf"/>' },
-    rentier: { f: '<use href="#jAntlers"/>' },
-    engel: { b: '<use href="#jWings"/>', f: '<use href="#jHalo"/>' },
-    nacht: { f: '<use href="#jNight"/>' },
-    geschenk: { f: '<rect x="-34" y="2" width="68" height="11" rx="2" fill="#b22f3c"/><rect x="-30" y="12" width="60" height="44" fill="#d83a4b"/><rect x="-5" y="2" width="10" height="54" fill="#ffd166"/><path d="M0,2 q-16,-16 -20,-2 q5,8 20,2 q16,-16 20,-2 q-5,8 -20,2" fill="#ffd166"/>' }
+    santa: { f: '<path d="M-22,-14 C-27,10 -33,28 -31,42 C-29,54 -14,58 0,58 C14,58 29,54 31,42 C33,28 27,10 22,-14 Z" fill="#b8262f"/><rect x="-31" y="26" width="62" height="7" fill="#2b2b2b"/><rect x="-5" y="25" width="10" height="9" fill="none" stroke="#d8b25a" stroke-width="2"/><path d="M-31,46 C-20,56 20,56 31,46 L31,52 C20,62 -20,62 -31,52Z" fill="#f4f1ea"/><path d="M-18,-3 C-21,18 -10,32 0,34 C10,32 21,18 18,-3 C10,5 -10,5 -18,-3Z" fill="#f4f1ea"/><use href="#jSanta"/>' },
+    elf: { f: '<path d="M-22,-12 C-27,12 -32,28 -30,42 L-24,56 L-12,48 L0,58 L12,48 L24,56 L30,42 C32,28 27,12 22,-12Z" fill="#2f6a4c"/><rect x="-30" y="22" width="60" height="6" fill="#5b3a26"/><path d="M-22,-12 l6,8 l6,-8 l6,8 l6,-8 l6,8 l6,-8 l6,8" fill="none" stroke="#c0392b" stroke-width="3"/><path d="M-20,-14 l-13,-9 l9,13z M20,-14 l13,-9 l-9,13z" fill="#e9c9a8"/><use href="#jElf"/>' },
+    schnee: { f: '<circle cx="0" cy="34" r="31" fill="#f4f7fb"/><circle cx="0" cy="-6" r="25" fill="#f4f7fb"/>' + FACE + '<path d="M0,-2 l15,3 l-15,3z" fill="#f08a24"/><circle cx="0" cy="22" r="3" fill="#222"/><circle cx="0" cy="36" r="3" fill="#222"/><use href="#jScarf"/><rect x="-17" y="-36" width="34" height="6" fill="#222"/><rect x="-11" y="-60" width="22" height="25" fill="#222"/><rect x="-11" y="-45" width="22" height="5" fill="#c0392b"/>' },
+    rentier: { f: '<path d="M-26,10 C-31,24 -32,34 -30,44 C-27,55 -14,58 0,58 C14,58 27,55 30,44 C32,34 31,24 26,10 C14,16 -14,16 -26,10Z" fill="#a8744a"/><ellipse cx="0" cy="38" rx="13" ry="13" fill="#d1a678"/><ellipse cx="-21" cy="-34" rx="9" ry="4" fill="#a8744a" transform="rotate(-30 -21 -34)"/><ellipse cx="21" cy="-34" rx="9" ry="4" fill="#a8744a" transform="rotate(30 21 -34)"/><use href="#jAntlers"/><circle cx="0" cy="-1" r="4.5" fill="#ff4b3a"/>' },
+    engel: { b: '<use href="#jWings"/>', f: '<path d="M-22,-16 C-28,10 -36,40 -37,57 L37,57 C36,40 28,10 22,-16Z" fill="#f4f1ea"/><rect x="-26" y="12" width="52" height="5" fill="#d8b25a"/><path d="M-22,-16 C-10,-8 10,-8 22,-16" fill="none" stroke="#d8b25a" stroke-width="3"/><use href="#jHalo"/>' },
+    tanne: { f: '<polygon points="0,-78 -20,-34 -12,-34 -27,6 -18,6 -33,56 33,56 18,6 27,6 12,-34 20,-34" fill="#3f8a5f"/><polygon points="0,-78 20,-34 12,-34 27,6 18,6 33,56 0,56" fill="#2f6e4b"/><ellipse cx="0" cy="-4" rx="20" ry="17" fill="#8a58ad"/>' + FACE + '<circle cx="-14" cy="30" r="4" fill="#ff6b5b"/><circle cx="13" cy="40" r="4" fill="#ffd166"/><circle cx="10" cy="20" r="3.5" fill="#9ad7ff"/><circle cx="-8" cy="46" r="3.5" fill="#ffd166"/><use href="#star" x="-10" y="-90" width="20" height="20" fill="#ffd166"/>' },
+    geschenk: { f: '<rect x="-37" y="0" width="74" height="58" fill="#6e2129"/><rect x="-6" y="0" width="12" height="58" fill="#8a6a34"/><rect x="-37" y="26" width="74" height="8" fill="#8a6a34"/><rect x="-41" y="-6" width="82" height="11" fill="#5a1a21"/><rect x="-6" y="-6" width="12" height="11" fill="#7a5c2c"/><path d="M-14,-6 q-14,-12 -18,-2 q4,6 18,2 M14,-6 q14,-12 18,-2 q-4,6 -18,2" fill="#8a6a34"/>' },
   };
   // Verstecke: [x, y, z, Tiefen-Verschiebung]
   var JSPOTS = [
-    [7.7, 7.4, 2.45, 0.6],
-    [24.2, 3.8, 3.05, 0.6],
-    [23.95, 24.31, 0, 0],
-    [9.65, 10.82, 0, 0],
-    [13.74, 16.21, 0, 0],
-    [25.35, 16.71, 0, 0],
-    [20.05, 27.45, 0, 0],
-    [19.65, 13.41, 0, 0],
-    [20.38, 23.37, 0, 0],
-    [28.39, 10.32, 0, 0],
-    [8.39, 22.43, 0, 0],
-    [21.95, 8.2, 0, 0],
-    [-1.34, 17.72, 0, 0],
-    [23.29, 25.92, 0, 0],
-    [15.34, 11.87, 0, 0],
-    [12.02, 15.35, 0, 0],
-    [7.89, 28.98, 0, 0],
-    [0.57, 11.67, 0, 0],
-    [12.1, -1.23, 0, 0],
-    [20.85, 25.91, 0, 0],
-    [19.5, -0.7, 0, 0],
-    [11.7, 25.64, 0, 0],
-    [3.94, 17.15, 0, 0],
-    [28.02, 14.25, 0, 0]
+    [-0.81, 16.77, 0, 0],
+    [25.9, 7.99, 0, 0],
+    [14.11, 8.85, 0, 0],
+    [16.87, 28.09, 0, 0],
+    [10.03, 20.76, 0, 0],
+    [2.56, 8.41, 0, 0],
+    [26.27, 17.52, 0, 0],
+    [0.9, 13.95, 0, 0],
+    [22.45, 4.77, 0, 0],
+    [10.36, 8.94, 0, 0],
+    [17.24, 0.94, 0, 0],
+    [28.06, 15.24, 0, 0],
+    [-0.43, 11.24, 0, 0],
+    [4.3, 22.64, 0, 0],
+    [13.5, 2.31, 0, 0],
+    [9.3, 1.76, 0, 0],
+    [16.76, 20.5, 0, 0],
+    [10.83, 5.23, 0, 0],
+    [22.04, 25.01, 0, 0],
+    [21.42, 7.7, 0, 0],
+    [5.75, 4.97, 0, 0],
+    [6.85, 27.67, 0, 0],
+    [8.49, 9.76, 0, 0],
+    [15.67, 24.72, 0, 0]
   ];
   function jochen(js, costume) {
-    var p = P(js[0], js[1], js[2]), sc = 0.3, c = COSTUMES[costume] || COSTUMES.santa, s = "";
+    var p = P(js[0], js[1], js[2]), sc = 0.285, c = COSTUMES[costume] || COSTUMES.santa, s = "";
     if (!js[2]) s += ell(add(p, 4, 0), 9, 3, "#000", 'opacity=".22"');
     var ty = p[1] - 54 * sc;
-    s += '<g transform="translate(' + f1(p[0]) + " " + f1(ty) + ") scale(" + sc + ')">' + (c.b || "") + '<use href="#jBody"/>' + (c.f || "") + "</g>";
+    s += '<g class="jochen-fig" transform="translate(' + f1(p[0]) + " " + f1(ty) + ") scale(" + sc + ')">' + (c.b || "") + '<use href="#jBody" filter="url(#nightBody)"/>' + (c.f || "") + "</g>";
     item(js[0] + js[1] + (js[3] || 0) - 0.02, s);
     return [p[0], ty + 4 * sc];
   }
@@ -1398,7 +1480,7 @@ window.DAYS = [
     // Girlanden über dem Platz
     [[9.3, 10.4, 16.7, 10.4], [9.3, 15.6, 16.7, 15.6]].forEach(function (gl) {
       var a = P(gl[0], gl[1], 1.6), b = P(gl[2], gl[3], 1.6), s = '<path d="M' + f1(a[0]) + "," + f1(a[1]) + " Q" + f1((a[0] + b[0]) / 2) + "," + f1((a[1] + b[1]) / 2 + 26) + " " + f1(b[0]) + "," + f1(b[1]) + '" stroke="#2d2a2a" stroke-width="1" fill="none"/>';
-      for (var i = 1; i < 18; i++) { var t = i / 18, x = (1 - t) * (1 - t) * a[0] + 2 * (1 - t) * t * (a[0] + b[0]) / 2 + t * t * b[0], y = (1 - t) * (1 - t) * a[1] + 2 * (1 - t) * t * ((a[1] + b[1]) / 2 + 26) + t * t * b[1]; var c = ["#ffe3a0", "#ff6b5b", "#ffd166", "#9ad7ff"][i % 4]; s += circ([x, y + 2], 1.9, c); glows.push(circ([x, y + 2], 5, c)); }
+      for (var i = 1; i < 18; i++) { var t = i / 18, x = (1 - t) * (1 - t) * a[0] + 2 * (1 - t) * t * (a[0] + b[0]) / 2 + t * t * b[0], y = (1 - t) * (1 - t) * a[1] + 2 * (1 - t) * t * ((a[1] + b[1]) / 2 + 26) + t * t * b[1]; var c = ["#ffe3a0", "#ff6b5b", "#ffd166", "#9ad7ff"][i % 4]; s += circ([x, y + 2], 1.9, "*" + c); glows.push(circ([x, y + 2], 6, c)); }
       item(gl[1] + 13 + 0.9, s);
     });
 
@@ -1416,6 +1498,13 @@ window.DAYS = [
     churchSign(17.75, 7.85, 22);
     signpost(11.75, 21.15, 23);
 
+    banner("R", 7.6, 11.95, 2.1, "Frohe Weihnachten");
+    banner("L", 11.95, 19.0, 2.1, "Weihnachtsmarkt");
+    banner("R", 20.0, 11.95, 2.1, "Fröhliche Weihnacht");
+
+    // Täusch-Fässer und -Kisten
+    [[10.7, 10.75, 37], [16.0, 10.75, 48], [8.8, 15.2, 29], [17.4, 15.9, 56], [4.5, 17.3, 33], [20.5, 12.25, 71], [25.2, 13.75, 26], [14.4, 17.2, 41]].forEach(function (d, i) { if (i % 2) decoyCrate(d[0], d[1], d[2]); else decoyBarrel(d[0], d[1], d[2]); });
+
     // Laternen
     [1, 4, 7, 19, 22, 25].forEach(function (v, i) {
       if (v !== 19) lamp(v, 11.8);
@@ -1431,7 +1520,7 @@ window.DAYS = [
       var tx = rr(-1, 28), ty = rr(-1, 28);
       if (Math.abs(ty - 13) < 1.5 || Math.abs(tx - 13) < 1.5 || (tx > 8.6 && tx < 17.4 && ty > 8.6 && ty < 17.4) || (tx > 2.5 && tx < 8.7 && ty > 17.5 && ty < 22.9)) continue;
       if (!free(tx, ty, 0.45)) continue;
-      occupy(tx - 0.2, ty - 0.2, 0.4, 0.4); tree(tx, ty, rr(0.6, 1.05), rnd() < 0.8);
+      occupy(tx - 0.2, ty - 0.2, 0.4, 0.4); tree(tx, ty, rr(0.6, 1.05), rnd() < 0.8, rnd() < 0.3);
     }
     // Wald rundherum
     for (var fx2 = -22; fx2 < 46; fx2 += 0.85) for (var fy2 = -22; fy2 < 46; fy2 += 0.85) {
@@ -1443,7 +1532,7 @@ window.DAYS = [
     }
     // Menschen
     var placed = 0, tries = 0;
-    while (placed < 95 && tries < 4000) {
+    while (placed < 150 && tries < 6000) {
       tries++;
       var area = rnd(), px, py;
       if (area < 0.35) { px = rr(9.2, 16.8); py = rr(9.2, 16.8); }
@@ -1460,21 +1549,25 @@ window.DAYS = [
     if (opts.jochen) jpos = jochen(JSPOTS[opts.jochen.spot % JSPOTS.length], opts.jochen.costume);
 
     items.sort(function (a, b) { return a.k - b.k; });
-    var out = ground.join("") +
-      '<rect x="-50" y="-50" width="1700" height="1250" filter="url(#snowTex)" opacity=".55"/>' +
-      '<g filter="url(#shadowBlur)" opacity=".2">' + shadows.join("") + "</g>" +
-      items.map(function (i) { return i.s; }).join("") +
-      '<g filter="url(#glowBlur)" opacity=".55" style="mix-blend-mode:screen">' + glows.join("") + "</g>" +
+    // Glitzernder Schnee im Mondlicht
+    for (var gl = 0; gl < 420; gl++) ground.push(circ(P(rr(-14, 40), rr(-14, 40), 0), rr(0.5, 1.3), "*#e4ecff", 'opacity="' + f1(rr(0.25, 0.8)) + '"'));
+    var out = nightify(ground.join("")) +
+      '<rect x="-50" y="-50" width="1700" height="1250" filter="url(#snowTex)" opacity=".35"/>' +
+      '<g filter="url(#shadowBlur)" opacity=".28">' + shadows.join("") + "</g>" +
+      nightify(items.map(function (i) { return i.s; }).join("")) +
+      '<g filter="url(#glowBlur)" opacity=".9" style="mix-blend-mode:screen">' + glows.join("") + "</g>" +
       '<rect x="0" y="0" width="1600" height="1150" fill="url(#haze)" pointer-events="none"/>' +
       '<rect x="0" y="0" width="1600" height="1150" fill="url(#vignette)" pointer-events="none"/>';
     root.innerHTML = out;
-    return { spots: spots, jochen: jpos, free: function (x, y, r) { return free(x, y, r || 0.3); } };
+    return { spots: spots, jochen: jpos, meta: META, free: function (x, y, r) { return free(x, y, r || 0.3); } };
   }
 
   window.buildScene = build;
+  window.SCENE_P = P;
   window.JOCHEN_SPOT_COUNT = JSPOTS.length;
   window.JOCHEN_SPOTS = JSPOTS;
   window.JOCHEN_COSTUMES = Object.keys(COSTUMES);
+  window.JOCHEN_COSTUME_SVG = COSTUMES;
 })();
 </script>
   <script>
@@ -1560,7 +1653,7 @@ window.DAYS = [
   // ---------- Kopf ----------
   $("motto").textContent = cfg.motto || "Bytes unterm Tannenbaum";
   $("subtitle").textContent = cfg.subtitle || "";
-  $("greeting").textContent = (cfg.name ? "Hallo " + cfg.name + "!" : "Hallo du!") + " Jochen freut sich schon riesig auf dich.";
+  $("greeting").textContent = (cfg.name ? "Hallo " + cfg.name + "!" : "Hallo du!") + " Jochen ist auch schon da, irgendwo im Dorf.";
   if (cfg.name) {
     document.querySelector(".kicker").textContent = "Für " + cfg.name + " · AI Bytes Adventskalender";
     document.title = "AI Bytes Adventskalender für " + cfg.name;
@@ -1574,7 +1667,7 @@ window.DAYS = [
     if (previewAll) text = "Testmodus: alle Zahlen sind anklickbar · " + opened + " von 24 gefunden";
     else if (now.y === YEAR && now.m < 12) {
       var n = daysUntilDec1();
-      text = "Noch " + n + (n === 1 ? " Tag" : " Tage") + " bis zum 1. Dezember – dann darfst du die erste Zahl suchen. Jochen ist aber schon da!";
+      text = "Noch " + n + (n === 1 ? " Tag" : " Tage") + " bis zum 1. Dezember – dann darfst du die erste Zahl suchen. Jochen ist schon da.";
     } else if (now.y < YEAR) text = "Der Kalender startet am 1. Dezember " + YEAR + ".";
     else if (todayDay) text = "Heute ist der " + todayDay + ". Dezember – finde die " + todayDay + " im Dorf! · " + opened + " von 24 gefunden";
     else text = opened + " von 24 Zahlen gefunden";
@@ -1583,39 +1676,39 @@ window.DAYS = [
 
   // ---------- Jochen ----------
   var JOCHEN_MSG = {
-    santa: "Hohoho! Erwischt – ich wollte gerade Geschenke verteilen!",
-    elf: "Psst! Ich bin heute Wichtel und helfe beim Geschenke-Einpacken.",
-    schnee: "Brrr, aber herrlich! So eine Bommelmütze ist das Beste am Winter.",
-    rentier: "Rentier Jochen meldet sich startklar für Heiligabend!",
-    engel: "Ein Engel? Na klar! Ich schwebe vor Vorfreude auf Wolke sieben.",
-    nacht: "Oh, gefunden! Ich wollte gerade ein Weihnachtsschläfchen machen.",
-    geschenk: "Überraschung! Das schönste Geschenk bin natürlich ich 😄"
+      "santa": "Ah, du hast mich gefunden. Der Bart kratzt ein wenig, aber eigentlich steht er mir ganz gut.",
+      "elf": "Grün war nicht meine erste Wahl. Inzwischen fühle ich mich darin recht wohl.",
+      "schnee": "Mir ist ein bisschen kalt. Dafür ist es hier draußen sehr friedlich.",
+      "rentier": "Das Geweih ist schwerer als gedacht. Ich trage es mit Fassung.",
+      "engel": "Ich schwebe nicht wirklich. Aber ich bin ganz zufrieden mit dem Platz, an dem ich stehe.",
+      "tanne": "Ein paar Nadeln pieksen. Dafür hat man als Baum seine Ruhe.",
+      "geschenk": "Es ist eng hier drin, aber erstaunlich gemütlich. Schön, dass du vorbeischaust."
   };
   var JOCHEN_SAYS = [
-    "Hallo {name}! Ich bin Jochen und begleite dich durch den Advent. Heute bauen wir den perfekten Prompt – ich bin schon ganz aufgeregt!",
-    "Je mehr die AI über dich weiß, desto besser hilft sie dir. Über mich musst du nur eins wissen: Ich liebe Weihnachten!",
-    "Ideen sammeln ist mein Lieblingssport. Gleich nach Plätzchen-Naschen und Verkleiden.",
-    "Heute stellt die AI die Fragen. Ich hätte auch eine: Hast du mich heute im Dorf schon entdeckt?",
-    "Wochenende! Zeit für Kunst. Ich stehe gern Modell – am liebsten mit Weihnachtsmütze.",
-    "Nikolaus! Ich hab meine Stiefel geputzt. Okay, ich hab keine Füße. Aber die Vorfreude zählt!",
-    "Zeigen statt erklären – genau so mache ich das mit meinen Kostümen auch.",
-    "Manchmal lohnt es sich, kurz nachzudenken. Ich überlege zum Beispiel jeden Morgen, wo ich mich verstecke.",
-    "Ein guter Freund sagt dir auch mal die Wahrheit. Heute darf die AI ehrlich sein – ich bleibe trotzdem optimistisch!",
-    "Schwierige Nachrichten? Mit dem richtigen Ton wird alles leichter. Und mit einem Lächeln sowieso.",
-    "Detektivarbeit! Quellen prüfen ist fast so spannend, wie mich im Dorf zu suchen.",
-    "Ich hab das Weihnachtsmenü schon im Kopf: Hauptsache, es gibt Nachtisch!",
-    "Fotografier mal was! Ich bin übrigens sehr fotogen, falls du ein Motiv suchst.",
-    "Lange Dokumente? Die AI liest, du entspannst. So mag ich das.",
-    "Zahlen erzählen Geschichten. Meine Lieblingszahl? Natürlich die 24!",
-    "Heute bringst du der AI bei, wie du tickst. Ich ticke übrigens: weihnachtlich.",
-    "Ein eigener Assistent! Falls er Hilfe beim Verkleiden braucht – ich bin da.",
-    "Einfach mal reden statt tippen. Ich rede eh am liebsten, und zwar über Weihnachten.",
-    "Lernen macht Spaß, wenn man dabei lacht. Und ich lache eigentlich immer.",
-    "Agenten! Klingt nach Geheimmission. Meine Mission: dich jeden Tag zum Lächeln bringen.",
-    "Heute baust du dein eigenes Tool. Ich glaube fest an dich – wie immer!",
-    "Gut aufpassen, was man teilt. Ich teile nur gute Laune, davon hab ich genug.",
-    "Morgen ist Heiligabend! Heute noch einmal kritisch denken – und dann wird gefeiert.",
-    "Frohe Weihnachten, {name}! Danke, dass du jeden Tag vorbeigeschaut hast. Das war der schönste Advent meines Lebens!"
+      "Hallo {name}. Ich bin Jochen. Ich begleite dich durch den Advent, ganz in Ruhe, ein Türchen nach dem anderen. Heute geht es um gute Prompts.",
+      "Ich finde, man darf ruhig sagen, wer man ist. Bei mir ist das schnell erzählt: Ich mag den Dezember. Und die AI mag es, wenn du ihr ein bisschen von dir erzählst.",
+      "Viele Ideen auf einmal sind mir manchmal zu viel. Darum mag ich es, erst zu sammeln und dann in Ruhe auszusortieren.",
+      "Mir stellt selten jemand Fragen. Ich habe mich damit arrangiert. Heute darf die AI dich fragen, das finde ich schön.",
+      "Samstag. Ich habe mir vorgenommen, nichts Großes vorzuhaben. Ein Bild entstehen zu lassen passt da gut.",
+      "Nikolaus. Ich habe keine Stiefel, also auch keine Erwartungen. Das macht den Tag sehr entspannt.",
+      "Beispiele helfen. Ich habe zum Beispiel gelernt, dass man in jeder Verkleidung ein bisschen man selbst bleibt.",
+      "Ich denke gern etwas länger nach, bevor ich etwas sage. Die AI kann das inzwischen auch.",
+      "Kritik nehme ich nicht persönlich. Meistens steckt etwas Nützliches darin, auch wenn sie von einer AI kommt.",
+      "Manche Nachrichten sind schwer zu schreiben. Mit dem richtigen Ton wird es meistens gar nicht so schlimm, wie man denkt.",
+      "Ich glaube nicht alles, was ich höre. Ich schaue lieber zweimal hin. Damit bin ich bisher gut gefahren.",
+      "An Weihnachten esse ich, was auf den Tisch kommt. Einen Plan zu haben, beruhigt trotzdem.",
+      "Heute geht es um Fotos. Ich werde selten fotografiert, wahrscheinlich wegen der Kostüme. Das ist in Ordnung.",
+      "Lange Texte lese ich in kleinen Stücken. Die AI liest sie am Stück. Jeder, wie er kann.",
+      "Zahlen beruhigen mich. Sie sind, was sie sind. Ganz besonders die, die du heute im Dorf gefunden hast.",
+      "Die AI muss nicht alles über dich wissen. Aber das, was sie weiß, darf ruhig stimmen.",
+      "Ich mag Dinge, die sich wiederholen. Ein eigener Assistent dafür wäre mir trotzdem recht.",
+      "Ich rede nicht viel. Wenn, dann meistens beim Spazierengehen. Vielleicht geht es dir ähnlich.",
+      "Lernen geht bei mir langsam. Ich habe gemerkt, dass das völlig reicht.",
+      "Agenten erledigen Aufgaben für dich. Ich finde, man darf auch mal etwas abgeben.",
+      "Ich hätte nie gedacht, dass man ohne Programmieren etwas bauen kann. Ich freue mich still mit dir, wenn es klappt.",
+      "Ich gebe nicht viel von mir preis. Das ist kein Misstrauen, eher Gewohnheit. Bei der AI ist das eine gute Gewohnheit.",
+      "Ich nicke nicht zu allem. Das macht mich nicht unfreundlicher, nur ehrlicher. Morgen ist Heiligabend.",
+      "Frohe Weihnachten, {name}. Danke, dass du jeden Tag vorbeigeschaut hast. Ich war gern dabei, egal in welchem Kostüm."
   ];
   function jochenToday() {
     var n = Math.max(0, dayNum) + jochenShift, count = window.JOCHEN_SPOT_COUNT || 24, cos = window.JOCHEN_COSTUMES || ["santa"];
@@ -1633,11 +1726,12 @@ window.DAYS = [
   // ---------- Wimmelbild ----------
   var NS = "http://www.w3.org/2000/svg", layer = $("spots"), fx = $("fx"), SPOTS = {}, JPOS = null, JC = null;
   function svgEl(n, a) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); return e; }
+  var META = {};
   function buildWorld() {
     JC = jochenToday();
     var res = { spots: {}, jochen: null };
     try { res = window.buildScene($("world"), { jochen: JC }); } catch (e) { if (window.console) console.error(e); }
-    SPOTS = res.spots || {}; JPOS = res.jochen;
+    SPOTS = res.spots || {}; JPOS = res.jochen; META = res.meta || {};
   }
   function renderSpots() {
     while (layer.firstChild) layer.removeChild(layer.firstChild);
@@ -1653,7 +1747,7 @@ window.DAYS = [
     });
     if (JPOS) {
       var j = svgEl("g", { "class": "jochen-hit", tabindex: "0", role: "button", "aria-label": "Jochen" });
-      j.appendChild(svgEl("circle", { "class": "ring", cx: JPOS[0], cy: JPOS[1], r: 22 }));
+      j.appendChild(svgEl("circle", { "class": "ring", cx: JPOS[0], cy: JPOS[1], r: 21 }));
       j.appendChild(svgEl("circle", { "class": "hit", cx: JPOS[0], cy: JPOS[1], r: 18 }));
       j.addEventListener("click", function () { if (!dragMoved) onJochen(); });
       j.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onJochen(); } });
@@ -1690,7 +1784,7 @@ window.DAYS = [
   function onJochen() {
     var k = jochenKey(), first = !state.jochen[k];
     state.jochen[k] = true; save(); updateJochen();
-    toast((JOCHEN_MSG[JC.costume] || "Erwischt!") + " Morgen verstecke ich mich woanders!");
+    toast((JOCHEN_MSG[JC.costume] || "Ah, da bist du.") + " Morgen bin ich woanders.");
     if (first) burstAt(JPOS[0], JPOS[1]);
   }
 
@@ -1733,11 +1827,11 @@ window.DAYS = [
     if (todayDay && !state.opened[todayDay]) target = todayDay;
     else for (var d = 24; d >= 1; d--) { if (isUnlocked(d) && !state.opened[d]) { target = d; break; } }
     if (!target || !SPOTS[target]) {
-      toast(now.y === YEAR && now.m < 12 && !previewAll ? "Ab dem 1. Dezember gibt es hier Tipps. Aber Jochen kannst du schon suchen!" : "Du hast alle bisherigen Zahlen gefunden 🎉");
+      toast(now.y === YEAR && now.m < 12 && !previewAll ? "Ab dem 1. Dezember gibt es hier Tipps. Jochen kannst du aber schon suchen." : "Du hast alle bisherigen Zahlen gefunden 🎉");
       return;
     }
     var c = SPOTS[target].c;
-    var h = svgEl("circle", { "class": "hint", cx: c[0] + (Math.random() * 90 - 45), cy: c[1] + (Math.random() * 90 - 45), r: 130 });
+    var h = svgEl("circle", { "class": "hint", cx: c[0] + (Math.random() * 130 - 65), cy: c[1] + (Math.random() * 130 - 65), r: 170 });
     fx.appendChild(h);
     setTimeout(function () { if (h.parentNode) h.parentNode.removeChild(h); }, 3800);
     scrollToPoint(c[0], c[1]);
@@ -1871,6 +1965,124 @@ window.DAYS = [
     if (sc.scrollHeight > sc.clientHeight) sc.scrollTop = (sc.scrollHeight - sc.clientHeight) / 2;
   }
   centerView(); setTimeout(centerView, 60);
+
+  // ---------- Wolken ----------
+  var cloudsG = $("clouds"), eventsG = $("events");
+  function animate(el, frames, ms, done) {
+    if (!el.animate) { if (done) setTimeout(done, ms); return; }
+    var a = el.animate(frames, { duration: ms, easing: "linear", fill: "forwards" });
+    a.onfinish = function () { if (done) done(); };
+  }
+  function cloud(startFrac) {
+    var y = 120 + Math.random() * 760, w = 380 + Math.random() * 420, g = svgEl("g", {});
+    var sh = svgEl("g", { filter: "url(#cloudBlur)", opacity: "0.32" }), cl = svgEl("g", { filter: "url(#cloudBlur)", opacity: "0.55" });
+    for (var i = 0; i < 7; i++) {
+      var cx = (i / 6 - 0.5) * w + (Math.random() * 60 - 30), cy = Math.random() * 50 - 25, rx = w * (0.16 + Math.random() * 0.14), ry = rx * (0.45 + Math.random() * 0.2);
+      sh.appendChild(svgEl("ellipse", { cx: cx + 60, cy: cy + 170, rx: rx, ry: ry * 0.8, fill: "#03061a" }));
+      cl.appendChild(svgEl("ellipse", { cx: cx, cy: cy, rx: rx, ry: ry, fill: "#6b7699" }));
+      cl.appendChild(svgEl("ellipse", { cx: cx - rx * 0.2, cy: cy - ry * 0.35, rx: rx * 0.6, ry: ry * 0.45, fill: "#aab4d6", opacity: "0.6" }));
+    }
+    g.appendChild(sh); g.appendChild(cl); cloudsG.appendChild(g);
+    var x0 = -w, x1 = 1600 + w, ms = 55000 + Math.random() * 35000, f = startFrac || 0;
+    animate(g, [{ transform: "translate(" + (x0 + (x1 - x0) * f) + "px," + y + "px)" }, { transform: "translate(" + x1 + "px," + (y - 40) + "px)" }], ms * (1 - f), function () { g.remove(); });
+  }
+  function scheduleClouds() { setTimeout(function () { if (!document.hidden) cloud(0); scheduleClouds(); }, 22000 + Math.random() * 38000); }
+  cloud(0.35); scheduleClouds();
+
+  // ---------- Überraschungen ----------
+  function P(x, y, z) { return window.SCENE_P ? window.SCENE_P(x, y, z) : [800, 500]; }
+  var SURPRISES = {
+    schlitten: function () {
+      var g = svgEl("g", { "class": "ev-sleigh", tabindex: "0", role: "button", "aria-label": "Schlitten am Himmel" }), s = "";
+      for (var i = 0; i < 4; i++) {
+        var x = -i * 34;
+        s += '<g transform="translate(' + x + ',' + (Math.sin(i) * 3) + ')"><ellipse cx="0" cy="0" rx="12" ry="5" fill="#2a2030"/><path d="M8,-2 l6,-7 M10,-3 l7,-3 M-8,3 l-4,8 M6,3 l3,8" stroke="#2a2030" stroke-width="2"/><circle cx="13" cy="-8" r="3.5" fill="#2a2030"/><path d="M13,-11 l-3,-7 M14,-11 l4,-7" stroke="#2a2030" stroke-width="1.4"/></g>';
+      }
+      s += '<circle cx="17" cy="-8" r="3" fill="#ff4b3a"/><circle cx="17" cy="-8" r="7" fill="#ff4b3a" opacity=".35" filter="url(#softGlow)"/>';
+      s += '<path d="M-150,-2 L-122,-2" stroke="#2a2030" stroke-width="1"/><path d="M-200,-6 h52 l6,-10 h-60z" fill="#7a1f26"/><path d="M-204,0 h60 q8,0 10,-6" stroke="#d8b25a" stroke-width="2" fill="none"/><circle cx="-180" cy="-22" r="7" fill="#b8262f"/><circle cx="-180" cy="-30" r="5" fill="#f1c9a5"/><path d="M-186,-32 q6,-10 12,0z" fill="#b8262f"/><rect x="-198" y="-24" width="12" height="10" fill="#d8b25a"/>';
+      for (var k = 0; k < 14; k++) s += '<circle cx="' + (-210 - k * 14 - Math.random() * 6) + '" cy="' + (Math.random() * 10 - 5) + '" r="' + (1.8 - k * 0.1) + '" fill="#ffe9a8" opacity="' + (0.9 - k * 0.06) + '"/>';
+      g.innerHTML = s;
+      g.addEventListener("click", function () { if (!dragMoved) toast("Da fliegt jemand ein paar Proberunden für Heiligabend. Jochen hat übrigens kurz gewinkt."); });
+      eventsG.appendChild(g);
+      var y0 = 160 + Math.random() * 160;
+      animate(g, [{ transform: "translate(-80px," + y0 + "px)" }, { transform: "translate(900px," + (y0 - 70) + "px)" }, { transform: "translate(1900px," + (y0 + 10) + "px)" }], 15000, function () { g.remove(); });
+    },
+    sternschnuppe: function () {
+      var x = 300 + Math.random() * 1000, y = 40 + Math.random() * 200, g = svgEl("g", {});
+      g.innerHTML = '<line x1="0" y1="0" x2="-140" y2="-50" stroke="url(#shoot)" stroke-width="2.5" stroke-linecap="round"/><circle r="2.6" fill="#ffffff"/><circle r="8" fill="#dfe8ff" opacity=".5" filter="url(#softGlow)"/>';
+      eventsG.appendChild(g);
+      animate(g, [{ transform: "translate(" + x + "px," + y + "px)", opacity: 0 }, { opacity: 1, offset: 0.15 }, { transform: "translate(" + (x + 420) + "px," + (y + 150) + "px)", opacity: 0 }], 1400, function () { g.remove(); });
+    },
+    glocken: function () {
+      var t = META.tower; if (!t) return;
+      var glow = svgEl("circle", { cx: t[0], cy: t[1] + 60, r: 40, fill: "#ffd98a", opacity: "0", filter: "url(#softGlow)" });
+      eventsG.appendChild(glow);
+      animate(glow, [{ opacity: 0 }, { opacity: 0.5 }, { opacity: 0 }, { opacity: 0.45 }, { opacity: 0 }], 4000, function () { glow.remove(); });
+      for (var i = 0; i < 6; i++) (function (i) {
+        setTimeout(function () {
+          var n = svgEl("text", { x: t[0] + (i % 2 ? 14 : -14), y: t[1] + 50, "font-size": 18, fill: "#ffe9b8", "class": "ev-note" }); n.textContent = i % 3 ? "♪" : "♫";
+          eventsG.appendChild(n);
+          animate(n, [{ transform: "translate(0,0)", opacity: 0 }, { opacity: 1, offset: 0.2 }, { transform: "translate(" + (i % 2 ? 30 : -30) + "px,-90px)", opacity: 0 }], 3200, function () { n.remove(); });
+        }, i * 450);
+      })(i);
+    },
+    fuchs: function () {
+      var a = P(-3, 13.55, 0), b = P(31, 13.55, 0), g = svgEl("g", {});
+      g.innerHTML = '<g class="ev-fox"><ellipse cx="0" cy="0" rx="9" ry="4.5" fill="#c86a2a"/><circle cx="9" cy="-3" r="4" fill="#c86a2a"/><path d="M11,-6 l2,-5 l1,5z M8,-6 l0,-5 l2,4z" fill="#8a3f14"/><path d="M-8,0 q-12,-2 -16,-8 q8,2 14,4z" fill="#c86a2a"/><circle cx="-23" cy="-8" r="2.5" fill="#f4f1ea"/><path d="M-5,4 l-2,5 M4,4 l2,5" stroke="#3a2416" stroke-width="2"/></g>';
+      eventsG.appendChild(g);
+      animate(g, [{ transform: "translate(" + a[0] + "px," + (a[1] - 6) + "px)" }, { transform: "translate(" + b[0] + "px," + (b[1] - 6) + "px)" }], 11000, function () { g.remove(); });
+    },
+    lichtershow: function () {
+      var w = $("world"); w.classList.add("lightshow");
+      setTimeout(function () { w.classList.remove("lightshow"); }, 6000);
+    },
+    schneegestoeber: function () { if (window.__snowBurst) window.__snowBurst(9000); }
+  };
+  var lastSurprise = "";
+  function surprise() {
+    var keys = Object.keys(SURPRISES).filter(function (k) { return k !== lastSurprise; });
+    var k = keys[Math.floor(Math.random() * keys.length)]; lastSurprise = k;
+    try { SURPRISES[k](); } catch (e) { /* ignorieren */ }
+  }
+  function scheduleSurprise(first) {
+    setTimeout(function () { if (!document.hidden) surprise(); scheduleSurprise(false); }, first ? 15000 + Math.random() * 15000 : 40000 + Math.random() * 50000);
+  }
+  scheduleSurprise(true);
+  if (params.get("surprise")) setTimeout(function () { var k = params.get("surprise"); if (SURPRISES[k]) SURPRISES[k](); }, 600);
+
+  // ---------- Schneefall über dem Dorf (in Landschafts-Koordinaten, wandert beim Verschieben/Zoomen mit) ----------
+  (function () {
+    var c = $("sceneSnow"); if (!c || !c.getContext) return;
+    var reduceM = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var x = c.getContext("2d"), W = 0, H = 0, fl = [], wind = 0, t = 0, burstUntil = 0, VW = 1600, VH = 1150;
+    window.__snowBurst = function (ms) { burstUntil = Date.now() + ms; };
+    function size() {
+      var r = sc.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = r.width; H = r.height; c.width = W * dpr; c.height = H * dpr; c.style.width = W + "px"; c.style.height = H + "px";
+      x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    size(); window.addEventListener("resize", size);
+    var n = 700;
+    for (var i = 0; i < n; i++) { var z = Math.random(); fl.push({ x: Math.random() * VW, y: Math.random() * VH, z: z, r: 0.5 + z * 1.9, s: 0.25 + z * 0.9, p: Math.random() * 6.28 }); }
+    (function tick() {
+      t += 0.005; var burst = Date.now() < burstUntil; wind = Math.sin(t) * 0.35 + 0.15 + (burst ? 1.6 : 0);
+      var k = svg.getBoundingClientRect().width / VW, ox = sc.scrollLeft, oy = sc.scrollTop;
+      if (Math.abs(sc.clientHeight - H) > 2 || Math.abs(sc.clientWidth - W) > 2) size();
+      x.clearRect(0, 0, W, H);
+      for (var i = 0; i < fl.length; i++) {
+        var f = fl[i];
+        if (!burst && i > n * 0.6 && f.y < 0) continue;
+        f.y += f.s * (burst ? 1.8 : 1); f.p += 0.02; f.x += wind * (0.4 + f.z) + Math.sin(f.p) * 0.2;
+        if (f.y > VH + 4) { f.y = -4; f.x = Math.random() * VW; }
+        if (f.x > VW + 4) f.x = -4; if (f.x < -4) f.x = VW + 4;
+        var sx = f.x * k - ox, sy = f.y * k - oy;
+        if (sx < -6 || sy < -6 || sx > W + 6 || sy > H + 6) continue;
+        x.beginPath(); x.fillStyle = "rgba(235,242,255," + (0.35 + f.z * 0.55) + ")";
+        x.arc(sx, sy, f.r * k, 0, 6.283); x.fill();
+      }
+      if (!reduceM) requestAnimationFrame(tick);
+    })();
+  })();
 
   // ---------- Schnee ----------
   var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
