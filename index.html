@@ -442,9 +442,11 @@ footer { color: var(--muted); }
         <div class="scene-scroll" id="sceneScroll">
           <svg class="scene" id="scene" viewBox="0 0 1600 1150" role="img" aria-label="Wimmelbild: ein verschneites Weihnachtsdorf bei Nacht von schräg oben mit versteckten Zahlen">
             <defs>
+              <linearGradient id="iceDay" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#bcd3e6"/><stop offset=".5" stop-color="#a7c3dc"/><stop offset="1" stop-color="#b8cfe3"/></linearGradient>
               <linearGradient id="ice" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0" stop-color="#3e5a86"/><stop offset=".5" stop-color="#2f4a75"/><stop offset="1" stop-color="#3a5682"/>
               </linearGradient>
+              <radialGradient id="snowballDay" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#e6ecf4"/><stop offset="1" stop-color="#c3cddb"/></radialGradient>
               <radialGradient id="snowball" cx=".35" cy=".3" r=".75">
                 <stop offset="0" stop-color="#8d9bc8"/><stop offset=".7" stop-color="#6573a6"/><stop offset="1" stop-color="#46527f"/>
               </radialGradient>
@@ -452,6 +454,7 @@ footer { color: var(--muted); }
               <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0" stop-color="#070b1c" stop-opacity=".7"/><stop offset=".25" stop-color="#070b1c" stop-opacity=".2"/><stop offset=".45" stop-color="#070b1c" stop-opacity="0"/>
               </linearGradient>
+              <linearGradient id="dayHaze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe7f1" stop-opacity=".55"/><stop offset=".3" stop-color="#dfe7f1" stop-opacity=".1"/><stop offset=".5" stop-color="#dfe7f1" stop-opacity="0"/></linearGradient>
               <radialGradient id="vignette" cx=".5" cy=".55" r=".75">
                 <stop offset=".5" stop-color="#05081a" stop-opacity="0"/><stop offset="1" stop-color="#05081a" stop-opacity=".6"/>
               </radialGradient>
@@ -460,6 +463,7 @@ footer { color: var(--muted); }
               <linearGradient id="fogGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0" stop-color="#9aa6c8" stop-opacity=".55"/><stop offset=".5" stop-color="#8d99bd" stop-opacity=".32"/><stop offset="1" stop-color="#9aa6c8" stop-opacity=".45"/>
               </linearGradient>
+              <radialGradient id="fogPuffDay"><stop offset="0" stop-color="#f2f5f9" stop-opacity=".7"/><stop offset=".55" stop-color="#e9eef4" stop-opacity=".35"/><stop offset="1" stop-color="#e9eef4" stop-opacity="0"/></radialGradient>
               <radialGradient id="fogPuff"><stop offset="0" stop-color="#b9c3df" stop-opacity=".62"/><stop offset=".55" stop-color="#a9b4d4" stop-opacity=".3"/><stop offset="1" stop-color="#a9b4d4" stop-opacity="0"/></radialGradient>
               <filter id="albumDark"><feColorMatrix values="0 0 0 0 .16  0 0 0 0 .14  0 0 0 0 .2  0 0 0 1 0"/></filter>
               <filter id="nightFull" color-interpolation-filters="sRGB"><feColorMatrix values=".286 .022 .022 0 .0235  .026 .338 .026 0 .035  .04 .04 .52 0 .07  0 0 0 1 0"/></filter>
@@ -1159,6 +1163,9 @@ window.DAYS = [
   }
   function tcenter(kind, pt, size) { var m = MAT[kind], oy = -size * 0.36; return [pt[0] + m[2] * oy, pt[1] + m[3] * oy]; }
 
+  // Vor dem 1. Dezember: Tag und noch kein Weihnachtsmarkt
+  var PRE = false;
+  function hidePre(fn) { if (!PRE) return fn(); var a = items.length, b = shadows.length, c = glows.length, r = fn(); items.length = a; shadows.length = b; glows.length = c; return r; }
   // ---------- Nacht ----------
   function nightHex(h) {
     var r = parseInt(h.substr(0, 2), 16), g = parseInt(h.substr(2, 2), 16), b = parseInt(h.substr(4, 2), 16);
@@ -1167,6 +1174,7 @@ window.DAYS = [
     return o.map(function (v) { v = Math.max(0, Math.min(255, Math.round(v))); return (v < 16 ? "0" : "") + v.toString(16); }).join("");
   }
   function nightify(str) {
+    if (PRE) return str.replace(/url\(#snowball\)/g, "url(#snowballDay)").replace(/="\*#(ffd27a|f6b04e)"/g, '="#8ea4bb"').replace(/="\*#/g, '="#');
     return str.replace(/(fill|stroke)="(\*?)#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})"/g, function (m, attr, star, hex) {
       if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
       return attr + '="#' + (star ? hex : nightHex(hex)) + '"';
@@ -1264,7 +1272,7 @@ window.DAYS = [
       s += poly(frect(F, door - 0.27, 0.05, door + 0.27, 0.92), "#efe7da");
       s += poly(frect(F, door - 0.22, 0.05, door + 0.22, 0.86), o.church ? "#4a2f1f" : pick(["#5b3a26", "#2f4a3a", "#6b2d2b", "#3b4a63"]));
       s += circ(F(door + 0.14, 0.42), 1.6, "#d8b25a");
-      if (rnd() < 0.6) s += circ(F(door, 0.66), 6, "none", 'stroke="#2f5d3f" stroke-width="3.5"') + circ(F(door, 0.6), 1.8, "#c0392b");
+      if (rnd() < 0.6 && !PRE) s += circ(F(door, 0.66), 6, "none", 'stroke="#2f5d3f" stroke-width="3.5"') + circ(F(door, 0.6), 1.8, "#c0392b");
       s += poly(frect(F, door - 0.32, 0, door + 0.32, 0.06), "#f6f8fb");
       if (o.plate) s += plate(F, kind, door + 0.5, 0.8, o.plate, o.plate <= 24 ? o.plate : 0);
     }
@@ -1901,7 +1909,7 @@ window.DAYS = [
     shadows.push(ell(add(c, 40, 10), HILL.r * RX * 1.05, HILL.r * RY * 0.9, "#000"));
     for (var i = 0; i <= N; i++) {
       var t = i / N, z = HILL.h * t, r = HILL.r * Math.sqrt(1 - t) + 0.03, q = P(HILL.x, HILL.y, z);
-      var lo = Math.round(150 + 75 * Math.pow(t, 0.7)), hi = Math.min(250, lo + 30);
+      var lo = PRE ? Math.round(196 + 44 * Math.pow(t, 0.7)) : Math.round(150 + 75 * Math.pow(t, 0.7)), hi = Math.min(250, lo + (PRE ? 14 : 30));
       s += ell(q, r * RX, r * RY, "#" + hx(lo - 22) + hx(lo - 10) + hx(lo + 4));
       s += ell(add(q, -r * RX * 0.16, -r * RY * 0.1), r * RX * 0.8, r * RY * 0.84, "#" + hx(hi - 14) + hx(hi - 6) + hx(hi + 4));
     }
@@ -1962,8 +1970,9 @@ window.DAYS = [
     }
     return null;
   }
+  var TJ0 = null;
   function animals() {
-    AN = []; META.animals = AN; var q, i;
+    AN = TJ0 ? [[TJ0[0], TJ0[1]]] : []; META.animals = AN; var q, i;
     for (i = 0; i < 9; i++) {
       q = animalSpot(0.32, 0.9, true); if (!q) continue;
       var fl = rnd() < 0.5; deer(q[0], q[1], fl, rnd() < 0.35, false);
@@ -1998,19 +2007,19 @@ window.DAYS = [
   function staticDetails() {
     var TOWN = [[-1, 28, -1, 28]], q;
     // Krippe bei der Kirche
-    q = findFree([[16.4, 18.0, 0.0, 2.2], [22.2, 24.0, 0.2, 2.0], [16.2, 18.0, 8.2, 8.6]], 0.8); if (q) krippe(q[0], q[1]);
+    q = findFree([[16.4, 18.0, 0.0, 2.2], [22.2, 24.0, 0.2, 2.0], [16.2, 18.0, 8.2, 8.6]], 0.8); if (q) hidePre(function () { krippe(q[0], q[1]); });
     // Christbaumverkauf am Ortsrand
-    q = findFree([[-3.5, -1.5, 9.2, 10.4], [26.5, 29, 9.0, 10.2], [26.2, 29, 15.0, 16.5], [-3, -1, 15.0, 16.5]], 1.2); if (q) treeLot(q[0], q[1]);
+    q = findFree([[-3.5, -1.5, 9.2, 10.4], [26.5, 29, 9.0, 10.2], [26.2, 29, 15.0, 16.5], [-3, -1, 15.0, 16.5]], 1.2); if (q) hidePre(function () { treeLot(q[0], q[1]); });
     // Pferdeschlitten auf der Hauptstraße
     q = findFree([[-5, 7, 12.2, 13.2]], 0.9); if (q) horseSleigh(q[0], q[1]);
     // Kinderkarussell
-    q = findFree([[25.5, 29, 11.4, 14.6], [11.5, 14.5, 25, 28.5], [25.5, 29, 11.4, 14.6]], 0.9); if (q) carousel(q[0], q[1]);
+    q = findFree([[25.5, 29, 11.4, 14.6], [11.5, 14.5, 25, 28.5], [25.5, 29, 11.4, 14.6]], 0.9); if (q) hidePre(function () { carousel(q[0], q[1]); });
     // Leuchtende Rentier-Figuren in Gärten
-    for (var r = 0; r < 5; r++) { q = findFree(TOWN, 0.45); var fl = rnd() < 0.5; if (q && r / 5 < G) lightReindeer(q[0], q[1], fl); else if (q) occupy(q[0] - 0.3, q[1] - 0.3, 0.6, 0.6); }
+    for (var r = 0; r < 5; r++) { q = findFree(TOWN, 0.45); var fl = rnd() < 0.5; if (q && r / 5 < G) hidePre(function () { lightReindeer(q[0], q[1], fl); }); else if (q) occupy(q[0] - 0.3, q[1] - 0.3, 0.6, 0.6); }
     // Katzen auf Zäunen
     [[7.3, 8.95], [18.6, 21.0], [1.4, 23.2], [4.2, 5.6]].forEach(function (c) { cat(c[0], c[1], 0.4); });
     // Dampf über Glühwein und Punsch
-    steam(9.95, 16.15, 1.75); steam(11.55, 16.15, 1.75);
+    hidePre(function () { steam(9.95, 16.15, 1.75); steam(11.55, 16.15, 1.75); });
     // Extra Schneemänner
     for (var sm = 0; sm < 3; sm++) {
       q = findFree(TOWN, 0.4); if (!q) continue;
@@ -2026,7 +2035,7 @@ window.DAYS = [
     while (placed < 150 && tries < 6000) {
       tries++;
       var area = rnd(), px, py;
-      if (area < 0.35) { px = rr(9.2, 16.8); py = rr(9.2, 16.8); }
+      if (area < 0.35) { px = rr(9.2, 16.8); py = rr(9.2, 16.8); if (PRE && area > 0.08) continue; }
       else if (area < 0.65) { px = rr(-6, 32); py = rr(12.2, 13.8); }
       else if (area < 0.9) { px = rr(12.2, 13.8); py = rr(-6, 32); }
       else { px = rr(3.1, 8.1); py = rr(18.1, 22.3); }
@@ -2038,16 +2047,16 @@ window.DAYS = [
     q = findFree([[-2, 28, -2, 28]], 1.0); if (q) snowballFight(q[0], q[1]);
     for (var i = 0; i < 6; i++) { q = findFree(TOWN, 0.5); if (q) sledKid(q[0], q[1]); }
     // Weihnachtsmänner (Vorsicht: nicht Jochen!)
-    for (var k = 0; k < 3; k++) { q = findFree([[9.2, 16.8, 9.2, 16.8], [-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30]], 0.25); if (q) santaPerson(q[0], q[1]); }
+    for (var k = 0; k < 3; k++) { q = findFree([[9.2, 16.8, 9.2, 16.8], [-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30]], 0.25); if (q) hidePre(function () { santaPerson(q[0], q[1]); }); }
     // Hundespaziergänger, Laternenläufer
     for (var dw = 0; dw < 10; dw++) { q = findFree([[-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30], [9.2, 16.8, 9.2, 16.8]], 0.3); if (q) dogWalker(q[0], q[1]); }
-    for (var lw = 0; lw < 14; lw++) { q = findFree([[-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30], [9.2, 16.8, 9.2, 16.8], [-1, 28, -1, 28]], 0.25); if (q) lanternWalker(q[0], q[1]); }
+    for (var lw = 0; lw < 14; lw++) { q = findFree([[-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30], [9.2, 16.8, 9.2, 16.8], [-1, 28, -1, 28]], 0.25); if (q) hidePre(function () { lanternWalker(q[0], q[1]); }); }
     // Sternsinger
     q = findFree([[15.5, 17.6, 7.6, 8.8], [21.4, 23, 8.6, 9.3], [3, 6, 11.4, 11.9], [19, 23, 14.2, 14.7]], 0.6);
-    if (q) [[0, 0], [0.3, 0.12], [0.6, 0.15], [0.9, 0.1], [1.15, -0.05]].forEach(function (o, i) { if (i === 2) lanternWalker(q[0] + o[0], q[1] + o[1]); else person(q[0] + o[0], q[1] + o[1], i === 0); });
+    if (q) hidePre(function () { [[0, 0], [0.3, 0.12], [0.6, 0.15], [0.9, 0.1], [1.15, -0.05]].forEach(function (o, i) { if (i === 2) lanternWalker(q[0] + o[0], q[1] + o[1]); else person(q[0] + o[0], q[1] + o[1], i === 0); }); });
     // Noch mehr Menschen: Marktbesucher, Spaziergänger, Familien
     var STREETS = [[-4, 30, 12.15, 13.85], [12.15, 13.85, -4, 30]], PLAZA = [[9.2, 16.8, 9.2, 16.8]];
-    for (var mp = 0; mp < 45; mp++) { q = findFree(PLAZA, 0.17); if (q) { occupy(q[0] - 0.1, q[1] - 0.1, 0.2, 0.2); person(q[0], q[1], rnd() < 0.2); } }
+    for (var mp = 0; mp < (PRE ? 8 : 45); mp++) { q = findFree(PLAZA, 0.17); if (q) { occupy(q[0] - 0.1, q[1] - 0.1, 0.2, 0.2); person(q[0], q[1], rnd() < 0.2); } }
     for (var ms = 0; ms < 55; ms++) { q = findFree(STREETS, 0.17); if (q) { occupy(q[0] - 0.1, q[1] - 0.1, 0.2, 0.2); person(q[0], q[1], rnd() < 0.2); } }
     for (var mg = 0; mg < 25; mg++) { q = findFree(TOWN, 0.2); if (q) { occupy(q[0] - 0.1, q[1] - 0.1, 0.2, 0.2); person(q[0], q[1], rnd() < 0.3); } }
     for (var fam = 0; fam < 10; fam++) {
@@ -2101,7 +2110,21 @@ window.DAYS = [
     koenig: { f: '<path d="M-25,4 C-30,20 -36,42 -37,57 L37,57 C36,42 30,20 25,4Z" fill="#4e3478"/><path d="M-25,4 C-29,20 -34,42 -35,57 L-27,57 C-26,42 -22,20 -18,6Z M25,4 C29,20 34,42 35,57 L27,57 C26,42 22,20 18,6Z" fill="#d6d0c4"/><path d="M-16,-34 v-16 l8,8 l8,-12 l8,12 l8,-8 v16z" fill="#b8913a"/><circle cx="0" cy="-44" r="2.5" fill="#8e2a30"/><rect x="-6" y="24" width="12" height="10" rx="2" fill="#b8913a"/>' },
     tanne: { f: '<polygon points="-16,-6 16,-6 27,20 19,20 34,56 -34,56 -19,20 -27,20" fill="#3a7a55"/><polygon points="0,-6 16,-6 27,20 19,20 34,56 0,56" fill="#2c6646"/><circle cx="-14" cy="34" r="4" fill="#b8423a"/><circle cx="13" cy="44" r="4" fill="#b8913a"/><circle cx="9" cy="14" r="3.5" fill="#4f7fa8"/><circle cx="-8" cy="48" r="3.5" fill="#b8913a"/><polygon points="0,-82 -14,-44 14,-44" fill="#3a7a55"/><use href="#star" x="-8" y="-92" width="16" height="16" fill="#b8963f"/>' },
     geschenk: { f: '<rect x="-36" y="16" width="72" height="42" fill="#6e2129"/><rect x="-6" y="16" width="12" height="42" fill="#8a6a34"/><rect x="-36" y="34" width="72" height="7" fill="#8a6a34"/><rect x="-40" y="10" width="80" height="10" fill="#5a1a21"/><rect x="-6" y="10" width="12" height="10" fill="#7a5c2c"/><path d="M-14,10 q-14,-12 -18,-2 q4,6 18,2 M14,10 q14,-12 18,-2 q-4,6 -18,2" fill="#8a6a34"/>' },
+    // Vorweihnachtszeit (20.–30. November): allgemeine Kostüme
+    astronaut: { b: '<rect x="-30" y="-6" width="60" height="44" rx="8" fill="#a9a9b2"/><rect x="-26" y="-2" width="10" height="34" rx="3" fill="#8a8a94"/>', f: '<path d="M-25,4 C-30,20 -33,40 -33,57 L33,57 C33,40 30,20 25,4Z" fill="#d6d3cc"/><rect x="-12" y="18" width="24" height="16" rx="3" fill="#6f7f94"/><circle cx="-6" cy="26" r="2.2" fill="#b8423a"/><circle cx="2" cy="26" r="2.2" fill="#d8b440"/><circle cx="8" cy="26" r="2.2" fill="#4f8a5a"/><rect x="18" y="12" width="9" height="6" fill="#3f5a8a"/><circle cx="0" cy="-12" r="33" fill="#a8c2da" opacity=".22" stroke="#c4c8ce" stroke-width="3.5"/><path d="M-20,-34 q8,-8 18,-6" stroke="#ffffff" stroke-width="3" fill="none" opacity=".5"/>' },
+    holzfaeller: { f: '<path d="M-25,4 C-30,20 -34,40 -35,57 L35,57 C34,40 30,20 25,4Z" fill="#7a2c2c"/><path d="M-30,20 H30 M-33,34 H33 M-34,48 H34 M-12,4 V57 M12,4 V57" stroke="#3a1818" stroke-width="4" opacity=".75"/><path d="M-20,-30 C-20,-50 20,-50 20,-30Z" fill="#4e5a40"/><rect x="-22" y="-34" width="44" height="7" rx="3" fill="#3e4834"/><path d="M30,56 L44,-26" stroke="#7e6040" stroke-width="4"/><path d="M40,-30 l14,-4 l-2,16 l-12,-4z" fill="#6f6f78"/>' },
+    postbote: { f: '<path d="M-25,4 C-30,20 -34,40 -35,57 L35,57 C34,40 30,20 25,4Z" fill="#2c3a5e"/><path d="M-24,6 L26,50" stroke="#7a6630" stroke-width="5"/><rect x="18" y="34" width="28" height="22" rx="3" fill="#8a7434"/><rect x="21" y="27" width="10" height="11" fill="#cfcabe" transform="rotate(-8 26 32)"/><rect x="31" y="26" width="10" height="12" fill="#bdb8ac" transform="rotate(6 36 32)"/><path d="M-20,-30 C-20,-46 20,-46 20,-30Z" fill="#2c3a5e"/><path d="M-22,-30 h44 l6,5 h-50z" fill="#1e2a44"/><rect x="-4" y="-40" width="8" height="5" rx="1" fill="#8a7434"/>' },
+    maler: { f: '<path d="M-25,4 C-31,20 -35,40 -36,57 L36,57 C35,40 31,20 25,4Z" fill="#c9c2b0"/><circle cx="-14" cy="22" r="4" fill="#b8423a" opacity=".8"/><circle cx="10" cy="40" r="3.5" fill="#3a6fb0" opacity=".8"/><circle cx="16" cy="18" r="3" fill="#d8b440" opacity=".8"/><circle cx="-8" cy="46" r="3" fill="#4f8a5a" opacity=".8"/><ellipse cx="-4" cy="-34" rx="24" ry="8" fill="#2e2a44" transform="rotate(-10 -4 -34)"/><path d="M-4,-42 v-5" stroke="#2e2a44" stroke-width="3"/><path d="M-50,30 C-56,14 -38,6 -28,16 C-24,22 -32,24 -30,30 C-28,38 -44,42 -50,30Z" fill="#a8865a"/><circle cx="-44" cy="22" r="2.4" fill="#b8423a"/><circle cx="-38" cy="16" r="2.4" fill="#3a6fb0"/><circle cx="-46" cy="31" r="2.4" fill="#d8b440"/><path d="M30,40 L46,6" stroke="#6b4a30" stroke-width="2.4"/><path d="M45,8 l4,-8 l1,9z" fill="#3a6fb0"/>' },
+    eichhoernchen: { b: '<path d="M14,52 C44,56 56,30 48,6 C44,-12 54,-26 40,-38 C28,-46 18,-34 26,-24 C34,-14 24,-2 22,14 C20,30 10,44 14,52Z" fill="#8a4a2a"/><path d="M40,-30 C34,-26 34,-18 38,-12" stroke="#a8643c" stroke-width="3" fill="none"/>', f: '<path d="M-17,-38 l-6,-16 l12,9z M17,-38 l6,-16 l-12,9z" fill="#8a4a2a"/><path d="M-22,20 C-26,34 -28,48 -24,56 L24,56 C28,48 26,34 22,20Z" fill="#7a4224"/><ellipse cx="0" cy="38" rx="11" ry="15" fill="#c9a882"/><ellipse cx="-24" cy="16" rx="6" ry="7" fill="#7a5a30"/><path d="M-30,10 q6,-8 12,0z" fill="#4e3a22"/>' },
+    angler: { f: '<path d="M-24,14 C-28,28 -32,44 -32,57 L32,57 C32,44 28,28 24,14Z" fill="#3e5a3a"/><path d="M-14,14 V-2 M14,14 V-2" stroke="#3e5a3a" stroke-width="5"/><rect x="-12" y="22" width="24" height="12" rx="2" fill="#344c31"/><path d="M-24,-28 C-24,-44 24,-44 24,-28 L32,-22 H-32Z" fill="#6e7a5a"/><path d="M28,56 L62,-74" stroke="#6b4a30" stroke-width="2.6"/><path d="M62,-74 V-10" stroke="#c8c8c8" stroke-width=".9"/><path d="M58,-12 q4,-6 8,0 q-4,6 -8,0z M66,-12 l4,-3 v6z" fill="#7a8a96"/><rect x="-48" y="40" width="18" height="16" rx="2" fill="#5a6470"/>' },
+    schornsteinfeger: { f: '<path d="M-24,4 C-29,20 -33,40 -34,57 L34,57 C33,40 29,20 24,4Z" fill="#24222a"/><g fill="#8a7a4a"><circle cx="-7" cy="16" r="2.2"/><circle cx="7" cy="16" r="2.2"/><circle cx="-8" cy="28" r="2.2"/><circle cx="8" cy="28" r="2.2"/><circle cx="-9" cy="40" r="2.2"/><circle cx="9" cy="40" r="2.2"/></g><rect x="-14" y="-72" width="28" height="40" rx="2" fill="#1c1a20"/><ellipse cx="0" cy="-32" rx="22" ry="5" fill="#16141a"/><path d="M38,58 V-6 M50,58 V-6 M38,4 h12 M38,18 h12 M38,32 h12 M38,46 h12" stroke="#5e4630" stroke-width="2.6"/><path d="M-36,0 C-38,20 -40,34 -38,44" stroke="#3a3a3e" stroke-width="1.6" fill="none"/><circle cx="-38" cy="48" r="7" fill="#2a2a2e"/>' },
+    detektiv: { f: '<path d="M-25,4 C-31,20 -36,40 -37,57 L37,57 C36,40 31,20 25,4Z" fill="#8a7458"/><path d="M-25,4 L-6,22 L-4,57 M25,4 L6,22 L4,57" stroke="#6e5c44" stroke-width="2.5" fill="none"/><rect x="-33" y="30" width="66" height="6" fill="#5a4a36"/><path d="M-22,-28 C-22,-48 22,-48 22,-28Z" fill="#7a6a4a"/><path d="M-22,-36 H22 M-20,-42 H20 M-8,-48 V-28 M8,-48 V-28" stroke="#5a4c34" stroke-width="2" opacity=".7"/><path d="M-22,-29 l-8,6 h12z M22,-29 l8,6 h-12z" fill="#6a5a3e"/><circle cx="-44" cy="16" r="9" fill="#a8c2da" opacity=".35" stroke="#4a3a2a" stroke-width="2.5"/><path d="M-38,23 L-30,36" stroke="#4a3a2a" stroke-width="3.5"/>' },
+    bergmann: { f: '<path d="M-25,4 C-30,20 -34,40 -35,57 L35,57 C34,40 30,20 25,4Z" fill="#26262e"/><g fill="#8a7a4a"><circle cx="0" cy="14" r="2.2"/><circle cx="0" cy="25" r="2.2"/><circle cx="0" cy="36" r="2.2"/></g><path d="M-25,46 C-10,52 10,52 25,46 L28,57 H-28z" fill="#3a2e26"/><path d="M-15,-30 L-12,-62 H12 L15,-30Z" fill="#202026"/><rect x="-18" y="-34" width="36" height="6" rx="2" fill="#18181c"/><path d="M8,-62 C4,-76 14,-84 20,-80 C14,-74 16,-66 12,-60" fill="#4e6a50"/><path d="M-5,-50 l5,-6 l5,6z" fill="#8a7a4a"/><rect x="-46" y="24" width="12" height="16" rx="3" fill="#4a463e"/><path d="M-40,24 v-6" stroke="#4a463e" stroke-width="2"/>' },
+    imker: { f: '<path d="M-25,4 C-30,20 -34,40 -35,57 L35,57 C34,40 30,20 25,4Z" fill="#d6d3cc"/><path d="M-30,30 H30" stroke="#b9b5aa" stroke-width="3"/><ellipse cx="0" cy="-30" rx="32" ry="6" fill="#c9bb9c"/><path d="M-15,-32 C-15,-46 15,-46 15,-32Z" fill="#c9bb9c"/><path d="M-30,-28 C-32,-6 -28,6 -24,10 L24,10 C28,6 32,-6 30,-28Z" fill="#2a2a2a" opacity=".28"/><rect x="30" y="28" width="12" height="18" rx="3" fill="#7a7a84"/><path d="M36,28 l-6,-8 h12z" fill="#6a6a74"/><g fill="#c8a032"><ellipse cx="-40" cy="-4" rx="3" ry="2"/><ellipse cx="-34" cy="-16" rx="3" ry="2"/><ellipse cx="44" cy="2" rx="3" ry="2"/></g>' },
+    igel: { b: '<path d="M-38,50 L-48,40 L-40,34 L-52,24 L-40,18 L-50,6 L-36,4 L-42,-10 L-28,-8 L-30,-24 L-16,-18 L-12,-34 L0,-22 L12,-34 L16,-18 L30,-24 L28,-8 L42,-10 L36,4 L50,6 L40,18 L52,24 L40,34 L48,40 L38,50 L44,58 H-44Z" fill="#4e4236"/><path d="M-40,20 l-6,-4 M-30,-4 l-8,-3 M30,-4 l8,-3 M40,20 l6,-4 M-36,40 l-7,1 M36,40 l7,1" stroke="#6a5a48" stroke-width="2"/>', f: '<path d="M30,-14 q8,-6 12,2 q-6,6 -12,-2z" fill="#8a5a2a"/><path d="M-36,28 q-8,-6 -12,2 q6,6 12,-2z" fill="#7a4e24"/><circle cx="-26" cy="-4" r="3.2" fill="#6e2a2a"/>' },
   };
+  // Schwierigere Verstecke für die Vorweihnachtszeit (20.–30. November)
+  var PRESPOTS = [[-1.02, 5.09, 0, 0], [29.83, 19.09, 0, 0], [9.41, 28.59, 0, 0], [18.13, 13.83, 0, 0], [13.92, 31.58, 0, 0], [9.64, 16.99, 0, 0], [16.92, -3.23, 0, 0], [29.42, 9.54, 0, 0], [8.52, 21.77, 0, 0], [9.41, -4.58, 0, 0], [5.68, 23.3, 0, 0]];
   // Verstecke: [x, y, z, Tiefen-Verschiebung]
   var JSPOTS = [
     [-0.81, 16.77, 0, 0],
@@ -2129,12 +2152,12 @@ window.DAYS = [
     [8.49, 9.76, 0, 0],
     [15.67, 24.72, 0, 0]
   ];
-  function nightUses(str) { return str.replace(/<use href="#j/g, '<use filter="url(#nightFull)" href="#j'); }
+  function nightUses(str) { if (PRE) return str; return str.replace(/<use href="#j/g, '<use filter="url(#nightFull)" href="#j'); }
   function jochen(js, costume) {
-    var p = P(js[0], js[1], js[2]), sc = 0.285, c = COSTUMES[costume] || COSTUMES.santa, s = "";
-    if (!js[2]) s += ell(add(p, 4, 0), 9, 3, "#000", 'opacity=".22"');
+    var p = P(js[0], js[1], js[2]), sc = 0.242, c = COSTUMES[costume] || COSTUMES.santa, s = "";
+    if (!js[2]) s += ell(add(p, 3.4, 0), 7.7, 2.6, "#000", 'opacity=".22"');
     var ty = p[1] - 54 * sc;
-    s += '<g class="jochen-fig" transform="translate(' + f1(p[0]) + " " + f1(ty) + ") scale(" + sc + ')">' + nightUses(c.b || "") + '<use href="#jBody" filter="url(#nightBody)"/>' + nightUses(c.f || "") + "</g>";
+    s += '<g class="jochen-fig" transform="translate(' + f1(p[0]) + " " + f1(ty) + ") scale(" + sc + ')">' + nightUses(c.b || "") + '<use href="#jBody"' + (PRE ? "" : ' filter="url(#nightBody)"') + "/>" + nightUses(c.f || "") + "</g>";
     item(js[0] + js[1] + (js[3] || 0) - 0.02, s);
     return [p[0], ty + 4 * sc];
   }
@@ -2142,7 +2165,7 @@ window.DAYS = [
   // ---------- Aufbau ----------
   function build(root, opts) {
     opts = opts || {};
-    OPTS = opts; G = opts.growth == null ? 1 : opts.growth; FINALE = !!opts.finale;
+    OPTS = opts; G = opts.growth == null ? 1 : opts.growth; FINALE = !!opts.finale; PRE = !!opts.pre && !FINALE;
     seed = 1225; seed2 = 4711; FT = []; ground = []; items = []; shadows = []; glows = []; spots = {}; occ = []; guards = [];
 
     // Boden
@@ -2156,7 +2179,7 @@ window.DAYS = [
     [[-30, 12.55], [-30, 13.45]].forEach(function (t) { ground.push(line(P(t[0], t[1], 0), P(50, t[1], 0), "#b9c1cb", 2.2, 'stroke-dasharray="14 6"')); });
     [[12.55, -30], [13.45, -30]].forEach(function (t) { ground.push(line(P(t[0], t[1], 0), P(t[0], 50, 0), "#b9c1cb", 2.2, 'stroke-dasharray="14 6"')); });
     // Eisbahn
-    gpoly([[2.8, 17.8], [8.4, 17.8], [8.4, 22.6], [2.8, 22.6]], "url(#ice)");
+    gpoly([[2.8, 17.8], [8.4, 17.8], [8.4, 22.6], [2.8, 22.6]], PRE ? "url(#iceDay)" : "url(#ice)");
     for (var sc = 0; sc < 26; sc++) {
       var a = P(rr(3, 8.2), rr(18, 22.4), 0), b = add(a, rr(-30, 30), rr(-10, 10));
       ground.push('<path d="M' + f1(a[0]) + "," + f1(a[1]) + " Q" + f1((a[0] + b[0]) / 2 + rr(-8, 8)) + "," + f1((a[1] + b[1]) / 2 + rr(-6, 6)) + " " + f1(b[0]) + "," + f1(b[1]) + '" stroke="#ffffff" stroke-width="1" fill="none" opacity=".55"/>');
@@ -2224,15 +2247,15 @@ window.DAYS = [
     church(18.6, 2.6);
 
     // Markt
-    stall(9.3, 9.3, "#b8262f", "Waffeln");
-    stall(10.9, 9.3, "#2f6a4c", "Lebkuchen");
-    stall(14.5, 9.3, "#b8262f", "Maroni", 5);
-    stall(16.0, 9.3, "#2f5f9e", "Kerzen");
-    stall(9.3, 15.6, "#2f6a4c", "Glühwein", 3);
-    stall(10.9, 15.6, "#b8262f", "Punsch");
-    stall(14.5, 15.6, "#8a5a2b", "Mandeln");
-    stall(16.0, 15.6, "#2f6a4c", "Bratwurst");
-    bigTree(13, 13);
+    hidePre(function () { stall(9.3, 9.3, "#b8262f", "Waffeln"); });
+    hidePre(function () { stall(10.9, 9.3, "#2f6a4c", "Lebkuchen"); });
+    hidePre(function () { stall(14.5, 9.3, "#b8262f", "Maroni", 5); });
+    hidePre(function () { stall(16.0, 9.3, "#2f5f9e", "Kerzen"); });
+    hidePre(function () { stall(9.3, 15.6, "#2f6a4c", "Glühwein", 3); });
+    hidePre(function () { stall(10.9, 15.6, "#b8262f", "Punsch"); });
+    hidePre(function () { stall(14.5, 15.6, "#8a5a2b", "Mandeln"); });
+    hidePre(function () { stall(16.0, 15.6, "#2f6a4c", "Bratwurst"); });
+    hidePre(function () { bigTree(13, 13); });
     // Girlanden über dem Platz
     if (G > 0.2) [[9.3, 10.4, 16.7, 10.4], [9.3, 15.6, 16.7, 15.6]].forEach(function (gl) {
       var a = P(gl[0], gl[1], 1.6), b = P(gl[2], gl[3], 1.6), s = '<path d="M' + f1(a[0]) + "," + f1(a[1]) + " Q" + f1((a[0] + b[0]) / 2) + "," + f1((a[1] + b[1]) / 2 + 26) + " " + f1(b[0]) + "," + f1(b[1]) + '" stroke="#2d2a2a" stroke-width="1" fill="none"/>';
@@ -2254,9 +2277,9 @@ window.DAYS = [
     churchSign(17.75, 7.85, 22);
     signpost(11.75, 21.15, 23);
 
-    banner("R", 7.6, 11.95, 2.1, "Frohe Weihnachten", 0.3);
-    banner("L", 11.95, 19.0, 2.1, "Weihnachtsmarkt", 0);
-    banner("R", 20.0, 11.95, 2.1, "Fröhliche Weihnacht", 0.6);
+    hidePre(function () { banner("R", 7.6, 11.95, 2.1, "Frohe Weihnachten", 0.3); });
+    hidePre(function () { banner("L", 11.95, 19.0, 2.1, "Weihnachtsmarkt", 0); });
+    hidePre(function () { banner("R", 20.0, 11.95, 2.1, "Fröhliche Weihnacht", 0.6); });
 
     // Täusch-Fässer und -Kisten
     [[10.7, 10.75, 37], [16.0, 10.75, 48], [8.8, 15.2, 29], [17.4, 15.9, 56], [4.5, 17.3, 33], [20.5, 12.25, 71], [25.2, 13.75, 26], [14.4, 17.2, 41]].forEach(function (d, i) { if (i % 2) decoyCrate(d[0], d[1], d[2]); else decoyBarrel(d[0], d[1], d[2]); });
@@ -2294,15 +2317,17 @@ window.DAYS = [
     // ---------- Wimmel-Details (feste Plätze) ----------
     seed = 777;
     JSPOTS.forEach(function (j) { guards.push([j[0], j[1]]); });
-    carbonara(16.2, 11.35, "#2f6a4c", "Jochens Carbonara");
+    hidePre(function () { carbonara(16.2, 11.35, "#2f6a4c", "Jochens Carbonara"); });
     staticDetails();
 
     // ---------- Menschen und Tiere: jeden Tag woanders ----------
     var ds = Math.abs(Math.floor(opts.daySeed || 0));
     seed = 1 + (1225 + ds * 7919) % 2147483000;
     for (var warm = 0; warm < 5; warm++) rnd();
+    var TJ = opts.jochen ? (opts.jochen.pos || (opts.jochen.spot >= 100 ? PRESPOTS[(opts.jochen.spot - 100) % PRESPOTS.length] : null)) : null;
+    if (TJ) guards.push([TJ[0], TJ[1]]);
     people();
-    animals();
+    TJ0 = TJ; animals(); TJ0 = null;
 
     // Finale: alle versammeln sich am Baum
     if (FINALE) {
@@ -2329,7 +2354,7 @@ window.DAYS = [
     // Jochen
     var jpos = null;
     if (opts.jochen) {
-      var js = JSPOTS[opts.jochen.spot % JSPOTS.length], jc = opts.jochen.costume;
+      var js = opts.jochen.pos || (opts.jochen.spot >= 100 ? PRESPOTS[(opts.jochen.spot - 100) % PRESPOTS.length] : JSPOTS[opts.jochen.spot % JSPOTS.length]), jc = opts.jochen.costume;
       if (FINALE) { js = [12.05, 14.35, 0, 0]; jc = "fest"; }
       else if (jc === "koch" && META.carbonaraSpot) js = META.carbonaraSpot;
       jpos = jochen(js, jc);
@@ -2338,14 +2363,15 @@ window.DAYS = [
 
     items.sort(function (a, b) { return a.k - b.k; });
     // Glitzernder Schnee im Mondlicht
-    for (var gl = 0; gl < 420; gl++) ground.push(circ(P(rr(-14, 40), rr(-14, 40), 0), rr(0.5, 1.3), "*#e4ecff", 'opacity="' + f1(rr(0.25, 0.8)) + '"'));
+    for (var gl = 0; gl < 420; gl++) if (!PRE) ground.push(circ(P(rr(-14, 40), rr(-14, 40), 0), rr(0.5, 1.3), "*#e4ecff", 'opacity="' + f1(rr(0.25, 0.8)) + '"'));
     var out = nightify(ground.join("")) +
       '<rect x="-50" y="-50" width="1700" height="1250" filter="url(#snowTex)" opacity=".35"/>' +
       '<g filter="url(#shadowBlur)" opacity=".28">' + shadows.join("") + "</g>" +
       nightify(items.map(function (i) { return i.s; }).join("")) +
+      (PRE ? '<rect x="0" y="0" width="1600" height="1150" fill="url(#dayHaze)" pointer-events="none"/>' :
       '<g filter="url(#glowBlur)" opacity=".9" style="mix-blend-mode:screen">' + glows.join("") + "</g>" +
       '<rect x="0" y="0" width="1600" height="1150" fill="url(#haze)" pointer-events="none"/>' +
-      '<rect x="0" y="0" width="1600" height="1150" fill="url(#vignette)" pointer-events="none"/>';
+      '<rect x="0" y="0" width="1600" height="1150" fill="url(#vignette)" pointer-events="none"/>');
     root.innerHTML = out;
     return { spots: spots, jochen: jpos, meta: META, free: function (x, y, r) { return free(x, y, r || 0.3); } };
   }
@@ -2354,6 +2380,7 @@ window.DAYS = [
   window.SCENE_P = P;
   window.JOCHEN_SPOT_COUNT = JSPOTS.length;
   window.JOCHEN_SPOTS = JSPOTS;
+  window.JOCHEN_PRESPOTS = PRESPOTS;
   window.JOCHEN_COSTUMES = Object.keys(COSTUMES);
   window.JOCHEN_COSTUME_SVG = COSTUMES;
 })();
@@ -2404,8 +2431,10 @@ window.DAYS = [
   function growth() {
     if (previewAll || now.y > YEAR || params.get("finale")) return 1;
     if (now.y === YEAR && now.m === 12) return Math.min(1, now.d / 24);
-    return 0.08;
+    return PRE ? 0 : 0.08;
   }
+  // Vor dem 1. Dezember: Tag, noch kein Weihnachtsmarkt, Jochen in Alltagskostümen
+  var PRE = !previewAll && !params.get("finale") && (now.y < YEAR || (now.y === YEAR && now.m < 12));
   var FINALE = !!params.get("finale") || now.y > YEAR || (now.y === YEAR && now.m === 12 && now.d >= 24);
   var WEATHER_PLAN = ["schnee", "klar", "schnee", "nebel", "dicht", "schnee", "vollmond", "klar", "schnee", "dicht", "nebel", "schnee",
     "vollmond", "klar", "schnee", "dicht", "schnee", "nebel", "klar", "schnee", "vollmond", "dicht", "klar", "schnee"];
@@ -2416,6 +2445,7 @@ window.DAYS = [
   var WEATHER = params.get("wetter") || (now.y === YEAR && now.m === 12 && now.d <= 24 ? WEATHER_PLAN[now.d - 1] : WEATHER_PLAN[((dayNum % 24) + 24) % 24]);
   if (FINALE && !params.get("wetter")) WEATHER = "schnee";
   if (!WEATHER_INFO[WEATHER]) WEATHER = "schnee";
+  if (PRE && WEATHER === "vollmond") WEATHER = "klar";
 
   // ---------- Speicher ----------
   var state;
@@ -2534,10 +2564,26 @@ window.DAYS = [
   // Ein eigenes Kostüm für jeden Adventstag (Tag 24: Heiligabend)
   var ROTATION = ["schnee", "elf", "lebkuchen", "rentier", "herbert", "nikolaus", "tanne", "pinguin", "nussknacker", "eule", "zuckerstange", "koch",
     "eisbaer", "kerze", "ski", "geschenk", "tasse", "schlittschuh", "stern", "hirte", "engel", "koenig", "santa", "fest"];
+  // 20.–30. November: Alltagskostüme, schwierige Verstecke, nicht im Album
+  var PRE_ROTATION = ["astronaut", "holzfaeller", "postbote", "maler", "eichhoernchen", "angler", "schornsteinfeger", "detektiv", "bergmann", "imker", "igel"];
+  var PRE_MSG = {
+      "astronaut": "Hier unten ist die Schwerkraft ganz angenehm. Ich bleibe noch ein bisschen.",
+      "holzfaeller": "Ich fälle nichts. Ich mag nur karierte Hemden und den Geruch von Holz.",
+      "postbote": "Heute ist keine Post für dich dabei. Nur ich.",
+      "maler": "Ich male gerade nichts. Ich schaue nur, wie das Licht auf die Dächer fällt.",
+      "eichhoernchen": "Ich sammle nichts. Ich sitze einfach gern zwischen den Bäumen.",
+      "angler": "Gefangen habe ich noch nichts. Darum geht es beim Angeln aber auch nicht.",
+      "schornsteinfeger": "Glück bringe ich angeblich auch. Ich verspreche lieber nichts.",
+      "detektiv": "Ich ermittle in keinem Fall. Aber du hast mich gefunden, das war gute Arbeit.",
+      "bergmann": "Unter Tage ist es ruhig. Hier oben auch, wenn man den richtigen Platz findet.",
+      "imker": "Die Bienen schlafen schon. Ich lasse sie in Ruhe und mich auch.",
+      "igel": "Eigentlich wäre jetzt Winterschlaf. Ich bin trotzdem gern wach geblieben."
+  };
   var COSTUME_NAMES = { santa: "Weihnachtsmann", elf: "Wichtel", schnee: "Schneemann", rentier: "Rentier", engel: "Engel", tanne: "Tannenbaum", geschenk: "Geschenk", koch: "Carbonara-Koch", herbert: "Mit Herbert", fest: "Heiligabend",
     lebkuchen: "Lebkuchenmann", nussknacker: "Nussknacker", eisbaer: "Eisbär", pinguin: "Pinguin", zuckerstange: "Zuckerstange", stern: "Stern",
     kerze: "Kerze", nikolaus: "Nikolaus", eule: "Eule", tasse: "Glühweintasse", ski: "Skifahrer", schlittschuh: "Schlittschuhläufer", hirte: "Hirte", koenig: "König" };
   function jochenToday() {
+    if (PRE) { var k = (((dayNum - 19 + jochenShift) % 11) + 11) % 11; return { spot: 100 + k, costume: PRE_ROTATION[k] }; }
     var n = Math.max(0, dayNum) + jochenShift, count = window.JOCHEN_SPOT_COUNT || 24, cos = ROTATION;
     var ci = (now.y === YEAR && now.m === 12 && now.d <= 24 && !jochenShift) ? now.d - 1 : n % 23;
     return { spot: (n * 5) % count, costume: cos[ci] };
@@ -2559,12 +2605,12 @@ window.DAYS = [
   function buildWorld() {
     JC = jochenToday();
     var res = { spots: {}, jochen: null };
-    try { res = window.buildScene($("world"), { jochen: JC, growth: growth(), finale: FINALE, name: cfg.name, daySeed: Math.max(0, dayNum) + jochenShift }); } catch (e) { if (window.console) console.error(e); }
+    try { res = window.buildScene($("world"), { jochen: JC, growth: growth(), finale: FINALE, pre: PRE, name: cfg.name, daySeed: Math.max(0, dayNum) + jochenShift }); } catch (e) { if (window.console) console.error(e); }
     SPOTS = res.spots || {}; JPOS = res.jochen; META = res.meta || {};
   }
   function renderSpots() {
     while (layer.firstChild) layer.removeChild(layer.firstChild);
-    Object.keys(SPOTS).forEach(function (k) {
+    Object.keys(PRE ? {} : SPOTS).forEach(function (k) {
       var day = +k, s = SPOTS[k];
       var g = svgEl("g", { "class": "spot", "data-day": day, tabindex: "0", role: "button", "aria-label": "Zahl " + day });
       g.appendChild(svgEl("circle", { "class": "ring", cx: s.c[0], cy: s.c[1], r: s.r }));
@@ -2613,9 +2659,10 @@ window.DAYS = [
   function onJochen() {
     var k = jochenKey(), first = !state.jochen[k], c = FINALE ? "fest" : JC.costume;
     state.jochen[k] = true;
-    var newCos = !state.album[c]; if (newCos) state.album[c] = dateKey;
+    var newCos = !PRE && !state.album[c]; if (newCos) state.album[c] = dateKey;
     save(); updateJochen();
-    if (FINALE) toast("Heute verstecke ich mich nicht. Herbert und ich wollten einfach dabei sein. Frohe Weihnachten.");
+    if (PRE) toast((PRE_MSG[c] || "Ah, da bist du.") + " Morgen bin ich woanders.");
+    else if (FINALE) toast("Heute verstecke ich mich nicht. Herbert und ich wollten einfach dabei sein. Frohe Weihnachten.");
     else toast((JOCHEN_MSG[c] || "Ah, da bist du.") + " Morgen bin ich woanders." + (newCos ? " (Neu im Album: " + COSTUME_NAMES[c] + ")" : ""));
     if (first) { burstAt(JPOS[0], JPOS[1]); Sound.chime(); if (c === "herbert" || c === "fest") setTimeout(Sound.woof, 500); }
   }
@@ -2949,7 +2996,7 @@ window.DAYS = [
       return t - t0;
     }
     function playMusic() {
-      if (!on) return;
+      if (!on || PRE) return;
       mBus(); if (musicOut) { musicOut.gain.cancelScheduledValues(ctx.currentTime); musicOut.gain.setValueAtTime(1, ctx.currentTime); }
       var len = playSong(ctx.currentTime + 0.2);
       musicTimer = setTimeout(playMusic, len * 1000 + 30000 + Math.random() * 25000);
@@ -2982,8 +3029,8 @@ window.DAYS = [
     return api;
   })();
   window.__AIBYTES_SOUND = Sound;
-  function syncSoundBtn() { var b = $("soundBtn"); b.textContent = Sound.isOn() ? "🔈 Ton an" : "🔇 Ton aus"; b.title = "Heute im Dorf: " + Sound.song(); }
-  $("soundBtn").addEventListener("click", function () { Sound.toggle(); syncSoundBtn(); if (Sound.isOn()) toast("♪ Heute spielt im Dorf: " + Sound.song()); });
+  function syncSoundBtn() { var b = $("soundBtn"); b.textContent = Sound.isOn() ? "🔈 Ton an" : "🔇 Ton aus"; b.title = PRE ? "Ab dem 1. Dezember mit Weihnachtsmusik" : "Heute im Dorf: " + Sound.song(); }
+  $("soundBtn").addEventListener("click", function () { Sound.toggle(); syncSoundBtn(); if (Sound.isOn() && !PRE) toast("♪ Heute spielt im Dorf: " + Sound.song()); });
   syncSoundBtn();
   if (Sound.isOn()) { var resumeOnce = function () { Sound.toggle(); Sound.toggle(); syncSoundBtn(); window.removeEventListener("pointerdown", resumeOnce); }; window.addEventListener("pointerdown", resumeOnce); }
 
@@ -3040,9 +3087,9 @@ window.DAYS = [
     var sh = svgEl("g", { filter: "url(#cloudBlur)", opacity: "0.32" }), cl = svgEl("g", { filter: "url(#cloudBlur)", opacity: "0.55" });
     for (var i = 0; i < 7; i++) {
       var cx = (i / 6 - 0.5) * w + (Math.random() * 60 - 30), cy = Math.random() * 50 - 25, rx = w * (0.16 + Math.random() * 0.14), ry = rx * (0.45 + Math.random() * 0.2);
-      sh.appendChild(svgEl("ellipse", { cx: cx + 60, cy: cy + 170, rx: rx, ry: ry * 0.8, fill: "#03061a" }));
-      cl.appendChild(svgEl("ellipse", { cx: cx, cy: cy, rx: rx, ry: ry, fill: "#6b7699" }));
-      cl.appendChild(svgEl("ellipse", { cx: cx - rx * 0.2, cy: cy - ry * 0.35, rx: rx * 0.6, ry: ry * 0.45, fill: "#aab4d6", opacity: "0.6" }));
+      sh.appendChild(svgEl("ellipse", { cx: cx + 60, cy: cy + 170, rx: rx, ry: ry * 0.8, fill: PRE ? "#5a6478" : "#03061a" }));
+      cl.appendChild(svgEl("ellipse", { cx: cx, cy: cy, rx: rx, ry: ry, fill: PRE ? "#e8edf4" : "#6b7699" }));
+      cl.appendChild(svgEl("ellipse", { cx: cx - rx * 0.2, cy: cy - ry * 0.35, rx: rx * 0.6, ry: ry * 0.45, fill: PRE ? "#ffffff" : "#aab4d6", opacity: "0.6" }));
     }
     g.appendChild(sh); g.appendChild(cl); cloudsG.appendChild(g);
     var x0 = -w, x1 = 1600 + w, ms = 55000 + Math.random() * 35000, f = startFrac || 0;
@@ -3061,7 +3108,7 @@ window.DAYS = [
     var w = 650 + Math.random() * 750, h = w * (0.2 + Math.random() * 0.12), y = 120 + Math.random() * 900, g = svgEl("g", {}), inner = svgEl("g", {});
     for (var i = 0; i < 9; i++) {
       var rx = w * (0.16 + Math.random() * 0.16);
-      inner.appendChild(svgEl("ellipse", { cx: (i / 8 - 0.5) * w * 0.9 + (Math.random() * 80 - 40), cy: (Math.random() - 0.5) * h * 0.5, rx: rx, ry: h * (0.35 + Math.random() * 0.35), fill: "url(#fogPuff)" }));
+      inner.appendChild(svgEl("ellipse", { cx: (i / 8 - 0.5) * w * 0.9 + (Math.random() * 80 - 40), cy: (Math.random() - 0.5) * h * 0.5, rx: rx, ry: h * (0.35 + Math.random() * 0.35), fill: PRE ? "url(#fogPuffDay)" : "url(#fogPuff)" }));
     }
     g.appendChild(inner); fogG.appendChild(g);
     var op = FOG_OP * (0.55 + Math.random() * 0.45), x0 = -w * 0.6, x1 = 1600 + w * 0.6, dy = 40 + Math.random() * 80, ms = 140000 + Math.random() * 90000, f = startFrac || 0;
@@ -3075,11 +3122,11 @@ window.DAYS = [
   for (var fb = 0; fb < FOG_N; fb++) fogBank(Math.random() * 0.85);
   (function scheduleFog() { setTimeout(function () { if (!document.hidden && fogG.childNodes.length < FOG_N + 2) fogBank(0); scheduleFog(); }, 185000 / FOG_N * (0.7 + Math.random() * 0.6)); })();
   // dünner Bodendunst über dem ganzen Dorf
-  cloudsG.insertBefore(svgEl("rect", { x: -50, y: -50, width: 1700, height: 1250, fill: "#9aa6c8", opacity: WEATHER === "nebel" ? "0.1" : "0.06", "pointer-events": "none" }), fogG);
+  cloudsG.insertBefore(svgEl("rect", { x: -50, y: -50, width: 1700, height: 1250, fill: PRE ? "#e6ebf2" : "#9aa6c8", opacity: WEATHER === "nebel" ? "0.12" : "0.07", "pointer-events": "none" }), fogG);
   // Wetter-Überlagerung
   if (WEATHER === "nebel") cloudsG.appendChild(svgEl("rect", { x: -50, y: -50, width: 1700, height: 1250, fill: "url(#fogGrad)", "class": "fog" }));
   if (WEATHER === "vollmond") cloudsG.appendChild(svgEl("rect", { x: -50, y: -50, width: 1700, height: 1250, fill: "#a9bbf0", opacity: "0.16", style: "mix-blend-mode:screen" }));
-  if (WEATHER === "klar") cloudsG.appendChild(svgEl("rect", { x: -50, y: -50, width: 1700, height: 1250, fill: "#7f95d8", opacity: "0.07", style: "mix-blend-mode:screen" }));
+  if (WEATHER === "klar" && !PRE) cloudsG.appendChild(svgEl("rect", { x: -50, y: -50, width: 1700, height: 1250, fill: "#7f95d8", opacity: "0.07", style: "mix-blend-mode:screen" }));
 
 
   // ---------- Überraschungen ----------
@@ -3134,7 +3181,7 @@ window.DAYS = [
   };
   var lastSurprise = "";
   function surprise() {
-    var keys = Object.keys(SURPRISES).filter(function (k) { return k !== lastSurprise; });
+    var keys = Object.keys(SURPRISES).filter(function (k) { return k !== lastSurprise && !(PRE && /schlitten|sternschnuppe|lichtershow|glocken/.test(k)); });
     var k = keys[Math.floor(Math.random() * keys.length)]; lastSurprise = k;
     try { SURPRISES[k](); } catch (e) { /* ignorieren */ }
   }
