@@ -410,6 +410,7 @@ footer { color: var(--muted); }
 .compare-cols ul { margin: 0; padding-left: 1.1em; }
 .compare-cols li { margin: 3px 0; }
 .compare-rule { font-weight: 600; color: #2b3a55; }
+.album-section { grid-column: 1 / -1; font-family: var(--serif, Georgia, serif); font-weight: 700; font-size: 1.05rem; color: #6b4a30; margin: 10px 2px 0; border-bottom: 1px solid #e2d6bf; padding-bottom: 4px; }
 </style>
 </head>
 <body data-theme="lebkuchen">
@@ -880,34 +881,37 @@ window.DAYS = [
   },
   {
     "day": 14,
-    "kind": "lern",
-    "emoji": "📄",
-    "title": "Dokumente und PDFs",
-    "teaser": "Lange Texte in Minuten durchdringen.",
+    "kind": "challenge",
+    "emoji": "🪜",
+    "title": "Große Aufgaben in Etappen",
+    "teaser": "Prompt-Ketten, Abzweigungen und Übergabe-Notizen: So bleibt die AI auch bei langen Projekten präzise.",
     "lesson": [
-      "Du kannst Dokumente hochladen oder einfügen und gezielt befragen. Das spart Zeit bei Verträgen, Studien, Anleitungen und Protokollen.",
-      "Gute Aufträge verlangen Belegstellen: Wenn die AI Seitenzahlen oder Zitate nennen muss, kannst du jede Aussage schnell nachprüfen.",
-      "Für fertige Dateien gibt es oft eigene **Skills**. Bitte ausdrücklich darum, zum Beispiel: „Nutze den Excel-Skill und erstelle daraus eine Tabelle mit allen Fristen.“ So bekommst du eine echte Datei statt nur Text.",
-      "**So geht es in Claude:** Zieh die PDF-Datei in den Chat oder lade sie über **+** hoch. Damit Claude dir echte Dateien (Word, Excel, PowerPoint, PDF) zurückgeben kann, muss unter **Einstellungen → Fähigkeiten** die Option **Dateien erstellen und bearbeiten** eingeschaltet sein. Die fertige Datei erscheint dann direkt im Chat zum Herunterladen.",
-      "**Claude oder Perplexity?** Für eigene Dokumente ist Claude meist die bessere Wahl: Es kann lange Dateien am Stück durcharbeiten, mit dir darüber sprechen und dir neue Dateien daraus bauen. Perplexity ist stark, wenn du zu einem Dokument ergänzend aktuelle Informationen aus dem Web brauchst."
+      "Die meisten enttäuschenden Ergebnisse entstehen, wenn eine große Aufgabe in einen einzigen Prompt gepackt wird. Besser ist eine **Prompt-Kette**: Jede Etappe hat ein klares Ergebnis, das du prüfst, bevor es weitergeht. Zum Beispiel: Ziel klären → Gliederung → Entwurf → Kritik → Überarbeitung.",
+      "Warum das wirkt: Du korrigierst früh, solange Änderungen noch wenig kosten. Eine schiefe Gliederung ist in einer Minute repariert, ein fertiger Text braucht dafür eine halbe Stunde.",
+      "**Abzweigen statt neu anfangen:** In Claude kannst du jede frühere Nachricht von dir bearbeiten (Stift-Symbol unter der Nachricht). Dann entsteht eine neue Abzweigung des Chats, und die alte Version bleibt erhalten. Mit den kleinen Pfeilen **‹ ›** wechselst du zwischen den Versionen. So probierst du zwei Richtungen aus, ohne den bisherigen Stand zu verlieren.",
+      "**Lange Chats werden unscharf:** Die AI hat ein begrenztes Arbeitsgedächtnis, das sogenannte Kontextfenster. Je länger ein Chat und je mehr Themen darin, desto eher gehen frühe Details unter oder Vorgaben widersprechen sich. Faustregel: ein Chat pro Thema oder pro größerer Etappe.",
+      "**Die Übergabe-Notiz:** Bevor du in einem neuen Chat weitermachst, lass dir den Stand verdichten: Ziel, Entscheidungen, verworfene Ideen, offene Punkte, nächster Schritt. Diese Notiz ist dein Startpaket für den nächsten Chat oder für ein Projekt (Tag 16). So entscheidest du, was erhalten bleibt, und nicht der Zufall."
     ],
-    "prompt": "Ich lade ein Dokument hoch. Liefere: 1) eine Zusammenfassung in 5 Sätzen, 2) die 5 wichtigsten Zahlen oder Fakten mit Seitenangabe, 3) offene Fragen und Risiken, 4) To-dos für mich. Nenne zu jeder Aussage die Belegstelle.",
-    "tip": "Stelle nach der Zusammenfassung gezielte Fragen. Die eigentlichen Erkenntnisse stecken meist im Nachfragen.",
     "steps": [
-      "Prüf unter **Einstellungen → Fähigkeiten**, dass **Dateien erstellen und bearbeiten** an ist.",
-      "Öffne einen neuen Chat und lade ein Dokument hoch (Vertrag, Anleitung, Studie).",
-      "Füge den Prompt unten ein und prüf zwei Belegstellen selbst nach.",
-      "Schreib danach: „Nutze den Excel-Skill und erstelle eine Tabelle mit allen Fristen.“ Lade die Datei herunter."
-    ]
+      "Wähle ein echtes Vorhaben, das mehr als einen Abend braucht: eine Reise, eine Rede, eine Bewerbung, ein Fotobuch.",
+      "Öffne einen **neuen Chat in Claude** und füge den Prompt unten ein. Setze dein Vorhaben und einen kritischen Leser ein (zum Beispiel „meine pingelige Schwester“).",
+      "Prüf jede Etappe, gib Feedback und schreib erst dann „Weiter mit Etappe 2“.",
+      "Zweig bei Etappe 2 ab: Fahr am Computer mit der Maus über deine Nachricht, klick auf das **Stift-Symbol**, ändere eine Vorgabe (anderer Ton, anderes Budget) und vergleiche beide Versionen mit den Pfeilen **‹ ›**. Entscheide dich für eine.",
+      "Schreib zum Schluss den Übergabe-Prompt aus dem Tipp. Kopier die Notiz, öffne einen **neuen Chat**, füge sie ein und mach dort mit dem nächsten Schritt weiter."
+    ],
+    "prompt": "Ich möchte [Vorhaben] umsetzen. Wir arbeiten in Etappen. Du lieferst immer nur die aktuelle Etappe und wartest dann auf mein Okay.\nEtappe 1: Stell mir die 5 wichtigsten Fragen zu Ziel, Zielgruppe und Rahmen.\nEtappe 2: Schlag eine Gliederung oder einen Plan vor.\nEtappe 3: Erster Entwurf.\nEtappe 4: Kritisiere deinen Entwurf aus Sicht von [kritischer Leser].\nEtappe 5: Überarbeitete Fassung.\nBeginne mit Etappe 1.",
+    "tip": "Übergabe-Prompt: „Fasse unseren Stand als Übergabe-Notiz zusammen: Ziel, Entscheidungen mit kurzer Begründung, verworfene Ideen, offene Fragen, nächster Schritt. Höchstens 15 Zeilen, so dass ein neuer Chat ohne Vorwissen weitermachen kann.“",
+    "challenge": "Bring dein Vorhaben bis Etappe 5 und zähl mit, wie oft du unterwegs korrigiert hast. Jede dieser Korrekturen wäre bei einem einzigen großen Prompt unbemerkt im Ergebnis gelandet."
   },
   {
     "day": 15,
     "kind": "challenge",
     "emoji": "📊",
-    "title": "Tabellen und Daten auswerten",
-    "teaser": "Aus Zahlenkolonnen werden Antworten.",
+    "title": "Dokumente, Tabellen und Daten",
+    "teaser": "Aus langen PDFs und Zahlenkolonnen werden Antworten.",
     "lesson": [
       "Mit CSV- oder Excel-Dateien kann die AI Auffälligkeiten finden, Auswertungen rechnen und Diagramme erstellen. Wichtig ist, erst einen Überblick zu verlangen, bevor es an die Fragen geht.",
+      "Das funktioniert genauso mit langen PDFs wie Verträgen, Studien oder Anleitungen. Verlange zu jeder Aussage die **Belegstelle** (Seite oder Zitat), dann kannst du schnell nachprüfen. Für fertige Dateien bittest du ausdrücklich um einen Skill, zum Beispiel: „Nutze den Excel-Skill und mach daraus eine Tabelle mit allen Fristen.“",
       "Und: Rechne Stichproben nach. Bei Zahlen gilt besonders, dass vertrauen gut und prüfen besser ist.",
       "**So geht es in Claude:** Lade eine CSV- oder Excel-Datei über **+** hoch. Claude rechnet die Auswertung im Hintergrund wirklich aus und zeichnet Diagramme. Voraussetzung ist auch hier **Dateien erstellen und bearbeiten** unter **Einstellungen → Fähigkeiten**."
     ],
@@ -918,7 +922,8 @@ window.DAYS = [
       "Exportiere eine eigene Tabelle als CSV- oder Excel-Datei (Haushaltsbuch, Sportdaten, Lesehistorie).",
       "Öffne einen neuen Chat in Claude und lade die Datei über **+** hoch.",
       "Füge den Prompt unten ein und setze deine Frage ein.",
-      "Rechne eine Zahl aus dem Ergebnis stichprobenartig selbst nach."
+      "Rechne eine Zahl aus dem Ergebnis stichprobenartig selbst nach.",
+      "Bonus: Lade ein PDF hoch und schreib: „Fasse es in 5 Sätzen zusammen und nenne zu jeder Aussage die Seite. Nutze dann den Excel-Skill und erstelle eine Tabelle mit allen Fristen und Zahlen.“"
     ]
   },
   {
@@ -2456,6 +2461,11 @@ window.DAYS = [
       var raw = localStorage.getItem(storageKey());
       if (raw) { var p = JSON.parse(raw); state.opened = p.opened || {}; state.done = p.done || {}; state.jochen = p.jochenDays || {}; state.herbert = p.herbertDays || {}; state.album = p.album || {}; state.stars = p.stars || {}; }
     } catch (e) { /* ignorieren */ }
+    // Jochen-Funde vom 20.–30. November nachträglich ins Album übernehmen
+    Object.keys(state.jochen).forEach(function (k) {
+      var m = /^(\d+)-11-(\d+)$/.exec(k), names = ["astronaut", "holzfaeller", "postbote", "maler", "eichhoernchen", "angler", "schornsteinfeger", "detektiv", "bergmann", "imker", "igel"];
+      if (m && +m[2] >= 20 && +m[2] <= 30 && !state.album[names[+m[2] - 20]]) state.album[names[+m[2] - 20]] = k;
+    });
   }
   function save() {
     try { localStorage.setItem(storageKey(), JSON.stringify({ opened: state.opened, done: state.done, jochenDays: state.jochen, herbertDays: state.herbert, album: state.album, stars: state.stars })); } catch (e) { /* ignorieren */ }
@@ -2549,7 +2559,7 @@ window.DAYS = [
       "Ich glaube nicht alles, was ich höre. Ich schaue lieber zweimal hin. Damit bin ich bisher gut gefahren.",
       "An Weihnachten esse ich, was auf den Tisch kommt. Am liebsten wäre es Carbonara, aber das sage ich nicht laut. Einen Plan zu haben, beruhigt trotzdem.",
       "Heute geht es um Fotos. Ich werde selten fotografiert, wahrscheinlich wegen der Kostüme. Das ist in Ordnung.",
-      "Lange Texte lese ich in kleinen Stücken. Die AI liest sie am Stück. Jeder, wie er kann.",
+      "Große Dinge mache ich am liebsten in kleinen Schritten. Ein Schal ist auch nur eine Masche nach der anderen.",
       "Zahlen beruhigen mich. Sie sind, was sie sind. Ganz besonders die, die du heute im Dorf gefunden hast.",
       "Die AI muss nicht alles über dich wissen. Aber das, was sie weiß, darf ruhig stimmen.",
       "Ich mag Dinge, die sich wiederholen. Herbert auch, vor allem Spaziergänge. Ein eigener Skill dafür wäre mir trotzdem recht.",
@@ -2579,7 +2589,8 @@ window.DAYS = [
       "imker": "Die Bienen schlafen schon. Ich lasse sie in Ruhe und mich auch.",
       "igel": "Eigentlich wäre jetzt Winterschlaf. Ich bin trotzdem gern wach geblieben."
   };
-  var COSTUME_NAMES = { santa: "Weihnachtsmann", elf: "Wichtel", schnee: "Schneemann", rentier: "Rentier", engel: "Engel", tanne: "Tannenbaum", geschenk: "Geschenk", koch: "Carbonara-Koch", herbert: "Mit Herbert", fest: "Heiligabend",
+  var COSTUME_NAMES = { astronaut: "Astronaut", holzfaeller: "Holzfäller", postbote: "Postbote", maler: "Maler", eichhoernchen: "Eichhörnchen", angler: "Angler", schornsteinfeger: "Schornsteinfeger", detektiv: "Detektiv", bergmann: "Bergmann", imker: "Imker", igel: "Igel",
+     santa: "Weihnachtsmann", elf: "Wichtel", schnee: "Schneemann", rentier: "Rentier", engel: "Engel", tanne: "Tannenbaum", geschenk: "Geschenk", koch: "Carbonara-Koch", herbert: "Mit Herbert", fest: "Heiligabend",
     lebkuchen: "Lebkuchenmann", nussknacker: "Nussknacker", eisbaer: "Eisbär", pinguin: "Pinguin", zuckerstange: "Zuckerstange", stern: "Stern",
     kerze: "Kerze", nikolaus: "Nikolaus", eule: "Eule", tasse: "Glühweintasse", ski: "Skifahrer", schlittschuh: "Schlittschuhläufer", hirte: "Hirte", koenig: "König" };
   function jochenToday() {
@@ -2659,9 +2670,9 @@ window.DAYS = [
   function onJochen() {
     var k = jochenKey(), first = !state.jochen[k], c = FINALE ? "fest" : JC.costume;
     state.jochen[k] = true;
-    var newCos = !PRE && !state.album[c]; if (newCos) state.album[c] = dateKey;
+    var newCos = !state.album[c]; if (newCos) state.album[c] = dateKey;
     save(); updateJochen();
-    if (PRE) toast((PRE_MSG[c] || "Ah, da bist du.") + " Morgen bin ich woanders.");
+    if (PRE) toast((PRE_MSG[c] || "Ah, da bist du.") + " Morgen bin ich woanders." + (newCos ? " (Neu im Album: " + COSTUME_NAMES[c] + ")" : ""));
     else if (FINALE) toast("Heute verstecke ich mich nicht. Herbert und ich wollten einfach dabei sein. Frohe Weihnachten.");
     else toast((JOCHEN_MSG[c] || "Ah, da bist du.") + " Morgen bin ich woanders." + (newCos ? " (Neu im Album: " + COSTUME_NAMES[c] + ")" : ""));
     if (first) { burstAt(JPOS[0], JPOS[1]); Sound.chime(); if (c === "herbert" || c === "fest") setTimeout(Sound.woof, 500); }
@@ -2826,17 +2837,22 @@ window.DAYS = [
   }
   function openAlbum() {
     var grid2 = $("albumGrid"); grid2.innerHTML = "";
-    var keys = ROTATION, found = 0;
-    keys.forEach(function (k, idx) {
+    var found = 0, total = PRE_ROTATION.length + ROTATION.length;
+    function card(k, label) {
       var has = !!state.album[k]; if (has) found++;
       var d = document.createElement("div"); d.className = "album-card" + (has ? " has" : "");
-      var when = has ? state.album[k].split("-") : null;
-      d.innerHTML = '<div class="album-day">Tag ' + (idx + 1) + "</div>" + (has ? costumeSVG(k, false) : '<div class="album-q">?</div>') +
+      var when = has ? state.album[k].split("#")[0].split("-") : null;
+      d.innerHTML = '<div class="album-day">' + label + "</div>" + (has ? costumeSVG(k, false) : '<div class="album-q">?</div>') +
         '<div class="album-name">' + (has ? COSTUME_NAMES[k] : "&nbsp;") + "</div>" +
         '<div class="album-date">' + (has ? "gefunden am " + when[2] + "." + when[1] + "." : "noch nicht entdeckt") + "</div>";
       grid2.appendChild(d);
-    });
-    $("albumInfo").textContent = found + " von " + keys.length + " Verkleidungen entdeckt";
+    }
+    function head(t) { var h = document.createElement("div"); h.className = "album-section"; h.textContent = t; grid2.appendChild(h); }
+    head("Vor dem Advent");
+    PRE_ROTATION.forEach(function (k, idx) { card(k, (20 + idx) + ". November"); });
+    head("Advent");
+    ROTATION.forEach(function (k, idx) { card(k, "Tag " + (idx + 1)); });
+    $("albumInfo").textContent = found + " von " + total + " Verkleidungen entdeckt";
     var dlg = $("album"); if (dlg.showModal) { try { dlg.showModal(); } catch (e) { dlg.setAttribute("open", ""); } } else dlg.setAttribute("open", "");
   }
   $("albumBtn").addEventListener("click", openAlbum);
