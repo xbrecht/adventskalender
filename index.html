@@ -260,7 +260,7 @@ dialog::backdrop { background: rgba(10, 15, 20, .62); backdrop-filter: blur(3px)
 .card h2 { margin: 6px 0 4px; font-size: clamp(1.4rem, 4.6vw, 1.9rem); color: var(--accent-2); line-height: 1.2; }
 .teaser { margin: 0 0 14px; font-style: italic; color: #5b5a4d; }
 .lesson p { margin: 0 0 12px; line-height: 1.6; font-size: 1.05rem; }
-.lesson b { color: var(--accent); }
+.lesson b { color: inherit; font-weight: 700; }
 .box { border-radius: 12px; padding: 14px 16px; margin: 14px 0; font-family: var(--sans); font-size: .95rem; line-height: 1.55; }
 .box p { margin: 6px 0 0; }
 #mFinal { white-space: pre-line; }
@@ -401,6 +401,15 @@ footer { color: var(--muted); }
 .steps-box { background: #f4efe4; border: 1px solid #e2d6bf; }
 .steps-box ol { margin: 8px 0 0; padding-left: 1.3em; }
 .steps-box li { margin: 3px 0; }
+
+.compare-box { background: #eef1f6; border: 1px solid #cdd5e3; }
+.compare-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+@media (max-width: 520px) { .compare-cols { grid-template-columns: 1fr; } }
+.compare-cols > div { background: #fff; border-radius: 8px; padding: 10px 12px; border: 1px solid #dde3ee; }
+.compare-head { font-weight: 700; color: #2b3a55; margin-bottom: 4px; }
+.compare-cols ul { margin: 0; padding-left: 1.1em; }
+.compare-cols li { margin: 3px 0; }
+.compare-rule { font-weight: 600; color: #2b3a55; }
 </style>
 </head>
 <body data-theme="lebkuchen">
@@ -423,7 +432,7 @@ footer { color: var(--muted); }
 
   <main>
     <div class="scene-wrap">
-      <p class="howto">Es ist Nacht im Weihnachtsdorf, und es schneit. Irgendwo zwischen Fenstern, Laternen und Lichterketten sind 24 Zahlen versteckt: an Häusern, Ständen, Schildern und sogar im Schnee. Such die Zahl des heutigen Tages und tipp sie an. Vorsicht: Die meisten Zahlen im Dorf gehören nicht zum Kalender.<br>Und irgendwo steckt <b>Jochen</b>. Er ist ein stiller Genießer, mag den Advent sehr und nimmt die Dinge, wie sie kommen, auch die Kostüme, in die er jeden Tag schlüpft. Achte auf sein Lächeln. Manchmal hat er seinen Dackel <b>Herbert</b> dabei. Und an fünf Tagen liegt irgendwo ein kleiner goldener Stern.</p>
+      <p class="howto">Es ist Nacht im Weihnachtsdorf, und es schneit. Irgendwo zwischen Fenstern, Laternen und Lichterketten sind 24 Zahlen versteckt: an Häusern, Ständen, Schildern und sogar im Schnee. Such die Zahl des heutigen Tages und tipp sie an. Vorsicht: Die meisten Zahlen im Dorf gehören nicht zum Kalender.<br>Und irgendwo steckt <b>Jochen</b>. Er ist ein stiller Genießer, mag den Advent sehr und nimmt die Dinge, wie sie kommen, auch die Kostüme, in die er jeden Tag schlüpft. Achte auf sein Lächeln.</p>
       <div class="scene-frame">
         <div class="zoom" aria-label="Zoom">
           <button type="button" id="zoomIn" aria-label="Hineinzoomen">+</button>
@@ -451,6 +460,7 @@ footer { color: var(--muted); }
               <linearGradient id="fogGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0" stop-color="#9aa6c8" stop-opacity=".55"/><stop offset=".5" stop-color="#8d99bd" stop-opacity=".32"/><stop offset="1" stop-color="#9aa6c8" stop-opacity=".45"/>
               </linearGradient>
+              <radialGradient id="fogPuff"><stop offset="0" stop-color="#b9c3df" stop-opacity=".62"/><stop offset=".55" stop-color="#a9b4d4" stop-opacity=".3"/><stop offset="1" stop-color="#a9b4d4" stop-opacity="0"/></radialGradient>
               <filter id="albumDark"><feColorMatrix values="0 0 0 0 .16  0 0 0 0 .14  0 0 0 0 .2  0 0 0 1 0"/></filter>
               <filter id="nightFull" color-interpolation-filters="sRGB"><feColorMatrix values=".286 .022 .022 0 .0235  .026 .338 .026 0 .035  .04 .04 .52 0 .07  0 0 0 1 0"/></filter>
               <clipPath id="coatClip"><path d="M-25,6 C-29,18 -33,30 -31,42 C-29,54 -14,58 0,58 C14,58 29,54 31,42 C33,30 29,18 25,6Z"/></clipPath>
@@ -499,7 +509,6 @@ footer { color: var(--muted); }
       <p class="swipe-note">Mit + und − zoomen, Bild mit Finger oder Maus verschieben</p>
       <div class="tools">
         <span class="jcount" id="jochenCount"></span>
-        <span class="jcount" id="starCount"></span>
       </div>
       <div class="tools">
         <button class="tool-btn" id="hintBtn" type="button">💡 Tipp, wo die Zahl ist</button>
@@ -532,13 +541,6 @@ footer { color: var(--muted); }
       <div class="album-grid" id="albumGrid"></div>
     </article>
   </dialog>
-  <dialog id="bonus" aria-labelledby="bonusTitle">
-    <article class="card">
-      <button class="close" id="bonusClose" aria-label="Schließen">×</button>
-      <h2 id="bonusTitle">⭐ Alle fünf goldenen Sterne!</h2>
-      <div class="box final-box"><p id="bonusText"></p></div>
-    </article>
-  </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -553,6 +555,16 @@ footer { color: var(--muted); }
       <p class="teaser" id="mTeaser"></p>
       <div class="jochen-say"><svg viewBox="-36 -72 72 130" aria-hidden="true"><use href="#jBody"/><use href="#jSanta"/></svg><p><strong>Jochen sagt:</strong> <span id="mJochen"></span></p></div>
       <div id="mLesson" class="lesson"></div>
+      <div class="box compare-box" id="mCompareBox">
+        <strong>⚖️ Claude oder Perplexity?</strong>
+        <p id="mCompIntro"></p>
+        <div class="compare-cols">
+          <div><div class="compare-head">Lieber Perplexity</div><ul id="mCompP"></ul></div>
+          <div><div class="compare-head">Lieber Claude</div><ul id="mCompC"></ul></div>
+        </div>
+        <p id="mCompNote"></p>
+        <p class="compare-rule" id="mCompRule"></p>
+      </div>
       <div class="box steps-box" id="mStepsBox"><strong>🪜 So gehst du vor</strong><ol id="mSteps"></ol></div>
       <div class="box prompt-box" id="mPromptBox">
         <div class="box-head">
@@ -578,15 +590,13 @@ window.CALENDAR_CONFIG = {
   theme: "lebkuchen",         // Design: "lebkuchen", "lichterkette", "hygge" oder "klassisch"
   motto: "Bytes unterm Tannenbaum",
   subtitle: "Finde jeden Tag deine Zahl im Weihnachtsdorf – und lerne etwas Neues über AI",
-  bonusMessage:
-    "du hast alle fünf goldenen Sterne gefunden – du bist eine richtig gute Sucherin. Dafür gibt es ein kleines Extra: Lös diesen Gutschein bei mir ein, für einen Abend, an dem ich für dich koche. Carbonara, natürlich. Jochen hat mir das Rezept verraten.",
   finalMessage:
     "Du hast 24 Türchen geöffnet, ganz viel ausprobiert und dabei hoffentlich genauso viel Spaß gehabt wie ich beim Zusammenstellen. Ich bin gespannt, was du 2027 mit AI anstellst. Frohe Weihnachten!"
 };
 </script>
   <script>
 // Inhalte der 24 Türchen.
-// kind: "lern" = Lernhappen, "challenge" = Challenge; steps = "So gehst du vor"
+// kind: "lern" = Lernhappen, "challenge" = Challenge; steps = "So gehst du vor"; compare = Tool-Vergleich
 window.DAYS = [
   {
     "day": 1,
@@ -596,11 +606,13 @@ window.DAYS = [
     "teaser": "Vier Zutaten, die aus einer Frage einen guten Auftrag machen.",
     "lesson": [
       "Wenn eine Antwort mittelmäßig ist, liegt es selten an der AI – meistens fehlt dem Prompt etwas. Gute Prompts haben vier Zutaten: **Rolle** (wer soll die AI sein?), **Aufgabe** (was genau soll herauskommen?), **Kontext** (für wen, wofür, mit welchen Grenzen?) und **Format** (Tabelle, Stichpunkte, Länge).",
-      "Du brauchst nicht immer alle vier. Aber wenn das Ergebnis nicht passt, frag dich: Welche Zutat habe ich weggelassen? Meist ist es der Kontext."
+      "Du brauchst nicht immer alle vier. Aber wenn das Ergebnis nicht passt, frag dich: Welche Zutat habe ich weggelassen? Meist ist es der Kontext.",
+      "In diesem Kalender nutzen wir als Beispiel **Claude** (claude.ai im Browser oder die Claude-App, vieles geht auch im kostenlosen Plan). Fast alles klappt genauso in ChatGPT oder Gemini. Wo es auf das Werkzeug ankommt, steht genau dabei, was du wo anklickst."
     ],
     "prompt": "Du bist [Rolle, z. B. erfahrene Reiseplanerin].\nAufgabe: [was genau soll entstehen?]\nKontext: [wer bin ich, wofür brauche ich es, welche Einschränkungen gibt es?]\nFormat: [z. B. Tabelle, max. 150 Wörter, Du-Form]\nFrag nach, falls dir Informationen fehlen.",
     "tip": "Der Satz „Frag nach, falls dir Informationen fehlen“ ist der günstigste Qualitätshebel, den es gibt.",
     "steps": [
+      "Öffne einen **neuen Chat in Claude** (claude.ai oder App). In ChatGPT geht es genauso.",
       "Wähle eine echte Aufgabe, die gerade ansteht.",
       "Fülle die vier Zutaten im Prompt unten aus.",
       "Vergleiche das Ergebnis mit einer schnellen Ein-Satz-Frage."
@@ -620,6 +632,7 @@ window.DAYS = [
     "tip": "Schreib auch auf, was du NICHT magst (z. B. „keine Floskeln, keine langen Einleitungen“).",
     "challenge": "Stelle dieselbe Alltagsfrage zweimal: einmal ohne, einmal mit Briefing. Wo ist der Unterschied am größten?",
     "steps": [
+      "Öffne einen **neuen Chat in Claude** (claude.ai oder App). In ChatGPT geht es genauso.",
       "Schreib fünf Sätze über dich: Alltag, Ziele, Vorlieben, Ton.",
       "Speichere den Text in deinen Notizen.",
       "Füge ihn vor eine Frage ein und vergleiche die Antworten."
@@ -638,6 +651,7 @@ window.DAYS = [
     "prompt": "Ich suche Ideen für [Thema/Anlass]. Schritt 1: Nenne 25 Ideen, die sich deutlich voneinander unterscheiden, darunter 5 bewusst ungewöhnliche. Schritt 2: Bewerte sie nach meinen Kriterien: [z. B. Aufwand, Budget, Wow-Effekt]. Schritt 3: Wähle die besten 3 und skizziere jeweils den ersten konkreten Schritt.",
     "tip": "Frag nach dem ersten Schritt: Eine Idee ohne nächsten Schritt bleibt meistens liegen.",
     "steps": [
+      "Öffne einen **neuen Chat in Claude** (claude.ai oder App). In ChatGPT geht es genauso.",
       "Nenne das Thema und deine Kriterien.",
       "Lass erst sammeln, ohne zu bewerten.",
       "Bewerte dann nach deinen Kriterien und plane den ersten Schritt."
@@ -657,6 +671,7 @@ window.DAYS = [
     "tip": "„Eine nach der anderen“ verhindert den Fragenkatalog, bei dem man sich erschlagen fühlt.",
     "challenge": "Nutze die Methode für etwas, das wirklich ansteht: eine Entscheidung, ein Geschenk, eine Rede, ein Projekt.",
     "steps": [
+      "Öffne einen **neuen Chat in Claude** (claude.ai oder App). In ChatGPT geht es genauso.",
       "Beschreibe nur dein Ziel in einem Satz.",
       "Beantworte die Fragen der AI ehrlich und kurz.",
       "Lass dir am Ende deine Antworten zusammenfassen."
@@ -670,15 +685,17 @@ window.DAYS = [
     "teaser": "Samstags-Special: Bilder erzeugen, die nach deiner Idee aussehen.",
     "lesson": [
       "Bei Bildgeneratoren zählt die Beschreibung: **Motiv**, **Stil** (Aquarell, Foto, Scherenschnitt), **Licht und Stimmung**, **Bildausschnitt** und manchmal, was **nicht** drauf soll.",
-      "Ändere beim Nachsteuern immer nur eine Sache. So lernst du, welcher Hebel was bewirkt."
+      "Ändere beim Nachsteuern immer nur eine Sache. So lernst du, welcher Hebel was bewirkt.",
+      "**Womit?** Claude kann keine Fotos oder Gemälde erzeugen. Für dieses Türchen nimmst du deshalb **ChatGPT** (chatgpt.com oder App): Dort schreibst du einfach „Erstelle ein Bild …“ in den Chat oder wählst im Menü **Mehr → Bilder**. Das geht auch im kostenlosen Plan, nur mit weniger Bildern pro Tag. Alle erzeugten Bilder findest du später unter **Bilder**."
     ],
     "prompt": "Erstelle eine Weihnachtskarte im Stil eines Aquarells: [Motiv, z. B. kleine Hütte im Schnee], warmes Kerzenlicht, sanfte Farben, gemütliche Stimmung, viel freier Platz oben für Text. Keine Schrift im Bild.",
     "tip": "Schrift im Bild ist bei vielen Generatoren noch fehleranfällig. Den Gruß setzt du besser selbst in einem Design-Tool darauf.",
     "challenge": "Erzeuge drei Varianten und ändere jeweils nur einen Parameter (Stil, Licht oder Motiv). Verschick deine Lieblingskarte wirklich.",
     "steps": [
-      "Beschreibe Motiv, Stil, Licht und Bildausschnitt.",
-      "Erzeuge eine erste Version.",
-      "Ändere pro Runde nur eine Sache."
+      "Öffne **chatgpt.com** oder die ChatGPT-App und starte einen neuen Chat.",
+      "Kopiere den Prompt unten hinein und ersetze das Motiv in der Klammer.",
+      "Gefällt dir etwas nicht, schreib eine einzige Änderung, z. B. „Mach das Licht wärmer.“",
+      "Lade das fertige Bild herunter (Download-Symbol am Bild) und verschicke es."
     ]
   },
   {
@@ -695,6 +712,7 @@ window.DAYS = [
     "tip": "Nimm Texte, die du wirklich gern geschrieben hast – nicht die, die du schreiben musstest.",
     "challenge": "Lass dir mit deinem Stilprofil einen Nikolausgruß schreiben und bewerte: Würdest du das so abschicken?",
     "steps": [
+      "Öffne einen **neuen Chat in Claude** (claude.ai oder App). In ChatGPT geht es genauso.",
       "Such drei Texte heraus, die typisch für dich sind.",
       "Lass die AI daraus dein Stilprofil schreiben.",
       "Teste es an einer kurzen Nachricht und korrigiere, was nicht passt."
@@ -713,6 +731,7 @@ window.DAYS = [
     "prompt": "Ich möchte Texte in genau diesem Stil:\n\nBeispiel 1: [...]\nBeispiel 2: [...]\n\nSchreibe jetzt einen für: [Thema]. Halte dich an Länge, Ton und Aufbau der Beispiele.",
     "tip": "Ein Negativbeispiel („So bitte nicht: …“) schärft das Ergebnis zusätzlich.",
     "steps": [
+      "Öffne einen **neuen Chat in Claude** (claude.ai oder App). In ChatGPT geht es genauso.",
       "Sammle zwei bis drei gelungene Beispiele.",
       "Füge sie in den Prompt ein.",
       "Ergänze ein Negativbeispiel, wenn das Ergebnis noch nicht passt."
@@ -726,14 +745,16 @@ window.DAYS = [
     "teaser": "Wann sich Reasoning-Modi lohnen und wann nicht.",
     "lesson": [
       "Viele Tools bieten einen Denkmodus, in dem die AI vor der Antwort länger überlegt. Das lohnt sich bei Logik, Mathe, Abwägungen, Planung und kniffligen Analysen. Für Umformulieren oder Smalltalk reicht der schnelle Modus.",
-      "Auch ohne Denkmodus hilft die Bitte, schrittweise vorzugehen und Annahmen offenzulegen."
+      "Auch ohne Denkmodus hilft die Bitte, schrittweise vorzugehen und Annahmen offenzulegen.",
+      "**So schaltest du es ein:** In Claude klickst du unten im Eingabefeld auf das **Modell-Menü** und schaltest das **erweiterte Denken** (Extended Thinking) ein. In ChatGPT wählst du im Modell-Menü ein **Thinking**-Modell. Danach dauert die Antwort etwas länger, ist bei kniffligen Fragen aber deutlich gründlicher."
     ],
     "prompt": "Denke Schritt für Schritt über folgendes Problem nach: [Problem]. Liste zuerst deine Annahmen und die möglichen Optionen, wäge sie gegeneinander ab und gib dann eine Empfehlung mit Begründung. Markiere, wo du unsicher bist.",
     "tip": "Lies nicht nur das Fazit. Die Annahmen verraten, ob die AI dein Problem richtig verstanden hat.",
     "steps": [
-      "Wähle ein Problem mit mehreren Optionen.",
-      "Schalte, falls vorhanden, den Denkmodus ein.",
-      "Prüf zuerst die Annahmen, dann das Fazit."
+      "Öffne einen neuen Chat in Claude.",
+      "Klick unten im Eingabefeld auf das Modell-Menü und schalte das erweiterte Denken ein.",
+      "Füge den Prompt unten mit deinem Problem ein.",
+      "Lies zuerst die Annahmen. Stimmt eine nicht, korrigiere sie und lass neu abwägen."
     ]
   },
   {
@@ -750,6 +771,7 @@ window.DAYS = [
     "tip": "Frag danach: „Welche dieser Einwände sind wirklich ernst, welche eher Pedanterie?“",
     "challenge": "Teste es an einem echten Plan: Urlaub, Anschaffung, Jobidee oder Wochenendprojekt.",
     "steps": [
+      "Öffne einen **neuen Chat in Claude** (claude.ai oder App). In ChatGPT geht es genauso.",
       "Beschreibe dein Vorhaben in drei Sätzen.",
       "Lass Einwände und ein Pre-Mortem erstellen.",
       "Entscheide, welche zwei Punkte du wirklich angehst."
@@ -769,6 +791,7 @@ window.DAYS = [
     "tip": "Sag der AI, was du auf keinen Fall ausdrücken willst (z. B. „nicht vorwurfsvoll“). Das hilft oft mehr als jede positive Vorgabe.",
     "challenge": "Nimm eine Nachricht, die du schon länger vor dir herschiebst, und schick sie heute ab.",
     "steps": [
+      "Öffne einen **neuen Chat in Claude** (claude.ai oder App). In ChatGPT geht es genauso.",
       "Nimm eine Nachricht, die dir schwerfällt.",
       "Lass drei Tonlagen schreiben.",
       "Misch dir die beste Fassung zusammen und schick sie ab."
@@ -782,15 +805,33 @@ window.DAYS = [
     "teaser": "Web-Suche und Deep Research richtig einsetzen.",
     "lesson": [
       "Viele Tools können im Web suchen. Für größere Fragen gibt es oft „Deep Research“: Die AI arbeitet mehrere Minuten, liest viele Seiten und liefert einen Bericht mit Quellen.",
-      "Entscheidend ist, wie du fragst: Verlange mehrere unabhängige Quellen, Datumsangaben und eine klare Trennung zwischen Fakten und Einschätzungen."
+      "Entscheidend ist, wie du fragst: Verlange mehrere unabhängige Quellen, Datumsangaben und eine klare Trennung zwischen Fakten und Einschätzungen.",
+      "**So geht es in Claude:** Über das **+** bzw. das Werkzeug-Menü unter dem Eingabefeld schaltest du die **Websuche** ein. Für große Fragen gibt es dort zusätzlich **Research**: Claude arbeitet dann mehrere Minuten und liefert einen ausführlichen Bericht mit Quellen. In ChatGPT heißt das Gegenstück **Deep Research**."
     ],
     "prompt": "Recherchiere aktuell zu [Thema]. Vergleiche mindestens 3 unabhängige Quellen, nenne Widersprüche zwischen ihnen, gib Links und Veröffentlichungsdatum an und trenne klar zwischen gesicherten Fakten und Einschätzungen. Am Ende: Was ist noch unklar?",
     "tip": "Frag zum Schluss: „Was spricht gegen dieses Ergebnis?“ So bekommst du auch die Gegenseite.",
     "steps": [
-      "Formuliere eine konkrete Recherchefrage.",
-      "Verlange Quellen mit Datum.",
-      "Öffne mindestens zwei Quellen selbst."
-    ]
+      "Öffne einen neuen Chat in Claude und schalte im Werkzeug-Menü die **Websuche** ein (für große Fragen: **Research**).",
+      "Füge den Prompt unten ein und setze dein Thema ein.",
+      "Warte, bis die Antwort mit Quellen fertig ist.",
+      "Öffne mindestens zwei der genannten Links und prüf, ob dort wirklich steht, was Claude behauptet.",
+      "Stell dieselbe Frage einmal auf **perplexity.ai** und vergleiche: Welche Antwort hilft dir schneller weiter, welche ist gründlicher?"
+    ],
+    "compare": {
+      "intro": "Beide suchen im Web und nennen Quellen. Der Unterschied liegt darin, was danach passiert.",
+      "perplexity": [
+        "Schnelle Fakten und aktuelle Nachrichten, mit Quelle zu jeder Aussage",
+        "Vergleiche vor dem Kauf, Preise, Öffnungszeiten, „Was gibt’s Neues zu …?“",
+        "Wenn du vor allem suchen und nachlesen willst"
+      ],
+      "claude": [
+        "Wenn aus der Recherche etwas entstehen soll: Text, Plan, Tabelle, Präsentation",
+        "Wenn du eigene, lange Dokumente auswerten und weiterverarbeiten willst",
+        "Wenn Claude deine Projekte, Dateien, Skills und Apps kennen soll"
+      ],
+      "note": "**Und Claude in Perplexity?** In Perplexity Pro kannst du Claude als Modell auswählen. Das ist aber nicht dasselbe wie die Claude-App: Perplexity setzt das Modell in seine eigene Suche, mit eigenen Anweisungen, Werkzeugen und Limits, deshalb antwortet es anders. Du bekommst Perplexitys Suche mit Claudes Sprachgefühl, aber ohne Claudes Projekte, Gedächtnis, Skills, Connectors oder das Vorschau-Fenster. Im kostenlosen Plan wählt Perplexity das Modell selbst („Best“). Wer Claude will, muss es in einem bezahlten Plan aktiv auswählen.",
+      "rule": "Faustregel: Perplexity zum Finden, Claude zum Weiterarbeiten."
+    }
   },
   {
     "day": 12,
@@ -806,6 +847,7 @@ window.DAYS = [
     "tip": "Rückwärts planen („ab Essenszeit“) ist ein Trick, der fast jede Planung entspannt.",
     "challenge": "Lass dir den Zeitplan als Checkliste ausgeben und probiere sie wirklich am Weihnachtstag aus.",
     "steps": [
+      "Öffne einen **neuen Chat in Claude** (claude.ai oder App). In ChatGPT geht es genauso.",
       "Nenne Personen, Budget, Zeit und Unverträglichkeiten.",
       "Lass Menü, Zeitplan und Einkaufsliste erstellen.",
       "Frag nach einem Plan B."
@@ -819,15 +861,17 @@ window.DAYS = [
     "teaser": "Sonntags-Special: zeig der AI, worum es geht.",
     "lesson": [
       "Moderne Modelle verstehen Bilder: Kühlschrankinhalt, Pflanze, Fehlermeldung, Wegweiser, handschriftliche Notiz, Diagramm. Ein Foto ersetzt oft drei Absätze Beschreibung.",
-      "Wichtig: Lass die AI erst beschreiben, was sie sieht, und dann die Aufgabe lösen. Das deckt Fehldeutungen früh auf."
+      "Wichtig: Lass die AI erst beschreiben, was sie sieht, und dann die Aufgabe lösen. Das deckt Fehldeutungen früh auf.",
+      "**So geht es:** In der Claude-App tippst du auf das **+** neben dem Eingabefeld und wählst **Kamera** oder ein Foto aus deiner Galerie. Am Computer ziehst du das Bild einfach in den Chat."
     ],
     "prompt": "Hier ist ein Foto von [Kühlschrankinhalt/Pflanze/Fehlermeldung/Tabelle]. Beschreibe zuerst, was du siehst. Dann: [Aufgabe, z. B. schlage 3 Rezepte vor / erkläre das Problem / was fehlt mir noch?]. Frag nach, wenn etwas unscharf oder unklar ist.",
     "tip": "Lade keine Fotos fremder Personen oder sensibler Dokumente hoch, wenn du nicht sicher bist, was damit geschieht.",
     "challenge": "Fotografiere deinen Kühlschrank und lass dir ein Abendessen aus dem vorhandenen Inhalt zusammenstellen.",
     "steps": [
-      "Mach ein scharfes Foto bei gutem Licht.",
-      "Lass die AI zuerst beschreiben, was sie sieht.",
-      "Stelle dann deine eigentliche Frage."
+      "Öffne die **Claude-App** auf dem Handy und starte einen neuen Chat.",
+      "Tipp auf **+** → **Kamera** und fotografiere deinen Kühlschrank (oder Pflanze, Fehlermeldung …).",
+      "Füge den Prompt unten ein und schick beides zusammen ab.",
+      "Frag nach, wenn etwas falsch erkannt wurde: „Das ist kein Käse, sondern Butter.“"
     ]
   },
   {
@@ -839,14 +883,17 @@ window.DAYS = [
     "lesson": [
       "Du kannst Dokumente hochladen oder einfügen und gezielt befragen. Das spart Zeit bei Verträgen, Studien, Anleitungen und Protokollen.",
       "Gute Aufträge verlangen Belegstellen: Wenn die AI Seitenzahlen oder Zitate nennen muss, kannst du jede Aussage schnell nachprüfen.",
-      "Für fertige Dateien gibt es oft eigene **Skills**. Bitte ausdrücklich darum, zum Beispiel: „Nutze den Excel-Skill und erstelle daraus eine Tabelle mit allen Fristen.“ So bekommst du eine echte Datei statt nur Text."
+      "Für fertige Dateien gibt es oft eigene **Skills**. Bitte ausdrücklich darum, zum Beispiel: „Nutze den Excel-Skill und erstelle daraus eine Tabelle mit allen Fristen.“ So bekommst du eine echte Datei statt nur Text.",
+      "**So geht es in Claude:** Zieh die PDF-Datei in den Chat oder lade sie über **+** hoch. Damit Claude dir echte Dateien (Word, Excel, PowerPoint, PDF) zurückgeben kann, muss unter **Einstellungen → Fähigkeiten** die Option **Dateien erstellen und bearbeiten** eingeschaltet sein. Die fertige Datei erscheint dann direkt im Chat zum Herunterladen.",
+      "**Claude oder Perplexity?** Für eigene Dokumente ist Claude meist die bessere Wahl: Es kann lange Dateien am Stück durcharbeiten, mit dir darüber sprechen und dir neue Dateien daraus bauen. Perplexity ist stark, wenn du zu einem Dokument ergänzend aktuelle Informationen aus dem Web brauchst."
     ],
     "prompt": "Ich lade ein Dokument hoch. Liefere: 1) eine Zusammenfassung in 5 Sätzen, 2) die 5 wichtigsten Zahlen oder Fakten mit Seitenangabe, 3) offene Fragen und Risiken, 4) To-dos für mich. Nenne zu jeder Aussage die Belegstelle.",
     "tip": "Stelle nach der Zusammenfassung gezielte Fragen. Die eigentlichen Erkenntnisse stecken meist im Nachfragen.",
     "steps": [
-      "Lade ein Dokument hoch, das du ohnehin lesen müsstest.",
-      "Verlange eine Zusammenfassung mit Belegstellen.",
-      "Lass dir das Ergebnis als Datei geben und ruf dafür den passenden Skill auf."
+      "Prüf unter **Einstellungen → Fähigkeiten**, dass **Dateien erstellen und bearbeiten** an ist.",
+      "Öffne einen neuen Chat und lade ein Dokument hoch (Vertrag, Anleitung, Studie).",
+      "Füge den Prompt unten ein und prüf zwei Belegstellen selbst nach.",
+      "Schreib danach: „Nutze den Excel-Skill und erstelle eine Tabelle mit allen Fristen.“ Lade die Datei herunter."
     ]
   },
   {
@@ -857,15 +904,17 @@ window.DAYS = [
     "teaser": "Aus Zahlenkolonnen werden Antworten.",
     "lesson": [
       "Mit CSV- oder Excel-Dateien kann die AI Auffälligkeiten finden, Auswertungen rechnen und Diagramme erstellen. Wichtig ist, erst einen Überblick zu verlangen, bevor es an die Fragen geht.",
-      "Und: Rechne Stichproben nach. Bei Zahlen gilt besonders, dass vertrauen gut und prüfen besser ist."
+      "Und: Rechne Stichproben nach. Bei Zahlen gilt besonders, dass vertrauen gut und prüfen besser ist.",
+      "**So geht es in Claude:** Lade eine CSV- oder Excel-Datei über **+** hoch. Claude rechnet die Auswertung im Hintergrund wirklich aus und zeichnet Diagramme. Voraussetzung ist auch hier **Dateien erstellen und bearbeiten** unter **Einstellungen → Fähigkeiten**."
     ],
     "prompt": "Hier ist meine Tabelle. Verschaffe dir zuerst einen Überblick (Spalten, Auffälligkeiten, fehlende Werte). Dann beantworte: [Frage]. Erstelle ein passendes Diagramm und erkläre in 3 Sätzen, was es zeigt – und was es nicht beweist.",
     "tip": "Der Zusatz „was es nicht beweist“ schützt vor vorschnellen Schlüssen.",
     "challenge": "Nimm eigene Daten: Haushaltsbuch, Laufzeiten, Lesehistorie. Welche Frage hättest du dir vorher nie gestellt?",
     "steps": [
-      "Exportiere eine Tabelle als CSV- oder Excel-Datei.",
-      "Lass zuerst einen Überblick erstellen.",
-      "Stelle eine Frage und lass ein Diagramm zeichnen."
+      "Exportiere eine eigene Tabelle als CSV- oder Excel-Datei (Haushaltsbuch, Sportdaten, Lesehistorie).",
+      "Öffne einen neuen Chat in Claude und lade die Datei über **+** hoch.",
+      "Füge den Prompt unten ein und setze deine Frage ein.",
+      "Rechne eine Zahl aus dem Ergebnis stichprobenartig selbst nach."
     ]
   },
   {
@@ -877,14 +926,16 @@ window.DAYS = [
     "lesson": [
       "Die meisten Tools bieten eigene Anweisungen, ein Gedächtnis und Projekte mit Dateien und Vorgaben. Damit musst du nicht jedes Mal von vorn erklären, wer du bist und wie du es magst.",
       "Die Funktionen heißen je nach Tool unterschiedlich. Suche in den Einstellungen nach „Anweisungen“, „Personalisierung“ oder „Projekte“.",
-      "Der Unterschied zu **Skills** (Tag 17): Eigene Anweisungen gelten immer. Skills kommen nur dann zum Einsatz, wenn eine bestimmte Aufgabe ansteht, oder wenn du sie ausdrücklich aufrufst."
+      "Der Unterschied zu **Skills** (Tag 17): Eigene Anweisungen gelten immer. Skills kommen nur dann zum Einsatz, wenn eine bestimmte Aufgabe ansteht, oder wenn du sie ausdrücklich aufrufst.",
+      "**Wo genau?** In Claude trägst du dauerhafte Anweisungen unter **Einstellungen → Profil** im Feld für deine persönlichen Präferenzen ein. Das **Gedächtnis** schaltest du unter **Einstellungen → Fähigkeiten** ein. **Projekte** findest du links in der Seitenleiste: Dort legst du ein Projekt an, gibst ihm eigene Anweisungen und Dateien, und jedes Projekt hat sein eigenes Gedächtnis. In ChatGPT heißen die Gegenstücke **Einstellungen → Personalisierung** und ebenfalls **Projekte**."
     ],
     "prompt": "Antworte auf Deutsch, direkt und ohne Floskeln. Wenn meine Frage unklar ist, frag zuerst nach. Gib bei Fakten Quellen an. Bei Entscheidungen: Pro und Contra und eine klare Empfehlung. Widersprich mir, wenn ich falsch liege.",
     "tip": "Halte die Anweisungen kurz und prüfe das Gedächtnis ab und zu: Altes und Überholtes darf raus.",
     "steps": [
-      "Öffne die Einstellungen deines Tools.",
-      "Trage deine dauerhaften Anweisungen ein.",
-      "Prüfe nach einer Woche, was du anpassen willst."
+      "Öffne in Claude **Einstellungen → Profil** und füge den Prompt unten in das Feld für persönliche Präferenzen ein.",
+      "Schalte unter **Einstellungen → Fähigkeiten** das Gedächtnis ein, falls es noch aus ist.",
+      "Leg links in der Seitenleiste ein **Projekt** an, z. B. „Weihnachten“, mit einer kurzen Anweisung und einer Geschenkeliste.",
+      "Prüfe nach einer Woche, was Claude sich gemerkt hat, und lösche, was nicht stimmt."
     ]
   },
   {
@@ -896,16 +947,18 @@ window.DAYS = [
     "lesson": [
       "**Skills** sind kleine Fähigkeitspakete für die AI: ein Ordner mit einer Datei namens SKILL.md, darin eine Anleitung und bei Bedarf Vorlagen, Beispiele oder kleine Skripte. Die AI lädt einen Skill, sobald deine Aufgabe zu seiner Beschreibung passt. Das Format ist ein offener Standard und wird inzwischen von mehreren Tools gelesen, zum Beispiel von Claude und ChatGPT.",
       "Viele Tools bringen fertige Skills mit, etwa zum Erstellen von Word-, Excel-, PowerPoint- oder PDF-Dateien. Du kannst einen Skill auch **ausdrücklich aufrufen**: mit seinem Namen im Prompt („Nutze den Skill …“) oder, je nach Tool, per Kurzbefehl wie /skill-name. Das ist zuverlässiger, als darauf zu hoffen, dass die AI ihn von selbst wählt.",
-      "Eigene Skills lohnen sich für alles, was du regelmäßig auf dieselbe Art erledigt haben willst: Antworten auf Mails, dein Wochenplan, Rezeptkarten oder Protokolle. Am einfachsten lässt du den Skill von der AI schreiben. In Claude gibt es dafür sogar einen eigenen Skill-Creator."
+      "Eigene Skills lohnen sich für alles, was du regelmäßig auf dieselbe Art erledigt haben willst: Antworten auf Mails, dein Wochenplan, Rezeptkarten oder Protokolle. Am einfachsten lässt du den Skill von der AI schreiben. In Claude gibt es dafür sogar einen eigenen Skill-Creator.",
+      "**Wo genau?** In Claude muss unter **Einstellungen → Fähigkeiten** die Option **Dateien erstellen und bearbeiten** an sein. Deine Skills findest du dann unter **Anpassen → Skills**: Dort schaltest du Beispiel-Skills ein oder aus und lädst eigene hoch, über **+ → Skill erstellen → Skill hochladen** (als ZIP-Datei mit dem Skill-Ordner)."
     ],
     "prompt": "Nutze den Skill-Creator und hilf mir, einen eigenen Skill für [wiederkehrende Aufgabe] zu bauen. Frag mich nach Zweck, Auslöser (wann soll der Skill greifen?), Ablauf in Schritten, Ton und je einem guten und einem schlechten Beispiel. Erstelle danach die SKILL.md mit Name und Beschreibung und erkläre mir, wie ich den Skill hochlade und ausdrücklich aufrufe.",
     "tip": "Die Beschreibung entscheidet, wann ein Skill greift. Schreib hinein, was er tut und wann er genutzt werden soll, zum Beispiel: „Nutze diesen Skill, wenn ich um eine Antwort auf eine Kundenmail bitte.“",
     "challenge": "Bau einen Skill für eine Aufgabe, die dich jede Woche Zeit kostet, und ruf ihn eine Woche lang ausdrücklich beim Namen auf.",
     "steps": [
-      "Schau in den Einstellungen nach, welche Skills es schon gibt (oft unter „Fähigkeiten“ oder „Skills“).",
-      "Ruf einen vorhandenen Skill ausdrücklich beim Namen auf, zum Beispiel für eine Excel-Datei.",
-      "Bau dir mit dem Prompt unten einen eigenen Skill.",
-      "Lade ihn hoch und teste ihn mit drei echten Aufgaben."
+      "Schalte in Claude unter **Einstellungen → Fähigkeiten** die Option **Dateien erstellen und bearbeiten** ein.",
+      "Öffne **Anpassen → Skills** und schau dir an, welche Skills es schon gibt.",
+      "Ruf einen davon ausdrücklich auf, z. B.: „Nutze den PowerPoint-Skill und mach mir drei Folien zu meinem Lieblingsrezept.“",
+      "Bau mit dem Prompt unten einen eigenen Skill. Lade die ZIP-Datei unter **Anpassen → Skills → + → Skill erstellen → Skill hochladen** hoch.",
+      "Teste ihn mit „Nutze meinen Skill … für …“ an drei echten Aufgaben."
     ]
   },
   {
@@ -916,14 +969,16 @@ window.DAYS = [
     "teaser": "Sprechen ist oft schneller als Tippen.",
     "lesson": [
       "Beim Sprechen denkst du freier. Diktiere unsortierte Gedanken, und lass die AI Ordnung hineinbringen. Auch der Sprachmodus für Gespräche ist stark: zum Brainstorming, für Sprachübungen oder zum Üben von Gesprächen.",
-      "Gerade unterwegs oder beim Spazierengehen entstehen so die besten Ideen."
+      "Gerade unterwegs oder beim Spazierengehen entstehen so die besten Ideen.",
+      "**So geht es:** In der Claude-App tippst du rechts neben dem Eingabefeld auf das **Sprach-Symbol** und redest einfach los. Zum reinen Diktieren nutzt du das **Mikrofon** auf der Tastatur deines Handys. In ChatGPT funktioniert der Sprachmodus genauso."
     ],
     "prompt": "Ich spreche gleich meine Gedanken zu [Thema] unsortiert ein. Ordne sie danach in: Kernaussagen, offene Fragen und nächste Schritte. Behalte meine Wortwahl bei, wo es sinnvoll ist.",
     "tip": "Für Fremdsprachen: Bitte die AI, dich zu korrigieren, aber erst am Ende, damit der Redefluss bleibt.",
     "steps": [
-      "Starte den Sprachmodus oder die Diktierfunktion.",
-      "Sprich zwei Minuten frei drauflos.",
-      "Lass die AI ordnen und nächste Schritte ableiten."
+      "Öffne die **Claude-App** und starte einen neuen Chat.",
+      "Tipp auf das **Sprach-Symbol** neben dem Eingabefeld.",
+      "Sag zuerst den Prompt unten, dann sprich zwei Minuten frei über dein Thema.",
+      "Beende das Gespräch und lies die geordnete Zusammenfassung im Chat nach."
     ]
   },
   {
@@ -940,6 +995,7 @@ window.DAYS = [
     "tip": "Sag am Ende: „Erkläre ich es dir jetzt in eigenen Worten, und du suchst die Lücken.“",
     "challenge": "Wähle ein Thema, das dich schon lange reizt, und lerne es an diesem Wochenende in 30 Minuten an.",
     "steps": [
+      "Öffne einen **neuen Chat in Claude** (claude.ai oder App). In ChatGPT geht es genauso.",
       "Wähle ein Thema, das dich neugierig macht.",
       "Lass dich Schritt für Schritt erklären und abfragen.",
       "Erkläre es am Ende selbst in eigenen Worten."
@@ -949,19 +1005,25 @@ window.DAYS = [
     "day": 20,
     "kind": "lern",
     "emoji": "🛠️",
-    "title": "Agenten und Connectoren",
-    "teaser": "Sonntags-Special: wenn die AI nicht nur redet, sondern handelt.",
+    "title": "Agenten: Die AI erledigt etwas für dich",
+    "teaser": "Sonntags-Special: Heute plant Claude deine Woche mit deinem echten Kalender und deinen Mails.",
     "lesson": [
-      "Ein Chatbot antwortet, ein Agent erledigt mehrstufige Aufgaben: suchen, Dateien erstellen, Tools bedienen, je nach Einrichtung auch auf Kalender, Mails oder Dokumente zugreifen (über sogenannte Connectoren).",
-      "Wichtig sind klare Ziele, begrenzte Rechte und ein prüfender Blick aufs Ergebnis. Starte mit Aufgaben, die nur lesen und nichts verändern."
+      "Ein Chatbot antwortet, ein **Agent** handelt: Er schaut selbst in deine Apps, sammelt Informationen, plant Schritte und bereitet Aktionen vor. Damit das geht, verbindest du die AI über sogenannte **Connectors** mit deinen Konten, zum Beispiel Google Kalender und Gmail.",
+      "Wir nehmen heute **Claude** (claude.ai oder die Claude-App). Die Connectors für Gmail, Google Kalender und Google Drive gibt es dort für alle Nutzer, auch im kostenlosen Plan. Wichtig: Bevor Claude eine Mail verschickt oder etwas in Drive ändert, fragt es dich standardmäßig um Erlaubnis. Du behältst also die Kontrolle.",
+      "In **ChatGPT** heißt das Gegenstück inzwischen **ChatGPT Work**: ein Modus für längere, mehrstufige Aufgaben, der ebenfalls mit Apps wie Gmail und Google Drive arbeiten kann. Die Schritte unten funktionieren dort sinngemäß genauso.",
+      "Die Grundregel für Agenten: **erst lesen, dann handeln.** Lass die AI zuerst nur Informationen zusammentragen. Erlaube Aktionen wie Termine eintragen oder Mails senden erst, wenn du den Plan gesehen hast."
     ],
-    "prompt": "Ziel: [gewünschtes Ergebnis]. Erledige das in Schritten. Zeig mir zuerst deinen Plan und warte auf mein OK. Sende, lösche oder bezahle nichts ohne meine ausdrückliche Bestätigung. Am Ende: eine Zusammenfassung, was du getan hast.",
-    "tip": "Gib Agenten nur so viele Zugriffsrechte, wie die Aufgabe wirklich braucht.",
+    "prompt": "Schau in meinen Google Kalender und in meine Gmail-Nachrichten der letzten 7 Tage. Erstelle mir eine Wochenvorschau für die kommenden 7 Tage:\n1) alle Termine pro Tag,\n2) Mails, auf die ich noch antworten sollte, mit einem Satz Begründung,\n3) mögliche Zeitkonflikte oder enge Tage,\n4) drei Vorschläge, wo ich mir bewusst Zeit für mich blocken könnte.\nVerändere nichts und sende nichts. Frag mich, bevor du irgendetwas einträgst oder abschickst.",
+    "tip": "Gib Agenten nur Zugriff auf das, was die Aufgabe braucht. Du kannst Connectors jederzeit unter Einstellungen → Connectors wieder trennen oder im Chat ausschalten.",
     "steps": [
-      "Wähle eine Aufgabe, die nur liest und nichts verändert.",
-      "Lass dir zuerst den Plan zeigen.",
-      "Gib erst danach dein OK."
-    ]
+      "Öffne claude.ai (oder die Claude-App) und geh auf **Einstellungen → Connectors**.",
+      "Klick bei **Google Kalender** auf **Verbinden** und melde dich mit deinem Google-Konto an. Mach dasselbe für **Gmail**.",
+      "Starte einen neuen Chat. Prüf über das Menü unter dem Eingabefeld, dass Kalender und Gmail eingeschaltet sind.",
+      "Kopiere den Prompt unten hinein und schick ihn ab. Claude liest jetzt deinen Kalender und deine Mails, verändert aber nichts.",
+      "Lies die Wochenvorschau. Sag dann z. B.: „Trag mir für Mittwoch 18 Uhr einen Termin ‚Geschenke einpacken‘ ein.“ Prüf den Vorschlag und bestätige, wenn Claude fragt.",
+      "Wenn du magst, lass dir eine Mail als **Entwurf** schreiben, aber noch nicht senden. Schau sie dir an und entscheide selbst."
+    ],
+    "challenge": "Lass Claude deine Woche planen und nimm genau einen Vorschlag an: einen Termin eintragen lassen oder einen Antwortentwurf schreiben lassen. Achte darauf, an welcher Stelle Claude dich um Erlaubnis fragt."
   },
   {
     "day": 21,
@@ -972,15 +1034,18 @@ window.DAYS = [
     "lesson": [
       "Du kannst der AI sagen, was du brauchst, und sie baut dir eine kleine Webseite oder ein Tool: Rechner, Zufallsgenerator, Tippspiel, Checkliste. Das nennt man Vibe Coding.",
       "Kleiner Spoiler: Dieser Adventskalender ist genau so entstanden.",
-      "Viele Tools haben eigene **Skills** für Gestaltung oder Webseiten. Nenne sie ausdrücklich, zum Beispiel „Nutze den Design-Skill“. Das Ergebnis sieht dann meist deutlich durchdachter aus."
+      "Viele Tools haben eigene **Skills** für Gestaltung oder Webseiten. Nenne sie ausdrücklich, zum Beispiel „Nutze den Design-Skill“. Das Ergebnis sieht dann meist deutlich durchdachter aus.",
+      "**So geht es in Claude:** Bitte um eine HTML-Seite, und Claude zeigt sie dir direkt im Fenster neben dem Chat an. Dort kannst du sie sofort ausprobieren, Änderungen im Chat anfordern und die Datei am Ende herunterladen oder als Link teilen.",
+      "**Claude oder Perplexity?** Perplexity ist für die Suche gebaut, nicht zum Bauen. Für Vibe Coding nimmst du Claude, weil du die Seite dort direkt neben dem Chat ausprobieren und Schritt für Schritt verändern kannst."
     ],
     "prompt": "Baue mir eine einfache einzelne HTML-Seite: [Idee, z. B. Haushaltsrechner, Spiele-Zufallsgenerator, Wichtel-Auslosung]. Design: [Stil]. Funktion: [Details]. Erkläre mir danach in einfachen Worten, wie ich die Datei öffne und was ich anpassen kann.",
     "tip": "Arbeite in kleinen Schritten: Erst läuft es, dann wird es schön. Bei Änderungen: „Ändere nur X, alles andere bleibt.“",
     "challenge": "Baue etwas Kleines, das dir im Alltag nützt, und öffne es im Browser.",
     "steps": [
-      "Beschreibe dein Mini-Tool in drei Sätzen.",
-      "Lass eine einzelne HTML-Datei bauen, gern mit einem Design-Skill.",
-      "Ändere danach immer nur eine Sache auf einmal."
+      "Öffne einen neuen Chat in Claude.",
+      "Füge den Prompt unten mit deiner Idee ein.",
+      "Probier die Seite direkt im Fenster neben dem Chat aus.",
+      "Wünsch dir eine Änderung nach der anderen („Mach die Knöpfe größer“). Lade die Datei am Ende herunter."
     ]
   },
   {
@@ -991,14 +1056,16 @@ window.DAYS = [
     "teaser": "Was in den Chat darf und was besser nicht.",
     "lesson": [
       "Vorsicht bei Passwörtern, Ausweis- und Kontodaten, sensiblen Gesundheitsinfos anderer und vertraulichen Firmendaten. Schau in die Einstellungen deines Tools: Wird mit deinen Chats trainiert? Gibt es temporäre Chats?",
-      "Neu hinzu kommt „Prompt Injection“: Versteckte Anweisungen in Webseiten oder Dateien können eine AI täuschen. Sei deshalb vorsichtig, wenn eine AI fremde Inhalte liest und gleichzeitig Rechte hat."
+      "Neu hinzu kommt „Prompt Injection“: Versteckte Anweisungen in Webseiten oder Dateien können eine AI täuschen. Sei deshalb vorsichtig, wenn eine AI fremde Inhalte liest und gleichzeitig Rechte hat.",
+      "**Wo genau?** In Claude legst du unter **Einstellungen → Datenschutz** fest, ob deine Chats zur Verbesserung der Modelle verwendet werden dürfen. Für einmalige, private Fragen gibt es den **Inkognito-Chat**: das Geister-Symbol oben rechts in einem neuen Chat. Solche Chats landen nicht im Verlauf und nicht im Gedächtnis."
     ],
     "prompt": "Ich möchte folgenden Text mit dir bearbeiten, aber ohne persönliche Daten. Ersetze Namen, Adressen, Zahlen und Firmenbezeichnungen durch Platzhalter wie [PERSON_1] und liste mir die Ersetzungen separat auf, damit ich sie nachher zurücktauschen kann.\n\nText: [...]",
     "tip": "Arbeitest du beruflich mit AI, kläre vorher die Regeln deines Arbeitgebers.",
     "steps": [
-      "Überleg, welche Daten du gerade teilst.",
-      "Prüfe die Datenschutz-Einstellungen deines Tools.",
-      "Anonymisiere sensible Texte mit dem Prompt unten."
+      "Öffne in Claude **Einstellungen → Datenschutz** und entscheide, ob deine Chats zum Training genutzt werden dürfen.",
+      "Probier einmal einen **Inkognito-Chat** aus (Geister-Symbol oben rechts in einem neuen Chat).",
+      "Schau unter **Einstellungen → Fähigkeiten**, was im Gedächtnis gespeichert ist, und lösche, was du nicht teilen möchtest.",
+      "Anonymisiere einen sensiblen Text mit dem Prompt unten, bevor du ihn bearbeiten lässt."
     ]
   },
   {
@@ -1014,6 +1081,7 @@ window.DAYS = [
     "prompt": "Hier ist meine Einschätzung: [...]. Sei kein Ja-Sager. Argumentiere zuerst die Gegenposition so stark wie möglich, dann sag mir ehrlich, was an meiner Sicht trägt und was nicht.",
     "tip": "Bei wichtigen Fragen: erst selbst eine Meinung bilden, dann die AI fragen. So bleibt dein eigenes Urteil trainiert.",
     "steps": [
+      "Öffne einen **neuen Chat in Claude** (claude.ai oder App). In ChatGPT geht es genauso.",
       "Schreib deine eigene Einschätzung auf.",
       "Lass die AI die Gegenposition stark machen.",
       "Entscheide selbst, was davon trägt."
@@ -1034,6 +1102,7 @@ window.DAYS = [
     "tip": "Pflege die Bibliothek: Alle paar Monate aussortieren, verbessern und neue Funde ergänzen.",
     "challenge": "Lege deine Bibliothek an einem festen Ort ab (Notizen-App, Dokument) und ergänze jede Woche einen Prompt.",
     "steps": [
+      "Öffne einen **neuen Chat in Claude** (claude.ai oder App). In ChatGPT geht es genauso.",
       "Such deine fünf liebsten Prompts aus dem Kalender heraus.",
       "Lass daraus eine Prompt-Bibliothek bauen.",
       "Mach aus dem wichtigsten Prompt einen eigenen Skill."
@@ -1343,8 +1412,9 @@ window.DAYS = [
     // Theke, Pfosten, Dach (vor Jochen)
     s += box(x, y + 0.72, 0, w, d - 0.72, 0.45, "#8b5a3c");
     var FL = faceL(x, y, w, d, 0);
-    s += poly(frect(FL, 0.08, 0.06, w - 0.08, 0.3), "#f1e3c3", 'stroke="#6b4428" stroke-width="1"');
-    s += ftext("L", FL(w / 2, 0.14), label, 7.5, "#5a2e1a", 'font-family="Georgia,serif" font-style="italic"');
+    s += poly(frect(FL, 0.05, 0.04, w - 0.05, 0.42), "#f1e3c3", 'stroke="#6b4428" stroke-width="1"');
+    s += ftext("L", FL(w / 2, 0.25), "Jochens", 6, "#5a2e1a", 'font-family="Georgia,serif" font-style="italic"');
+    s += ftext("L", FL(w / 2, 0.08), "Carbonara", 7, "#5a2e1a", 'font-family="Georgia,serif" font-style="italic" font-weight="700"');
     var pot = P(x + 0.9, y + 0.84, 0.45);
     s += ell(add(pot, 0, -4), 7, 3, "#3a3a40") + '<rect x="' + f1(pot[0] - 7) + '" y="' + f1(pot[1] - 4) + '" width="14" height="6" fill="#2b2b30"/>' + ell(add(pot, 0, -4), 5.5, 2.2, "#e8d7a8");
     s += '<g class="smoke">' + circ(add(pot, 0, -12), 5, "#e8edf3", 'opacity=".35"') + circ(add(pot, 3, -22), 7, "#e8edf3", 'opacity=".22"') + "</g>";
@@ -1359,13 +1429,13 @@ window.DAYS = [
     s += poly([P(x - ov, y + d / 2, h + rh), P(x + w + ov, y + d / 2, h + rh), P(x + w + ov, y + d * 0.8, h + rh * 0.4), P(x - ov, y + d * 0.8, h + rh * 0.35)], "#f8fafd", 'opacity=".92"');
     if (G > 0.12) for (var e = 0; e <= 6; e++) { var p = P(x - ov + (w + 2 * ov) * e / 6, y + d + ov, h - 0.03); s += circ(p, 1.8, "*#ffe3a0"); glows.push(circ(p, 6, "#ffcf70")); }
     var FR = faceR(x, y, w, d, 0);
-    s += poly(frect(FR, 0.1, 0.95, d - 0.1, 1.28), "#f1e3c3", 'stroke="#6b4428" stroke-width="1"');
-    s += ftext("R", FR(d / 2, 1.04), "Carbonara", 8, "#5a2e1a", 'font-family="Georgia,serif" font-style="italic"');
+    s += poly(frect(FR, 0.04, 0.95, d - 0.04, 1.28), "#f1e3c3", 'stroke="#6b4428" stroke-width="1"');
+    s += ftext("R", FR(d / 2, 1.05), "Carbonara", 6.5, "#5a2e1a", 'font-family="Georgia,serif" font-style="italic"');
     item(x + w / 2 + y + d / 2 + 0.3, s);
   }
 
   function bigTree(x, y) {
-    occupy(x - 0.9, y - 0.9, 1.8, 1.8);
+    occupy(x - 0.9, y - 0.9, 1.8, 1.8); occupy(x + 0.05, y + 0.85, 0.85, 0.8); // Sicht auf Geschenk 24 freihalten
     var b = P(x, y, 0), H = 240, s = "";
     shadows.push(ell(add(b, 70, 8), 110, 30, "#000"));
     s += ell(b, 52, 22, "#f4f7fb");
@@ -1414,8 +1484,8 @@ window.DAYS = [
     item(x + y + 0.9, s);
   }
 
-  function tree(x, y, sc, snowy, lit) {
-    var b = P(x, y, 0), H = 58 * sc, W = H * 0.42, s = "";
+  function tree(x, y, sc, snowy, lit, z, key) {
+    var b = P(x, y, z || 0), H = 58 * sc, W = H * 0.42, s = "";
     shadows.push(ell(add(b, H * 0.35, 3), H * 0.42, H * 0.13, "#000"));
     s += '<rect x="' + f1(b[0] - 2.5) + '" y="' + f1(b[1] - 8) + '" width="5" height="9" fill="#5b3a26"/>';
     for (var i = 0; i < 4; i++) {
@@ -1430,12 +1500,14 @@ window.DAYS = [
       if (thr(x, y) >= G) continue;
       s += circ([b[0] + lx, ly], 1.4, "*" + lc, 'class="tw" style="animation-delay:' + dl + 's"'); glows.push(circ([b[0] + lx, ly], 4, lc));
     }
-    item(x + y, s);
+    item(key != null ? key : x + y, s);
   }
 
   // ---------- Menschen & Kleinkram ----------
   var COATS = ["#8c2f39", "#2e4a62", "#3d5c45", "#6b4f3a", "#2b2b30", "#b5651d", "#5b4a8a", "#a33c2c", "#355c7d", "#7a6a5a", "#c9b79c"];
   var SKIN = ["#f1c9a5", "#e0ac7e", "#c68a5e", "#8d5a3b", "#f5d6bd"];
+  // Bereich vor der Carbonara-Theke bleibt frei (Zufallsfolge bleibt dabei unverändert)
+  function keepClear(x, y) { return x > 15.85 && x < 17.6 && y > 12.2 && y < 13.4; }
   function person(x, y, kid) {
     var p = P(x, y, 0), k = kid ? 0.72 : 1, coat = pick(COATS), s = "";
     s += ell(add(p, 5, 1), 6 * k, 2.4 * k, "#000", 'opacity=".18"');
@@ -1449,7 +1521,7 @@ window.DAYS = [
     s += '<path d="M' + f1(p[0] - 3.6 * k) + "," + f1(p[1] - 23.5 * k) + " a" + f1(3.6 * k) + "," + f1(3.8 * k) + " 0 0 1 " + f1(7.2 * k) + ',0z" fill="' + hat + '"/>';
     if (rnd() < 0.5) s += circ([p[0], p[1] - 27.6 * k], 1.5 * k, "#f4f1ea");
     if (rnd() < 0.25) s += '<rect x="' + f1(p[0] + 4 * k) + '" y="' + f1(p[1] - 13 * k) + '" width="' + f1(5 * k) + '" height="' + f1(6 * k) + '" fill="' + pick(["#c0392b", "#d8b25a", "#2f5f9e"]) + '"/>';
-    item(x + y, s);
+    if (!keepClear(x, y)) item(x + y, s);
   }
   function lamp(x, y, day) {
     var p0 = P(x, y, 0), p1 = P(x, y, 1.9), s = "";
@@ -1742,7 +1814,7 @@ window.DAYS = [
     s += circ(add(p, 0, -24), 3.5, "#f1c9a5") + '<path d="M' + f1(p[0] - 3.5) + "," + f1(p[1] - 23) + ' q3.5,7 7,0z" fill="#f4f1ea"/>';
     s += '<path d="M' + f1(p[0] - 4) + "," + f1(p[1] - 25.5) + ' q4,-9 9,-3 l-5,3z" fill="#b8262f"/>' + circ(add(p, 5, -28.5), 1.4, "#f4f1ea");
     s += line(add(p, 5, -17), add(p, 9, -13), "#b8262f", 2) + circ(add(p, 10, -12), 1.8, "#d8b25a");
-    item(x + y, s);
+    if (!keepClear(x, y)) item(x + y, s);
   }
   function snowballFight(x, y) {
     occupy(x - 0.4, y - 0.4, 2.2, 1.6);
@@ -1766,20 +1838,164 @@ window.DAYS = [
     occupy(x - 0.15, y - 0.15, 0.7, 0.3);
     person(x, y);
     var d = P(x + 0.45, y + 0.05, 0), c = pick(["#7a5236", "#d8c4a0", "#2b2b30", "#a8865a"]);
-    item(x + y + 0.45, line(add(P(x, y, 0), 3, -12), add(d, -3, -6), "#2b2b30", 0.8) + ell(add(d, 0, -5), 5, 2.6, c) + circ(add(d, 5, -7), 2.3, c) + line(add(d, -3, -3), add(d, -3, 0), c, 1.5) + line(add(d, 3, -3), add(d, 3, 0), c, 1.5) + line(add(d, -5, -6), add(d, -8, -9), c, 1.2));
+    if (!keepClear(x, y)) item(x + y + 0.45, line(add(P(x, y, 0), 3, -12), add(d, -3, -6), "#2b2b30", 0.8) + ell(add(d, 0, -5), 5, 2.6, c) + circ(add(d, 5, -7), 2.3, c) + line(add(d, -3, -3), add(d, -3, 0), c, 1.5) + line(add(d, 3, -3), add(d, 3, 0), c, 1.5) + line(add(d, -5, -6), add(d, -8, -9), c, 1.2));
   }
   function lanternWalker(x, y) {
     occupy(x - 0.15, y - 0.15, 0.3, 0.3);
     person(x, y, rnd() < 0.5);
     var l = add(P(x, y, 0), 6, -10);
-    item(x + y + 0.01, line(add(l, 0, -6), l, "#2b2b30", 0.8) + circ(l, 2.2, "*#ffcf6e"));
-    glows.push(circ(l, 10, "#ffc766"));
+    if (!keepClear(x, y)) { item(x + y + 0.01, line(add(l, 0, -6), l, "#2b2b30", 0.8) + circ(l, 2.2, "*#ffcf6e")); glows.push(circ(l, 10, "#ffc766")); }
   }
   function steam(x, y, z) {
     var sp = P(x, y, z);
     item(x + y + 0.9, '<g class="smoke" style="animation-delay:' + f1(rr(0, 5)) + 's">' + circ(add(sp, 0, -4), 5, "#e8edf3", 'opacity=".35"') + circ(add(sp, 4, -14), 7, "#e8edf3", 'opacity=".25"') + circ(add(sp, 1, -26), 9, "#e8edf3", 'opacity=".15"') + "</g>");
   }
-  function details() {
+  // ---------- Tiere im Wald ----------
+  function gk(p, flip, sc, inner) { return '<g transform="translate(' + f1(p[0]) + "," + f1(p[1]) + ") scale(" + f1((flip ? -1 : 1) * sc) + "," + f1(sc) + ')">' + inner + "</g>"; }
+  function deer(x, y, flip, buck, fawn) {
+    var p = P(x, y, 0), sc = fawn ? 0.68 : 1, c = fawn ? "#9a6c45" : "#86603f", s = "";
+    s += ell(add(p, 3, 1), 9 * sc, 2.4 * sc, "#000", 'opacity=".2"');
+    var d = line([-5, -10], [-5.5, 0], "#5e412a", 1.3) + line([-3, -10], [-2.5, 0], "#5e412a", 1.3) + line([4, -10], [4.5, 0], "#5e412a", 1.3) + line([6, -10], [6, 0], "#5e412a", 1.3);
+    d += ell([0, -11.5], 8, 4, c) + ell([0, -9.6], 5.5, 1.6, "#c9a77f", 'opacity=".55"') + circ([-7.6, -12], 2.1, "#e3d8c4");
+    if (fawn) for (var i = 0; i < 4; i++) d += circ([-3 + i * 2.2, -12.6 + (i % 2) * 1.4], 0.7, "#e8dcc8");
+    d += poly([[4.5, -13.5], [7.6, -20.5], [10, -19.6], [8.2, -11.5]], c);
+    d += ell([10.6, -21], 3.2, 2, c) + circ([13.4, -20.4], 1.1, "#2a1d14") + poly([[8.6, -22.2], [6.6, -25.4], [9.6, -23.2]], c) + circ([10.8, -21.6], 0.6, "#140c08");
+    if (buck) d += '<path d="M9.4,-22.6 l-1.4,-5.4 m0.6,2.4 l-2.4,-1 m2,-3.6 l-1.6,-1.8 M10.8,-22.6 l1.4,-5.4 m-0.6,2.4 l2.4,-1 m-2,-3.6 l1.8,-1.6" stroke="#d6c09a" stroke-width="1" fill="none" stroke-linecap="round"/>';
+    s += gk(p, flip, sc, d);
+    item(x + y + 0.05, s);
+  }
+  function sheep(x, y, z, flip, key, dark) {
+    var p = P(x, y, z || 0), w = dark ? "#4a4038" : "#e4dfd4", s = "";
+    s += ell(add(p, 2, 0.5), 7, 2, "#000", 'opacity=".2"');
+    var d = line([-3.5, -5], [-3.5, 0], "#2a2522", 1.3) + line([-1, -5], [-1, 0], "#2a2522", 1.3) + line([2.4, -5], [2.4, 0], "#2a2522", 1.3) + line([4.2, -5], [4.2, 0], "#2a2522", 1.3);
+    d += circ([-3.2, -7.2], 3.5, w) + circ([0.6, -8.4], 3.9, w) + circ([3.6, -7.2], 3.3, w) + circ([0, -5.9], 3.7, w) + circ([0.2, -10.2], 2.2, "#f4f6fa", 'opacity=".75"');
+    d += ell([6.8, -8.2], 2.3, 1.7, "#2a2420") + ell([5.6, -9.6], 1.3, 0.6, "#2a2420") + circ([7.4, -8.7], 0.45, "#c8c0b0");
+    s += gk(p, flip, 1, d);
+    item(key != null ? key : x + y + 0.05, s);
+  }
+  function goat(x, y, flip, kid) {
+    var p = P(x, y, 0), sc = kid ? 0.7 : 1, c = pick(["#e6ddcc", "#6b4a30", "#3a2e28", "#a8865a", "#d8cdb8"]), s = "";
+    s += ell(add(p, 2, 0.5), 7 * sc, 2 * sc, "#000", 'opacity=".2"');
+    var d = line([-4, -7], [-4.3, 0], "#2e2620", 1.3) + line([-2, -7], [-1.8, 0], "#2e2620", 1.3) + line([3, -7], [3.2, 0], "#2e2620", 1.3) + line([5, -7], [5, 0], "#2e2620", 1.3);
+    d += ell([0, -8.8], 6.6, 3.4, c) + line([-6, -10], [-7.4, -13], c, 1.6);
+    d += poly([[4, -10.5], [6.6, -15.5], [8.6, -14.6], [7, -8.4]], c) + ell([8.8, -15.4], 2.7, 1.8, c) + poly([[9.2, -14], [10, -11.4], [10.8, -13.6]], shade(c, -0.35));
+    d += '<path d="M8,-16.6 q-1,-4.2 -4.4,-4.6" stroke="#b9ab8c" stroke-width="1.2" fill="none" stroke-linecap="round"/>' + circ([9.4, -16], 0.55, "#140c08") + poly([[7, -16.4], [4.6, -17.6], [6.8, -15.4]], c);
+    s += gk(p, flip, sc, d);
+    item(x + y + 0.05, s);
+  }
+  var BIRDS = [["#7a5a3a", "#e07a3a", "#7a5a3a"], ["#4a4a52", "#d9473a", "#1c1c20"], ["#5d8a6a", "#e2c84a", "#3a6fb0"], ["#8a6a4a", "#c9b08a", "#7a5a3a"], ["#2a2a2e", "#2a2a2e", "#2a2a2e"]];
+  function birdAt(pt, key, flip) {
+    var b = pick(BIRDS), d = "";
+    d += line([-0.6, -1], [-0.8, 0.6], "#3a2a20", 0.6) + line([0.6, -1], [0.8, 0.6], "#3a2a20", 0.6);
+    d += poly([[-2, -3], [-4.8, -4.4], [-4.5, -2.2]], b[0]) + ell([0, -2.6], 2.7, 2, b[0]) + ell([1, -2], 1.7, 1.4, b[1]) + circ([2.1, -4.3], 1.45, b[2]);
+    d += poly([[3.4, -4.6], [4.8, -4.2], [3.4, -3.8]], "#e2a43a") + circ([2.5, -4.6], 0.4, "#0e0a08");
+    item(key, gk(pt, flip, 1.15, d));
+  }
+
+  // ---------- Osternberg ----------
+  var HILL = { x: 19.0, y: 33.3, r: 4.0, h: 4.0 };
+  function hillDist(x, y) { return Math.sqrt((x - HILL.x) * (x - HILL.x) + (y - HILL.y) * (y - HILL.y)); }
+  function hillZ(x, y) { var t = hillDist(x, y) / HILL.r; return t >= 1 ? 0 : HILL.h * (1 - t * t); }
+  function osternberg() {
+    var N = 16, s = "", c = P(HILL.x, HILL.y, 0), RX = 48.1, RY = 31.1;
+    shadows.push(ell(add(c, 40, 10), HILL.r * RX * 1.05, HILL.r * RY * 0.9, "#000"));
+    for (var i = 0; i <= N; i++) {
+      var t = i / N, z = HILL.h * t, r = HILL.r * Math.sqrt(1 - t) + 0.03, q = P(HILL.x, HILL.y, z);
+      var lo = Math.round(150 + 75 * Math.pow(t, 0.7)), hi = Math.min(250, lo + 30);
+      s += ell(q, r * RX, r * RY, "#" + hx(lo - 22) + hx(lo - 10) + hx(lo + 4));
+      s += ell(add(q, -r * RX * 0.16, -r * RY * 0.1), r * RX * 0.8, r * RY * 0.84, "#" + hx(hi - 14) + hx(hi - 6) + hx(hi + 4));
+    }
+    // Gipfelkreuz
+    var top = P(HILL.x, HILL.y, HILL.h);
+    s += line(add(top, 2, 0), add(top, 2, -22), "#4a3020", 2) + line(add(top, -4, -16), add(top, 8, -16), "#4a3020", 2) + ell(add(top, 2, 0.5), 5, 1.6, "#000", 'opacity=".2"');
+    // ein paar Büsche und kleine Tannen am Hang
+    for (var bb = 0; bb < 10; bb++) {
+      var ba = 0.2 + rnd2() * 6, br = HILL.r * (0.45 + rnd2() * 0.4), bx = HILL.x + Math.cos(ba) * br, by = HILL.y + Math.sin(ba) * br, bp = P(bx, by, hillZ(bx, by));
+      if (bb < 4) { var th = 20 + rnd2() * 8; s += poly([add(bp, 0, -th), add(bp, -th * 0.38, -3), add(bp, th * 0.38, -3)], "#24503b") + poly([add(bp, 0, -th), add(bp, -th * 0.22, -th * 0.45), add(bp, th * 0.1, -th * 0.5)], "#eef2f7", 'opacity=".85"'); }
+      else s += ell(add(bp, 0, -2.5), 5, 3, "#3a4a40") + ell(add(bp, -1, -4), 3.5, 1.6, "#eef2f7", 'opacity=".8"');
+    }
+    for (var k = 0; k < 70; k++) { var a = rnd2() * 6.283, rr2 = Math.sqrt(rnd2()) * HILL.r * 0.95, wx = HILL.x + Math.cos(a) * rr2, wy = HILL.y + Math.sin(a) * rr2; s += circ(P(wx, wy, hillZ(wx, wy)), 0.6 + rnd2() * 0.8, "*#e4ecff", 'opacity="' + f1(0.3 + rnd2() * 0.5) + '"'); }
+    // Weidezaun am Hang
+    var fz = "";
+    for (var f = 0; f <= 9; f++) {
+      var a2 = 2.35 + f * 0.17, fx = HILL.x + Math.cos(a2) * HILL.r * 0.9, fy = HILL.y + Math.sin(a2) * HILL.r * 0.9, fp = P(fx, fy, hillZ(fx, fy));
+      fz += line(fp, add(fp, 0, -9), "#5b3a26", 1.4);
+      if (f) { var pa = 2.35 + (f - 1) * 0.17, px = HILL.x + Math.cos(pa) * HILL.r * 0.9, py = HILL.y + Math.sin(pa) * HILL.r * 0.9, pp = P(px, py, hillZ(px, py)); fz += line(add(pp, 0, -7), add(fp, 0, -7), "#6b4a30", 1) + line(add(pp, 0, -3.5), add(fp, 0, -3.5), "#6b4a30", 1); }
+    }
+    item(HILL.x + HILL.y - HILL.r * 0.95, s + fz);
+    // Wegweiser an der Straße
+    var sp = P(14.45, 30.75, 0), sg = "";
+    sg += line(sp, add(sp, 0, -26), "#4a3020", 2.4);
+    sg += poly([add(sp, -16, -31), add(sp, 30, -31), add(sp, 36, -25.5), add(sp, 30, -20), add(sp, -16, -20)], "#6b4a30", 'stroke="#3a2618" stroke-width="0.8"');
+    sg += poly([add(sp, -15, -31.4), add(sp, 30, -31.4), add(sp, 31.5, -30), add(sp, -15, -30)], "#f1f5f9");
+    sg += '<text x="' + f1(sp[0] + 8) + '" y="' + f1(sp[1] - 23) + '" font-size="8" font-weight="700" text-anchor="middle" font-family="Georgia,serif" fill="#f3e6c8">Osternberg</text>';
+    item(14.45 + 30.75 + 8, sg);
+  }
+  function hx(v) { v = Math.max(0, Math.min(255, Math.round(v))); return (v < 16 ? "0" : "") + v.toString(16); }
+  function onHill(x, y, m) { return hillDist(x, y) < HILL.r * (m || 1); }
+
+  // Tiere platzieren (Tages-Zufall)
+  function inForest(x, y) {
+    if (x > -1.3 && x < 28.8 && y > -1.6 && y < 28.8) return false;
+    if (Math.abs(y - 13) < 1.5 || Math.abs(x - 13) < 1.5) return false;
+    var sp = P(x, y, 0); return sp[0] > 20 && sp[0] < 1580 && sp[1] > 70 && sp[1] < 1135;
+  }
+  var FT;
+  function nearTree(x, y) {
+    var best = 9;
+    for (var i = 0; i < FT.length; i++) { var dx = FT[i][0] - x, dy = FT[i][1] - y, d = Math.sqrt(dx * dx + dy * dy); if (d < best) best = d; }
+    return best;
+  }
+  var AN;
+  function animalSpot(minD, maxD, edge) {
+    for (var t = 0; t < 400; t++) {
+      var x, y;
+      if (edge && rnd() < 0.6) { // am Waldrand
+        var side = Math.floor(rnd() * 4), u = rr(-12, 40);
+        x = [u, u, rr(-4.5, -1.4), rr(28.9, 32)][side]; y = [rr(-4.5, -1.7), rr(28.9, 32), u, u][side];
+      } else { x = rr(-14, 42); y = rr(-14, 42); }
+      if (!inForest(x, y) || onHill(x, y, 1.12)) continue;
+      var nt = nearTree(x, y); if (nt < minD || nt > maxD) continue;
+      var ok = true; for (var a = 0; a < AN.length; a++) if (Math.abs(AN[a][0] - x) < 0.55 && Math.abs(AN[a][1] - y) < 0.55) { ok = false; break; }
+      if (!ok) continue;
+      AN.push([x, y]); return [x, y];
+    }
+    return null;
+  }
+  function animals() {
+    AN = []; META.animals = AN; var q, i;
+    for (i = 0; i < 9; i++) {
+      q = animalSpot(0.32, 0.9, true); if (!q) continue;
+      var fl = rnd() < 0.5; deer(q[0], q[1], fl, rnd() < 0.35, false);
+      if (rnd() < 0.4 && inForest(q[0] + 0.45, q[1] + 0.2)) deer(q[0] + 0.45, q[1] + 0.2, fl, false, true);
+    }
+    for (i = 0; i < 3; i++) { // kleine Ziegenherden
+      q = animalSpot(0.3, 1.0, true); if (!q) continue;
+      var n = 1 + Math.floor(rnd() * 3);
+      for (var g2 = 0; g2 < n; g2++) { var gx = q[0] + rr(-0.5, 0.5), gy = q[1] + rr(-0.5, 0.5); if (inForest(gx, gy) && nearTree(gx, gy) > 0.28) goat(gx, gy, rnd() < 0.5, g2 === 2); }
+    }
+    for (i = 0; i < 4; i++) { q = animalSpot(0.3, 0.9, true); if (q) sheep(q[0], q[1], 0, rnd() < 0.5, null, rnd() < 0.2); }
+    // Vögel: auf Baumspitzen, Ästen und im Schnee
+    var cand = FT.filter(function (t) { var sp = P(t[0], t[1], 0); return sp[0] > 20 && sp[0] < 1580 && sp[1] > 110 && sp[1] < 1135; });
+    for (i = 0; i < 16 && cand.length; i++) {
+      var t3 = cand[Math.floor(rnd() * cand.length)], b = P(t3[0], t3[1], 0), H = 58 * t3[2], W = H * 0.42, mode = rnd();
+      if (mode < 0.4) birdAt([b[0], b[1] - 6 - H + 1], t3[0] + t3[1] + 0.01, rnd() < 0.5);
+      else { var lv = rnd() < 0.5 ? 1 : 2, bot = b[1] - 5 - H * lv / 4 * 0.92, wd = W * (1 - lv / 4 * 0.7), sd = rnd() < 0.5 ? -1 : 1; birdAt([b[0] + sd * wd * 0.8, bot - 1], t3[0] + t3[1] + 0.01, sd < 0); }
+    }
+    for (i = 0; i < 6; i++) { q = animalSpot(0.25, 1.2, true); if (q) { birdAt(P(q[0], q[1], 0), q[0] + q[1], rnd() < 0.5); if (rnd() < 0.6) birdAt(P(q[0] + 0.18, q[1] + 0.1, 0), q[0] + q[1] + 0.2, rnd() < 0.5); } }
+    // Schafe auf dem Osternberg
+    var hk = HILL.x + HILL.y - HILL.r * 0.95, hs = [];
+    for (var t4 = 0, ns = 0; ns < 30 && t4 < 900; t4++) {
+      var a3 = rr(0, 6.283), r3 = Math.sqrt(rnd()) * HILL.r * 0.76, sx = HILL.x + Math.cos(a3) * r3, sy = HILL.y + Math.sin(a3) * r3, spp = P(sx, sy, hillZ(sx, sy));
+      if (spp[1] > 1130 || spp[0] < 20) continue;
+      var clash = false; for (var h = 0; h < hs.length; h++) if (Math.abs(hs[h][0] - sx) < 0.36 && Math.abs(hs[h][1] - sy) < 0.32) clash = true;
+      if (clash) continue;
+      hs.push([sx, sy]); sheep(sx, sy, hillZ(sx, sy), rnd() < 0.5, Math.max(sx + sy, hk + 0.01) + 0.05, ns === 4 || ns === 17); ns++;
+    }
+  }
+
+  // Feste Details (jeden Tag am selben Platz)
+  function staticDetails() {
     var TOWN = [[-1, 28, -1, 28]], q;
     // Krippe bei der Kirche
     q = findFree([[16.4, 18.0, 0.0, 2.2], [22.2, 24.0, 0.2, 2.0], [16.2, 18.0, 8.2, 8.6]], 0.8); if (q) krippe(q[0], q[1]);
@@ -1789,26 +2005,10 @@ window.DAYS = [
     q = findFree([[-5, 7, 12.2, 13.2]], 0.9); if (q) horseSleigh(q[0], q[1]);
     // Kinderkarussell
     q = findFree([[25.5, 29, 11.4, 14.6], [11.5, 14.5, 25, 28.5], [25.5, 29, 11.4, 14.6]], 0.9); if (q) carousel(q[0], q[1]);
-    // Schneeballschlacht, Rodelkinder
-    q = findFree([[-2, 28, -2, 28]], 1.0); if (q) snowballFight(q[0], q[1]);
-    for (var i = 0; i < 6; i++) { q = findFree(TOWN, 0.5); if (q) sledKid(q[0], q[1]); }
     // Leuchtende Rentier-Figuren in Gärten
     for (var r = 0; r < 5; r++) { q = findFree(TOWN, 0.45); var fl = rnd() < 0.5; if (q && r / 5 < G) lightReindeer(q[0], q[1], fl); else if (q) occupy(q[0] - 0.3, q[1] - 0.3, 0.6, 0.6); }
-    // Weihnachtsmänner (Vorsicht: nicht Jochen!)
-    for (var k = 0; k < 3; k++) { q = findFree([[9.2, 16.8, 9.2, 16.8], [-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30]], 0.25); if (q) santaPerson(q[0], q[1]); }
-    // Hundespaziergänger, Laternenläufer
-    for (var dw = 0; dw < 10; dw++) { q = findFree([[-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30], [9.2, 16.8, 9.2, 16.8]], 0.3); if (q) dogWalker(q[0], q[1]); }
-    for (var lw = 0; lw < 14; lw++) { q = findFree([[-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30], [9.2, 16.8, 9.2, 16.8], [-1, 28, -1, 28]], 0.25); if (q) lanternWalker(q[0], q[1]); }
-    // Sternsinger
-    q = findFree([[15.5, 17.6, 7.6, 8.8], [21.4, 23, 8.6, 9.3]], 0.6);
-    if (q) [[0, 0], [0.3, 0.12], [0.6, 0.15], [0.9, 0.1], [1.15, -0.05]].forEach(function (o, i) { if (i === 2) lanternWalker(q[0] + o[0], q[1] + o[1]); else person(q[0] + o[0], q[1] + o[1], i === 0); });
     // Katzen auf Zäunen
     [[7.3, 8.95], [18.6, 21.0], [1.4, 23.2], [4.2, 5.6]].forEach(function (c) { cat(c[0], c[1], 0.4); });
-    // Plätze für die goldenen Bonus-Sterne (fest)
-    META.stars = [];
-    [[[-1, 6, 16, 24]], [[18, 27, -1, 6]], [[0, 8, 0, 8]], [[17, 27, 17, 27]], [[8, 17, 18, 27]]].forEach(function (ar) {
-      var qq = findFree(ar, 0.3); if (qq) { occupy(qq[0] - 0.15, qq[1] - 0.15, 0.3, 0.3); META.stars.push(P(qq[0], qq[1], 0.05)); }
-    });
     // Dampf über Glühwein und Punsch
     steam(9.95, 16.15, 1.75); steam(11.55, 16.15, 1.75);
     // Extra Schneemänner
@@ -1818,6 +2018,45 @@ window.DAYS = [
       var p = P(q[0], q[1], 0);
       item(q[0] + q[1], circ(add(p, 0, -8), 9, "url(#snowball)") + circ(add(p, 0, -21), 6.5, "url(#snowball)") + poly([add(p, 0, -21), add(p, 6, -20), add(p, 0, -19.5)], "#f08a24") + '<rect x="' + f1(p[0] - 5) + '" y="' + f1(p[1] - 30) + '" width="10" height="3" fill="' + pick(["#c0392b", "#2f5f9e", "#3f8a5f"]) + '"/>');
     }
+  }
+  // Menschen (jeden Tag woanders)
+  function people() {
+    var TOWN = [[-1, 28, -1, 28]], q;
+    var placed = 0, tries = 0;
+    while (placed < 150 && tries < 6000) {
+      tries++;
+      var area = rnd(), px, py;
+      if (area < 0.35) { px = rr(9.2, 16.8); py = rr(9.2, 16.8); }
+      else if (area < 0.65) { px = rr(-6, 32); py = rr(12.2, 13.8); }
+      else if (area < 0.9) { px = rr(12.2, 13.8); py = rr(-6, 32); }
+      else { px = rr(3.1, 8.1); py = rr(18.1, 22.3); }
+      var spp = P(px, py, 0); if (spp[0] < 10 || spp[0] > 1590 || spp[1] < 40 || spp[1] > 1140) continue;
+      if (!free(px, py, 0.18)) continue;
+      occupy(px - 0.12, py - 0.12, 0.24, 0.24); person(px, py, rnd() < 0.2); placed++;
+    }
+    // Schneeballschlacht, Rodelkinder
+    q = findFree([[-2, 28, -2, 28]], 1.0); if (q) snowballFight(q[0], q[1]);
+    for (var i = 0; i < 6; i++) { q = findFree(TOWN, 0.5); if (q) sledKid(q[0], q[1]); }
+    // Weihnachtsmänner (Vorsicht: nicht Jochen!)
+    for (var k = 0; k < 3; k++) { q = findFree([[9.2, 16.8, 9.2, 16.8], [-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30]], 0.25); if (q) santaPerson(q[0], q[1]); }
+    // Hundespaziergänger, Laternenläufer
+    for (var dw = 0; dw < 10; dw++) { q = findFree([[-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30], [9.2, 16.8, 9.2, 16.8]], 0.3); if (q) dogWalker(q[0], q[1]); }
+    for (var lw = 0; lw < 14; lw++) { q = findFree([[-4, 30, 12.2, 13.8], [12.2, 13.8, -4, 30], [9.2, 16.8, 9.2, 16.8], [-1, 28, -1, 28]], 0.25); if (q) lanternWalker(q[0], q[1]); }
+    // Sternsinger
+    q = findFree([[15.5, 17.6, 7.6, 8.8], [21.4, 23, 8.6, 9.3], [3, 6, 11.4, 11.9], [19, 23, 14.2, 14.7]], 0.6);
+    if (q) [[0, 0], [0.3, 0.12], [0.6, 0.15], [0.9, 0.1], [1.15, -0.05]].forEach(function (o, i) { if (i === 2) lanternWalker(q[0] + o[0], q[1] + o[1]); else person(q[0] + o[0], q[1] + o[1], i === 0); });
+    // Noch mehr Menschen: Marktbesucher, Spaziergänger, Familien
+    var STREETS = [[-4, 30, 12.15, 13.85], [12.15, 13.85, -4, 30]], PLAZA = [[9.2, 16.8, 9.2, 16.8]];
+    for (var mp = 0; mp < 45; mp++) { q = findFree(PLAZA, 0.17); if (q) { occupy(q[0] - 0.1, q[1] - 0.1, 0.2, 0.2); person(q[0], q[1], rnd() < 0.2); } }
+    for (var ms = 0; ms < 55; ms++) { q = findFree(STREETS, 0.17); if (q) { occupy(q[0] - 0.1, q[1] - 0.1, 0.2, 0.2); person(q[0], q[1], rnd() < 0.2); } }
+    for (var mg = 0; mg < 25; mg++) { q = findFree(TOWN, 0.2); if (q) { occupy(q[0] - 0.1, q[1] - 0.1, 0.2, 0.2); person(q[0], q[1], rnd() < 0.3); } }
+    for (var fam = 0; fam < 10; fam++) {
+      q = findFree(STREETS.concat(PLAZA), 0.6); if (!q) continue;
+      occupy(q[0] - 0.3, q[1] - 0.3, 0.9, 0.6);
+      person(q[0], q[1]); person(q[0] + 0.28, q[1] + 0.05); person(q[0] + 0.55, q[1] + 0.12, true);
+    }
+    // ein Spaziergänger mit Hund auf dem Weg zum Osternberg
+    if (rnd() < 0.6) { var wy = rr(29.2, 31.5); if (P(13, wy, 0)[1] < 1130) dogWalker(rr(12.4, 13.4), wy); }
   }
 
   // ---------- Herbert, der Dackel ----------
@@ -1904,7 +2143,7 @@ window.DAYS = [
   function build(root, opts) {
     opts = opts || {};
     OPTS = opts; G = opts.growth == null ? 1 : opts.growth; FINALE = !!opts.finale;
-    seed = 1225; seed2 = 4711; ground = []; items = []; shadows = []; glows = []; spots = {}; occ = []; guards = [];
+    seed = 1225; seed2 = 4711; FT = []; ground = []; items = []; shadows = []; glows = []; spots = {}; occ = []; guards = [];
 
     // Boden
     ground.push('<rect x="-50" y="-50" width="1700" height="1250" fill="#eaf0f6"/>');
@@ -2045,28 +2284,25 @@ window.DAYS = [
       if (wx > -1.3 && wx < 28.8 && wy > -1.6 && wy < 28.8) continue;
       if (Math.abs(wy - 13) < 1.4 || Math.abs(wx - 13) < 1.4) continue;
       var sp2 = P(wx, wy, 0); if (sp2[0] < -40 || sp2[0] > 1640 || sp2[1] < 30 || sp2[1] > 1230) continue;
-      if (rnd() < 0.72) tree(wx, wy, rr(0.8, 1.35), rnd() < 0.85);
+      if (rnd() < 0.72) { var tsc = rr(0.8, 1.35), tsn = rnd() < 0.85; var hd = hillDist(wx, wy) / HILL.r; if (hd >= 1.04) { tree(wx, wy, tsc, tsn); FT.push([wx, wy, tsc]); } else if (hd > 0.82 && (wx + wy > HILL.x + HILL.y + 1 || Math.abs(wx - 16.87) + Math.abs(wy - 28.09) < 1.9)) tree(wx, wy, tsc * 0.85, tsn, false, hillZ(wx, wy), Math.max(wx + wy, HILL.x + HILL.y - HILL.r * 0.95 + 0.02)); }
     }
+    // zwei Tannen am Hangfuß, hinter denen sich Jochen verstecken kann
+    var T3 = [17.25, 28.75, 1.05, 16.3, 28.9, 0.9]; tree(T3[0], T3[1], T3[2], true); tree(T3[3], T3[4], T3[5], true); FT.push([T3[0], T3[1], T3[2]], [T3[3], T3[4], T3[5]]);
+    osternberg();
     occupy(16.1, 11.25, 1.3, 1.15); // Platz für Jochens Carbonara-Hütte
-    // Menschen
-    var placed = 0, tries = 0;
-    while (placed < 150 && tries < 6000) {
-      tries++;
-      var area = rnd(), px, py;
-      if (area < 0.35) { px = rr(9.2, 16.8); py = rr(9.2, 16.8); }
-      else if (area < 0.65) { px = rr(-6, 32); py = rr(12.2, 13.8); }
-      else if (area < 0.9) { px = rr(12.2, 13.8); py = rr(-6, 32); }
-      else { px = rr(3.1, 8.1); py = rr(18.1, 22.3); }
-      var spp = P(px, py, 0); if (spp[0] < 10 || spp[0] > 1590 || spp[1] < 40 || spp[1] > 1140) continue;
-      if (!free(px, py, 0.18)) continue;
-      occupy(px - 0.12, py - 0.12, 0.24, 0.24); person(px, py, rnd() < 0.2); placed++;
-    }
 
-    // ---------- Wimmel-Details (eigener Zufalls-Seed) ----------
+    // ---------- Wimmel-Details (feste Plätze) ----------
     seed = 777;
     JSPOTS.forEach(function (j) { guards.push([j[0], j[1]]); });
     carbonara(16.2, 11.35, "#2f6a4c", "Jochens Carbonara");
-    details();
+    staticDetails();
+
+    // ---------- Menschen und Tiere: jeden Tag woanders ----------
+    var ds = Math.abs(Math.floor(opts.daySeed || 0));
+    seed = 1 + (1225 + ds * 7919) % 2147483000;
+    for (var warm = 0; warm < 5; warm++) rnd();
+    people();
+    animals();
 
     // Finale: alle versammeln sich am Baum
     if (FINALE) {
@@ -2313,8 +2549,6 @@ window.DAYS = [
     $("jochenCount").textContent = found ? "🍆 Jochen heute gefunden ✓ · an " + total + (total === 1 ? " Tag" : " Tagen") + " entdeckt"
       : "🍆 Wo steckt Jochen heute?" + (total ? " · schon an " + total + (total === 1 ? " Tag" : " Tagen") + " entdeckt" : "");
     var g = $("spots").querySelector(".jochen-hit"); if (g) g.classList.toggle("found", found);
-    var sc0 = 0; for (var i = 0; i < 5; i++) if (state.stars[i]) sc0++;
-    $("starCount").textContent = "⭐ Goldene Sterne: " + sc0 + " von 5";
   }
 
   // ---------- Wimmelbild ----------
@@ -2325,7 +2559,7 @@ window.DAYS = [
   function buildWorld() {
     JC = jochenToday();
     var res = { spots: {}, jochen: null };
-    try { res = window.buildScene($("world"), { jochen: JC, growth: growth(), finale: FINALE, name: cfg.name }); } catch (e) { if (window.console) console.error(e); }
+    try { res = window.buildScene($("world"), { jochen: JC, growth: growth(), finale: FINALE, name: cfg.name, daySeed: Math.max(0, dayNum) + jochenShift }); } catch (e) { if (window.console) console.error(e); }
     SPOTS = res.spots || {}; JPOS = res.jochen; META = res.meta || {};
   }
   function renderSpots() {
@@ -2348,14 +2582,6 @@ window.DAYS = [
       j.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onJochen(); } });
       layer.appendChild(j);
     }
-    (META.stars || []).forEach(function (p, i) {
-      if (state.stars[i] || !isUnlocked(STAR_DAYS[i])) return;
-      var st = svgEl("g", { "class": "bonus-star", tabindex: "0", role: "button", "aria-label": "Goldener Stern" });
-      var u = svgEl("use", { href: "#star", x: p[0] - 6, y: p[1] - 12, width: 12, height: 12, fill: "#e8c25a", stroke: "#8a6a2a", "stroke-width": "0.6" });
-      st.appendChild(u); st.appendChild(svgEl("circle", { "class": "hit", cx: p[0], cy: p[1] - 6, r: 11 }));
-      st.addEventListener("click", function () { if (!dragMoved) onStar(i, st, p); });
-      layer.appendChild(st);
-    });
     updateJochen();
   }
   function syncSpot(day) {
@@ -2392,12 +2618,6 @@ window.DAYS = [
     if (FINALE) toast("Heute verstecke ich mich nicht. Herbert und ich wollten einfach dabei sein. Frohe Weihnachten.");
     else toast((JOCHEN_MSG[c] || "Ah, da bist du.") + " Morgen bin ich woanders." + (newCos ? " (Neu im Album: " + COSTUME_NAMES[c] + ")" : ""));
     if (first) { burstAt(JPOS[0], JPOS[1]); Sound.chime(); if (c === "herbert" || c === "fest") setTimeout(Sound.woof, 500); }
-  }
-  function onStar(i, el, p) {
-    state.stars[i] = true; save(); el.remove(); burstAt(p[0], p[1] - 6); Sound.chime(); updateJochen();
-    var n = 0; for (var k = 0; k < 5; k++) if (state.stars[k]) n++;
-    if (n === 5) setTimeout(openBonus, 700);
-    else toast("Ein goldener Stern! Noch " + (5 - n) + (5 - n === 1 ? " Stern" : " Sterne") + ", dann wartet eine Nachricht auf dich.");
   }
 
   // ---------- Zoom & Verschieben ----------
@@ -2501,8 +2721,18 @@ window.DAYS = [
     $("mJochen").textContent = (JOCHEN_SAYS[day - 1] || "").replace(/\{name\}/g, cfg.name || "du");
     var l = $("mLesson"); l.textContent = "";
     d.lesson.forEach(function (para) { var p = document.createElement("p"); richText(p, para); l.appendChild(p); });
+    var cmp = d.compare;
+    show("mCompareBox", !!cmp);
+    if (cmp) {
+      $("mCompIntro").textContent = cmp.intro;
+      [["mCompP", cmp.perplexity], ["mCompC", cmp.claude]].forEach(function (pair) {
+        var ul = $(pair[0]); ul.textContent = "";
+        pair[1].forEach(function (t) { var li = document.createElement("li"); li.textContent = t; ul.appendChild(li); });
+      });
+      richText($("mCompNote"), cmp.note); $("mCompRule").textContent = cmp.rule;
+    }
     var ol = $("mSteps"); ol.textContent = "";
-    (d.steps || []).forEach(function (t) { var li = document.createElement("li"); li.textContent = t; ol.appendChild(li); });
+    (d.steps || []).forEach(function (t) { var li = document.createElement("li"); richText(li, t); ol.appendChild(li); });
     show("mStepsBox", !!(d.steps && d.steps.length));
     $("mPrompt").textContent = d.prompt; $("mCopy").textContent = "Kopieren";
     $("mTip").textContent = d.tip || ""; show("mTipBox", !!d.tip);
@@ -2559,17 +2789,11 @@ window.DAYS = [
         '<div class="album-date">' + (has ? "gefunden am " + when[2] + "." + when[1] + "." : "noch nicht entdeckt") + "</div>";
       grid2.appendChild(d);
     });
-    var sn = 0; for (var i = 0; i < 5; i++) if (state.stars[i]) sn++;
-    $("albumInfo").textContent = found + " von " + keys.length + " Verkleidungen entdeckt · " + sn + " von 5 goldenen Sternen";
+    $("albumInfo").textContent = found + " von " + keys.length + " Verkleidungen entdeckt";
     var dlg = $("album"); if (dlg.showModal) { try { dlg.showModal(); } catch (e) { dlg.setAttribute("open", ""); } } else dlg.setAttribute("open", "");
   }
   $("albumBtn").addEventListener("click", openAlbum);
   $("albumClose").addEventListener("click", function () { var d = $("album"); if (d.close) d.close(); d.removeAttribute("open"); });
-  function openBonus() {
-    $("bonusText").textContent = (cfg.name ? "Liebe " + cfg.name + ",\n\n" : "") + (cfg.bonusMessage || "") + (cfg.from ? "\n\nDein " + cfg.from : "");
-    var d = $("bonus"); if (d.showModal) { try { d.showModal(); } catch (e) { d.setAttribute("open", ""); } } else d.setAttribute("open", "");
-  }
-  $("bonusClose").addEventListener("click", function () { var d = $("bonus"); if (d.close) d.close(); d.removeAttribute("open"); });
 
   // ---------- Töne (selbst erzeugt, standardmäßig aus) ----------
   var Sound = (function () {
@@ -2586,32 +2810,163 @@ window.DAYS = [
       g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
       o.connect(g); g.connect(master); o.start(t0); o.stop(t0 + dur + 0.05);
     }
-    function bell(f, t0, vol) { [1, 2, 2.4, 3, 4.2].forEach(function (m, i) { tone(f * m, t0, 3.2 - i * 0.4, vol / (i + 1.5)); }); }
+    var echoIn = null;
+    function bus() {
+      if (echoIn) return echoIn;
+      echoIn = ctx.createGain(); echoIn.connect(master);
+      var dl = ctx.createDelay(); dl.delayTime.value = 0.27; var fb = ctx.createGain(); fb.gain.value = 0.32; var wet = ctx.createGain(); wet.gain.value = 0.35;
+      echoIn.connect(dl); dl.connect(fb); fb.connect(dl); dl.connect(wet); wet.connect(master);
+      return echoIn;
+    }
+    function partial(freq, t0, dur, vol) {
+      var o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine"; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g); g.connect(bus()); o.start(t0); o.stop(t0 + dur + 0.05);
+    }
+    // Glockenspiel: unharmonische Obertöne, schnell abklingend
+    function glock(f, t0, vol) { [[1, 1, 1.8], [2.76, 0.45, 0.9], [5.4, 0.22, 0.45], [8.93, 0.1, 0.25]].forEach(function (p) { partial(f * p[0], t0, p[2], vol * p[1]); }); }
+    // Kirchenglocke: tiefer, lang nachklingend
+    function bell(f, t0, vol) { [[0.5, 0.6, 4.5], [1, 1, 3.6], [1.19, 0.5, 3], [1.5, 0.45, 2.6], [2, 0.35, 2.2], [2.74, 0.2, 1.6]].forEach(function (p) { partial(f * p[0], t0, p[2], vol * p[1]); }); }
+    var shakeBuf = null;
+    function shaker(t0, vol) {
+      if (!shakeBuf) { shakeBuf = ctx.createBuffer(1, ctx.sampleRate * 0.2, ctx.sampleRate); var d = shakeBuf.getChannelData(0); for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+      var src = ctx.createBufferSource(); src.buffer = shakeBuf; var hp = ctx.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 7000;
+      var g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.12);
+      src.connect(hp); hp.connect(g); g.connect(master); src.start(t0); src.stop(t0 + 0.15);
+    }
     function noiseBuf() { var b = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), d = b.getChannelData(0), last = 0; for (var i = 0; i < d.length; i++) { last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02; d[i] = last * 3.5; } return b; }
     function startAmbient() {
       if (!ctx || windNode) return;
       var src = ctx.createBufferSource(); src.buffer = noiseBuf(); src.loop = true;
       var lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 500;
       var g = ctx.createGain(); g.gain.value = 0.05; src.connect(lp); lp.connect(g); g.connect(master); src.start(); windNode = { src: src, g: g };
-      var melody = [392, 523, 523, 523, 587, 659, 659, 659, 659, 587, 659, 698, 494, 587, 523];
-      var lens = [0.5, 0.75, 0.25, 1, 0.5, 0.75, 0.25, 1, 0.5, 0.5, 0.5, 1, 1, 0.5, 1.5];
-      function playMusic() {
-        if (!on) return; var t = ctx.currentTime + 0.1;
-        melody.forEach(function (f, i) { tone(f, t, lens[i] * 0.9, 0.025, "triangle"); t += lens[i] * 0.55; });
-        musicTimer = setTimeout(playMusic, 45000 + Math.random() * 30000);
-      }
-      musicTimer = setTimeout(playMusic, 6000);
+      musicTimer = setTimeout(playMusic, 4000);
     }
-    function stopAmbient() { if (windNode) { try { windNode.src.stop(); } catch (e) { /* ignorieren */ } windNode = null; } clearTimeout(musicTimer); }
+    // ---------- Weihnachtslieder (gemeinfreie Melodien) ----------
+    // Noten: Name+Oktave:Dauer in Einheiten; unit = Sekunden pro Einheit, bar = Einheiten pro Takt
+    var SONGS = [
+      { name: "Morgen kommt der Weihnachtsmann", key: 0, unit: 0.4, bar: 4, hr: 2, pickup: 0, oct: 12,
+        n: "C4:1 C4:1 G4:1 G4:1 A4:1 A4:1 G4:2 F4:1 F4:1 E4:1 E4:1 D4:1 D4:1 C4:2 G4:1 G4:1 F4:1 F4:1 E4:1 E4:1 D4:2 G4:1 G4:1 F4:1 F4:1 E4:1 E4:1 D4:2 C4:1 C4:1 G4:1 G4:1 A4:1 A4:1 G4:2 F4:1 F4:1 E4:1 E4:1 D4:1 D4:1 C4:2" },
+      { name: "O Tannenbaum", key: 7, unit: 0.135, bar: 12, pickup: 4, oct: 12, beat: 4,
+        n: "D4:4 G4:3 G4:1 G4:6 A4:2 B4:3 B4:1 B4:6 B4:2 A4:4 B4:2 C5:4 F#4:2 A4:4 G4:4 D5:4 D5:3 B4:1 E5:6 D5:2 D5:3 C5:1 C5:6 C5:2 C5:3 A4:1 D5:6 C5:2 C5:3 B4:1 B4:6 D4:2 G4:3 G4:1 G4:6 A4:2 B4:3 B4:1 B4:6 B4:2 A4:4 B4:2 C5:4 F#4:2 A4:4 G4:8" },
+      { name: "Hört der Engel helle Lieder", key: 7, unit: 0.36, bar: 4, hr: 2, pickup: 0, oct: 12,
+        n: "B4:1 B4:1 B4:1 D5:1 D5:1.5 C5:.5 B4:2 B4:1 A4:1 B4:1 D5:1 B4:1.5 A4:.5 G4:2 B4:1 B4:1 B4:1 D5:1 D5:1.5 C5:.5 B4:2 B4:1 A4:1 B4:1 D5:1 B4:1.5 A4:.5 G4:2 " +
+           "D5:2 E5:.5 D5:.5 C5:.5 B4:.5 C5:2 D5:.5 C5:.5 B4:.5 A4:.5 B4:2 C5:.5 B4:.5 A4:.5 G4:.5 A4:1.5 D4:.5 D4:2 G4:1 A4:1 B4:1 C5:1 B4:2 A4:2 " +
+           "D5:2 E5:.5 D5:.5 C5:.5 B4:.5 C5:2 D5:.5 C5:.5 B4:.5 A4:.5 B4:2 C5:.5 B4:.5 A4:.5 G4:.5 A4:1.5 D4:.5 D4:2 G4:1 A4:1 B4:1 C5:1 B4:2 A4:2 G4:4" },
+      { name: "Jingle Bells", key: 0, unit: 0.3, bar: 4, pickup: 0, oct: 0, sleigh: true,
+        n: "E5:1 E5:1 E5:2 E5:1 E5:1 E5:2 E5:1 G5:1 C5:1.5 D5:.5 E5:4 F5:1 F5:1 F5:1.5 F5:.5 F5:1 E5:1 E5:1 E5:.5 E5:.5 E5:1 D5:1 D5:1 E5:1 D5:2 G5:2 " +
+           "E5:1 E5:1 E5:2 E5:1 E5:1 E5:2 E5:1 G5:1 C5:1.5 D5:.5 E5:4 F5:1 F5:1 F5:1.5 F5:.5 F5:1 E5:1 E5:1 E5:.5 E5:.5 G5:1 G5:1 F5:1 D5:1 C5:4" },
+      { name: "Stille Nacht", key: 0, unit: 0.23, bar: 6, pickup: 0, oct: 12, beat: 3,
+        n: "G4:3 A4:1 G4:2 E4:6 G4:3 A4:1 G4:2 E4:6 D5:4 D5:2 B4:6 C5:4 C5:2 G4:6 A4:4 A4:2 C5:3 B4:1 A4:2 G4:3 A4:1 G4:2 E4:6 A4:4 A4:2 C5:3 B4:1 A4:2 G4:3 A4:1 G4:2 E4:6 D5:4 D5:2 F5:3 D5:1 B4:2 C5:6 E5:6 C5:3 G4:1 E4:2 G4:3 F4:1 D4:2 C4:12" }
+    ];
+    var ARR = ["Glockenspiel", "Spieluhr", "Glocken & Orgel", "Celesta & Streicher", "Schlittenglocken"];
+    function midi(nm) { var m = /^([A-G])(#|b)?(-?\d)$/.exec(nm), base = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1]]; return 12 * (+m[3] + 1) + base + (m[2] === "#" ? 1 : m[2] === "b" ? -1 : 0); }
+    function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+    function parseSong(sg) { return sg.n.trim().split(/\s+/).map(function (t) { var a = t.split(":"); return [midi(a[0]) + (sg.oct || 0), +a[1]]; }); }
+    // einfache Begleitharmonie: pro Takt der passendste Akkord aus I, IV, V, vi, ii
+    var CH = [[0, [0, 4, 7], 0.25], [5, [5, 9, 0], 0.1], [7, [7, 11, 2], 0.15, [5]], [9, [9, 0, 4], 0], [2, [2, 5, 9], -0.1]];
+    function harmony(sg, notes) {
+      var bars = [], pos = -sg.pickup, BAR = sg.hr || sg.bar;
+      notes.forEach(function (nt) {
+        var b = Math.floor((pos + 1e-6) / BAR), rel = pos - b * BAR;
+        if (b >= 0) { (bars[b] = bars[b] || []).push([((nt[0] - sg.key) % 12 + 12) % 12, nt[1], rel === 0]); }
+        else { (bars[0] = bars[0] || []); }
+        // Noten über die Taktgrenze zählen auch im nächsten Takt
+        var end = pos + nt[1], b2 = Math.floor((end - 1e-6) / BAR);
+        for (var k = b + 1; k <= b2; k++) if (k >= 0) (bars[k] = bars[k] || []).push([((nt[0] - sg.key) % 12 + 12) % 12, Math.min(BAR, end - k * BAR), true]);
+        pos = end;
+      });
+      return bars.map(function (bn, bi) {
+        if (bi === bars.length - 1) return CH[0];
+        var best = CH[0], bs = -1;
+        CH.forEach(function (c) {
+          var sc = c[2] * BAR; (bn || []).forEach(function (x) { if (c[1].indexOf(x[0]) >= 0) sc += x[1] * (x[2] ? 1.5 : 1); else if (c[3] && c[3].indexOf(x[0]) >= 0) sc += x[1] * 0.4; else sc -= x[1] * 0.3; });
+          if (sc > bs) { bs = sc; best = c; }
+        });
+        return best;
+      });
+    }
+    var musicOut = null, roomIn = null;
+    function mBus() {
+      if (musicOut) return roomIn;
+      musicOut = ctx.createGain(); musicOut.gain.value = 1; musicOut.connect(master);
+      roomIn = ctx.createGain(); roomIn.connect(musicOut);
+      // zwei Echos + Tiefpass = kleiner Kirchenraum
+      [[0.29, 0.3, 0.3], [0.47, 0.28, 0.22]].forEach(function (e) {
+        var dl = ctx.createDelay(1); dl.delayTime.value = e[0]; var fb = ctx.createGain(); fb.gain.value = e[1]; var lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2600; var wet = ctx.createGain(); wet.gain.value = e[2];
+        roomIn.connect(dl); dl.connect(lp); lp.connect(fb); fb.connect(dl); lp.connect(wet); wet.connect(musicOut);
+      });
+      return roomIn;
+    }
+    function mPartial(freq, t0, dur, vol, att) {
+      var o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine"; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + (att || 0.004)); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g); g.connect(mBus()); o.start(t0); o.stop(t0 + dur + 0.05);
+    }
+    var VOICE = {
+      glock: function (f, t, v) { [[1, 1, 1.8], [2.76, 0.45, 0.9], [5.4, 0.22, 0.45], [8.93, 0.1, 0.25]].forEach(function (p) { mPartial(f * p[0], t, p[2], v * p[1]); }); },
+      box: function (f, t, v) { [[1, 1, 1.3], [2, 0.25, 0.6], [4.2, 0.18, 0.3], [6.3, 0.08, 0.15]].forEach(function (p) { mPartial(f * (f < 700 ? 2 : 1) * p[0], t, p[2], v * 0.8 * p[1]); }); },
+      celesta: function (f, t, v) { [[1, 1, 1.5], [2, 0.35, 0.9], [4, 0.12, 0.4]].forEach(function (p) { mPartial(f * p[0], t, p[2], v * p[1], 0.008); }); },
+      bell: function (f, t, v) { [[0.5, 0.6, 4.5], [1, 1, 3.6], [1.19, 0.5, 3], [1.5, 0.45, 2.6], [2, 0.35, 2.2], [2.74, 0.2, 1.6]].forEach(function (p) { mPartial(f * p[0], t, p[2], v * p[1]); }); }
+    };
+    function pad(midis, t0, dur, vol, kind) {
+      midis.forEach(function (m) {
+        var o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), lp = ctx.createBiquadFilter();
+        o.type = kind === "str" ? "sawtooth" : "triangle"; o.frequency.value = hz(m); o2.type = "sine"; o2.frequency.value = hz(m + 12); o2.detune.value = kind === "str" ? 7 : 2;
+        lp.type = "lowpass"; lp.frequency.value = kind === "str" ? 1100 : 1700;
+        var a = kind === "str" ? 0.35 : 0.09;
+        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + a); g.gain.setValueAtTime(vol, t0 + Math.max(a, dur - 0.12)); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur + 0.35);
+        o.connect(lp); o2.connect(lp); lp.connect(g); g.connect(mBus()); o.start(t0); o2.start(t0); o.stop(t0 + dur + 0.4); o2.stop(t0 + dur + 0.4);
+      });
+    }
+    function todaysMusic() {
+      var d = (now.y === YEAR && now.m === 12 && now.d <= 24) ? now.d : (((dayNum % 24) + 24) % 24) + 1;
+      if (FINALE || d === 24) return { song: SONGS[4], arr: "fest" };
+      return { song: SONGS[(d - 1) % 5], arr: Math.floor((d - 1) / 5) };
+    }
+    function playSong(t0) {
+      var tm = todaysMusic(), sg = tm.song, A = tm.arr, notes = parseSong(sg), chords = harmony(sg, notes);
+      var u = sg.unit * ({ 1: 0.96, 3: 1.06, fest: 1.12 }[A] || 1), mel = { 0: "glock", 1: "box", 2: "glock", 3: "celesta", 4: "glock", fest: "glock" }[A];
+      var t = t0, vol = 0.05;
+      if (A === 2 || A === "fest") { VOICE.bell(hz(sg.key + 55), t, 0.07); VOICE.bell(hz(sg.key + 48), t + 1.2, 0.06); t += 2.6; }
+      var start = t;
+      notes.forEach(function (nt) {
+        VOICE[mel](hz(nt[0]), t, vol);
+        if (A === "fest") VOICE.celesta(hz(nt[0] + 12), t, 0.018);
+        t += nt[1] * u;
+      });
+      var barT = (sg.hr || sg.bar) * u, first = start + sg.pickup * u;
+      chords.forEach(function (c, bi) {
+        var bt = first + bi * barT, root = sg.key + c[0], bass = 48 + ((root % 12) + 12) % 12; if (bass > 53) bass -= 12;
+        var tri = c[1].map(function (pc) { var m = 55 + ((sg.key + pc) % 12 + 12) % 12; return m > 64 ? m - 12 : m; });
+        if (A !== 1) pad(tri, bt, barT, A === 3 ? 0.006 : 0.0085, A === 3 ? "str" : "org");
+        if (A === 1) VOICE.box(hz(bass + 12), bt, 0.025);
+        else if (A === 2 || A === "fest") VOICE.bell(hz(bass + 12), bt, bi % 2 ? 0.025 : 0.04);
+        else VOICE.glock(hz(bass), bt, 0.02);
+        if (A === 2 || A === "fest") pad([bass], bt, barT, 0.008, "org");
+      });
+      if (A === 4 || A === "fest" || sg.sleigh) for (var k = 0, bl = (sg.beat || 1) * u; start + k * bl < t - 0.2; k++) shaker(start + k * bl, k % 2 ? 0.008 : 0.012);
+      return t - t0;
+    }
+    function playMusic() {
+      if (!on) return;
+      mBus(); if (musicOut) { musicOut.gain.cancelScheduledValues(ctx.currentTime); musicOut.gain.setValueAtTime(1, ctx.currentTime); }
+      var len = playSong(ctx.currentTime + 0.2);
+      musicTimer = setTimeout(playMusic, len * 1000 + 30000 + Math.random() * 25000);
+    }
+    function songInfo() { var tm = todaysMusic(); return tm.song.name + " · " + (tm.arr === "fest" ? "Heiligabend-Fassung" : ARR[tm.arr]); }
+    function stopAmbient() { if (windNode) { try { windNode.src.stop(); } catch (e) { /* ignorieren */ } windNode = null; } clearTimeout(musicTimer); if (musicOut) { musicOut.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.15); var mo = musicOut; setTimeout(function () { try { mo.disconnect(); } catch (e) { /* ignorieren */ } }, 1500); musicOut = null; roomIn = null; } }
     var api = {
       isOn: function () { return on; },
+      song: songInfo,
+      playNow: function () { if (!on || !ensure()) return; clearTimeout(musicTimer); playMusic(); },
       toggle: function () {
         on = !on; try { localStorage.setItem("ai-bytes-sound", on ? "1" : "0"); } catch (e) { /* ignorieren */ }
         if (on && ensure()) { ctx.resume && ctx.resume(); startAmbient(); api.chime(); } else stopAmbient();
         return on;
       },
-      chime: function () { if (!on || !ensure()) return; var t = ctx.currentTime; tone(1046, t, 0.8, 0.08); tone(1568, t + 0.12, 1.0, 0.06); },
-      bells: function () { if (!on || !ensure()) return; var t = ctx.currentTime; [392, 330, 294, 262, 392, 330].forEach(function (f, i) { bell(f, t + i * 0.7, 0.09); }); },
+      chime: function () { if (!on || !ensure()) return; var t = ctx.currentTime; [1046.5, 1318.5, 1568, 2093].forEach(function (f, i) { glock(f, t + i * 0.09, 0.07); }); shaker(t, 0.03); shaker(t + 0.18, 0.02); },
+      bells: function () { if (!on || !ensure()) return; var t = ctx.currentTime; [392, 330, 294, 196, 392, 330, 294, 196].forEach(function (f, i) { bell(f, t + i * 0.75, 0.08); }); },
       woof: function () {
         if (!on || !ensure()) return; var t = ctx.currentTime;
         [0, 0.22].forEach(function (d) {
@@ -2626,8 +2981,9 @@ window.DAYS = [
     };
     return api;
   })();
-  function syncSoundBtn() { $("soundBtn").textContent = Sound.isOn() ? "🔈 Ton an" : "🔇 Ton aus"; }
-  $("soundBtn").addEventListener("click", function () { Sound.toggle(); syncSoundBtn(); });
+  window.__AIBYTES_SOUND = Sound;
+  function syncSoundBtn() { var b = $("soundBtn"); b.textContent = Sound.isOn() ? "🔈 Ton an" : "🔇 Ton aus"; b.title = "Heute im Dorf: " + Sound.song(); }
+  $("soundBtn").addEventListener("click", function () { Sound.toggle(); syncSoundBtn(); if (Sound.isOn()) toast("♪ Heute spielt im Dorf: " + Sound.song()); });
   syncSoundBtn();
   if (Sound.isOn()) { var resumeOnce = function () { Sound.toggle(); Sound.toggle(); syncSoundBtn(); window.removeEventListener("pointerdown", resumeOnce); }; window.addEventListener("pointerdown", resumeOnce); }
 
@@ -2697,6 +3053,29 @@ window.DAYS = [
   if (WEATHER !== "klar") cloud(0.35);
   if (WEATHER === "dicht") cloud(0.7);
   scheduleClouds();
+  // Nebelbänke, die langsam über das Dorf ziehen
+  var fogG = svgEl("g", { "class": "fogbanks", "pointer-events": "none" });
+  cloudsG.insertBefore(fogG, cloudsG.firstChild);
+  var FOG_N = { nebel: 6, dicht: 4, schnee: 4, vollmond: 3, klar: 2 }[WEATHER] || 4, FOG_OP = WEATHER === "nebel" ? 0.8 : 0.7;
+  function fogBank(startFrac) {
+    var w = 650 + Math.random() * 750, h = w * (0.2 + Math.random() * 0.12), y = 120 + Math.random() * 900, g = svgEl("g", {}), inner = svgEl("g", {});
+    for (var i = 0; i < 9; i++) {
+      var rx = w * (0.16 + Math.random() * 0.16);
+      inner.appendChild(svgEl("ellipse", { cx: (i / 8 - 0.5) * w * 0.9 + (Math.random() * 80 - 40), cy: (Math.random() - 0.5) * h * 0.5, rx: rx, ry: h * (0.35 + Math.random() * 0.35), fill: "url(#fogPuff)" }));
+    }
+    g.appendChild(inner); fogG.appendChild(g);
+    var op = FOG_OP * (0.55 + Math.random() * 0.45), x0 = -w * 0.6, x1 = 1600 + w * 0.6, dy = 40 + Math.random() * 80, ms = 140000 + Math.random() * 90000, f = startFrac || 0;
+    var A = function (t) { return "translate(" + (x0 + (x1 - x0) * t) + "px," + (y + dy * t) + "px)"; };
+    if (!g.animate) { g.setAttribute("transform", "translate(" + (x0 + (x1 - x0) * f) + "," + y + ")"); g.setAttribute("opacity", op); return; }
+    var an = g.animate([{ transform: A(f), opacity: f > 0 ? op : 0 }, { transform: A(f + (1 - f) * 0.12), opacity: op, offset: 0.12 }, { transform: A(f + (1 - f) * 0.88), opacity: op, offset: 0.88 }, { transform: A(1), opacity: 0 }], { duration: ms * (1 - f), easing: "linear", fill: "forwards" });
+    an.onfinish = function () { g.remove(); };
+    // leichtes Wabern
+    if (inner.animate) inner.animate([{ transform: "scale(1,1)" }, { transform: "scale(1.08,0.9)" }, { transform: "scale(1,1)" }], { duration: 20000 + Math.random() * 15000, iterations: Infinity, easing: "ease-in-out" });
+  }
+  for (var fb = 0; fb < FOG_N; fb++) fogBank(Math.random() * 0.85);
+  (function scheduleFog() { setTimeout(function () { if (!document.hidden && fogG.childNodes.length < FOG_N + 2) fogBank(0); scheduleFog(); }, 185000 / FOG_N * (0.7 + Math.random() * 0.6)); })();
+  // dünner Bodendunst über dem ganzen Dorf
+  cloudsG.insertBefore(svgEl("rect", { x: -50, y: -50, width: 1700, height: 1250, fill: "#9aa6c8", opacity: WEATHER === "nebel" ? "0.1" : "0.06", "pointer-events": "none" }), fogG);
   // Wetter-Überlagerung
   if (WEATHER === "nebel") cloudsG.appendChild(svgEl("rect", { x: -50, y: -50, width: 1700, height: 1250, fill: "url(#fogGrad)", "class": "fog" }));
   if (WEATHER === "vollmond") cloudsG.appendChild(svgEl("rect", { x: -50, y: -50, width: 1700, height: 1250, fill: "#a9bbf0", opacity: "0.16", style: "mix-blend-mode:screen" }));
