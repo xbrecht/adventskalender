@@ -2129,9 +2129,11 @@ window.DAYS = [
     igel: { b: '<path d="M-38,50 L-48,40 L-40,34 L-52,24 L-40,18 L-50,6 L-36,4 L-42,-10 L-28,-8 L-30,-24 L-16,-18 L-12,-34 L0,-22 L12,-34 L16,-18 L30,-24 L28,-8 L42,-10 L36,4 L50,6 L40,18 L52,24 L40,34 L48,40 L38,50 L44,58 H-44Z" fill="#4e4236"/><path d="M-40,20 l-6,-4 M-30,-4 l-8,-3 M30,-4 l8,-3 M40,20 l6,-4 M-36,40 l-7,1 M36,40 l7,1" stroke="#6a5a48" stroke-width="2"/>', f: '<path d="M30,-14 q8,-6 12,2 q-6,6 -12,-2z" fill="#8a5a2a"/><path d="M-36,28 q-8,-6 -12,2 q6,6 12,-2z" fill="#7a4e24"/><circle cx="-26" cy="-4" r="3.2" fill="#6e2a2a"/>' },
   };
   // Schwierigere Verstecke für die Vorweihnachtszeit (20.–30. November)
-  var PRESPOTS = [[-1.02, 5.09, 0, 0], [29.83, 19.09, 0, 0], [9.41, 28.59, 0, 0], [18.13, 13.83, 0, 0], [13.92, 31.58, 0, 0], [9.64, 16.99, 0, 0], [16.92, -3.23, 0, 0], [29.42, 9.54, 0, 0], [8.52, 21.77, 0, 0], [9.41, -4.58, 0, 0], [5.68, 23.3, 0, 0]];
+  var PRESPOTS = [[-0.89, 5.02, 0, 0],  [8.49, 22.07, 0, 0],  [9.55, 30.18, 0, 0],  [17.83, 13.78, 0, 0],  [14.44, 31.28, 0, 0],  [9.19, 17.05, 0, 0],  [16.64, -4.5, 0, 0],  [29.54, 9.46, 0, 0],  [29.73, 18.98, 0, 0],  [9.27, -4.52, 0, 0],  [6.17, 24.82, 0, 0]];
   // Verstecke: [x, y, z, Tiefen-Verschiebung]
-  var JSPOTS = [
+  var JSPOTS = [[-0.83, 16.92, 0, 0],  [25.9, 7.99, 0, 0],  [14.11, 8.85, 0, 0],  [16.87, 28.09, 0, 0],  [10.18, 20.78, 0, 0],  [2.56, 8.41, 0, 0],  [27.05, 17.71, 0, 0],  [1.0, 14.06, 0, 0],  [22.54, 5.06, 0, 0],  [10.26, 8.83, 0, 0],  [17.25, 1.09, 0, 0],  [28.14, 15.11, 0, 0],  [-0.15, 9.97, 0, 0],  [4.3, 22.64, 0, 0],  [13.5, 2.31, 0, 0],  [9.15, 1.75, 0, 0],  [16.88, 20.59, 0, 0],  [10.93, 5.4, 0, 0],  [24.03, 24.77, 0, 0],  [22.22, 7.71, 0, 0],  [5.98, 5.17, 0, 0],  [6.96, 27.77, 0, 0],  [8.79, 9.81, 0, 0],  [15.92, 24.56, 0, 0]];
+  // feste Schutzzonen (unabhängig von späteren Feinkorrekturen der Verstecke)
+  var JGUARD = [
     [-0.81, 16.77, 0, 0],
     [25.9, 7.99, 0, 0],
     [14.11, 8.85, 0, 0],
@@ -2157,6 +2159,7 @@ window.DAYS = [
     [8.49, 9.76, 0, 0],
     [15.67, 24.72, 0, 0]
   ];
+  var KOCH_OFF = [-0.26, -0.15];
   function nightUses(str) { if (PRE) return str; return str.replace(/<use href="#j/g, '<use filter="url(#nightFull)" href="#j'); }
   function jochen(js, costume) {
     var p = P(js[0], js[1], js[2]), sc = 0.242, c = COSTUMES[costume] || COSTUMES.santa, s = "";
@@ -2321,7 +2324,8 @@ window.DAYS = [
 
     // ---------- Wimmel-Details (feste Plätze) ----------
     seed = 777;
-    JSPOTS.forEach(function (j) { guards.push([j[0], j[1]]); });
+    var NG = guards.length;
+    JGUARD.forEach(function (j) { guards.push([j[0], j[1]]); });
     hidePre(function () { carbonara(16.2, 11.35, "#2f6a4c", "Jochens Carbonara"); });
     staticDetails();
 
@@ -2329,7 +2333,11 @@ window.DAYS = [
     var ds = Math.abs(Math.floor(opts.daySeed || 0));
     seed = 1 + (1225 + ds * 7919) % 2147483000;
     for (var warm = 0; warm < 5; warm++) rnd();
-    var TJ = opts.jochen ? (opts.jochen.pos || (opts.jochen.spot >= 100 ? PRESPOTS[(opts.jochen.spot - 100) % PRESPOTS.length] : null)) : null;
+    var TJ = null;
+    if (opts.jochen && !FINALE) {
+      TJ = opts.jochen.pos || (opts.jochen.spot >= 100 ? PRESPOTS[(opts.jochen.spot - 100) % PRESPOTS.length] : JSPOTS[opts.jochen.spot % JSPOTS.length]);
+      if (!opts.jochen.pos && opts.jochen.costume === "koch" && META.carbonaraSpot) TJ = [META.carbonaraSpot[0] + KOCH_OFF[0], META.carbonaraSpot[1] + KOCH_OFF[1], 0, 0];
+    }
     if (TJ) guards.push([TJ[0], TJ[1]]);
     people();
     TJ0 = TJ; animals(); TJ0 = null;
@@ -2361,7 +2369,7 @@ window.DAYS = [
     if (opts.jochen) {
       var js = opts.jochen.pos || (opts.jochen.spot >= 100 ? PRESPOTS[(opts.jochen.spot - 100) % PRESPOTS.length] : JSPOTS[opts.jochen.spot % JSPOTS.length]), jc = opts.jochen.costume;
       if (FINALE) { js = [12.05, 14.35, 0, 0]; jc = "fest"; }
-      else if (jc === "koch" && META.carbonaraSpot) js = META.carbonaraSpot;
+      else if (jc === "koch" && META.carbonaraSpot && !opts.jochen.pos) js = [META.carbonaraSpot[0] + KOCH_OFF[0], META.carbonaraSpot[1] + KOCH_OFF[1], META.carbonaraSpot[2], META.carbonaraSpot[3]];
       jpos = jochen(js, jc);
     }
     META.herbert = hpos;
@@ -2378,7 +2386,7 @@ window.DAYS = [
       '<rect x="0" y="0" width="1600" height="1150" fill="url(#haze)" pointer-events="none"/>' +
       '<rect x="0" y="0" width="1600" height="1150" fill="url(#vignette)" pointer-events="none"/>');
     root.innerHTML = out;
-    return { spots: spots, jochen: jpos, meta: META, free: function (x, y, r) { return free(x, y, r || 0.3); } };
+    return { spots: spots, jochen: jpos, meta: META, free: function (x, y, r) { return free(x, y, r || 0.3); }, occFree: function (x, y, r) { r = r || 0.2; for (var i = 0; i < occ.length; i++) { var o = occ[i]; if (x > o[0] - r && x < o[2] + r && y > o[1] - r && y < o[3] + r) return false; } for (var j = 0; j < NG; j++) { if (Math.abs(x - guards[j][0]) < 0.9 && Math.abs(y - guards[j][1]) < 0.9) return false; } return true; } };
   }
 
   window.buildScene = build;
@@ -2463,7 +2471,7 @@ window.DAYS = [
     } catch (e) { /* ignorieren */ }
     // Jochen-Funde vom 20.–30. November nachträglich ins Album übernehmen
     Object.keys(state.jochen).forEach(function (k) {
-      var m = /^(\d+)-11-(\d+)$/.exec(k), names = ["astronaut", "holzfaeller", "postbote", "maler", "eichhoernchen", "angler", "schornsteinfeger", "detektiv", "bergmann", "imker", "igel"];
+      var m = /^(\d+)-11-(\d+)$/.exec(k), names = ["astronaut", "bergmann", "postbote", "maler", "eichhoernchen", "angler", "schornsteinfeger", "detektiv", "holzfaeller", "imker", "igel"];
       if (m && +m[2] >= 20 && +m[2] <= 30 && !state.album[names[+m[2] - 20]]) state.album[names[+m[2] - 20]] = k;
     });
   }
@@ -2575,7 +2583,7 @@ window.DAYS = [
   var ROTATION = ["schnee", "elf", "lebkuchen", "rentier", "herbert", "nikolaus", "tanne", "pinguin", "nussknacker", "eule", "zuckerstange", "koch",
     "eisbaer", "kerze", "ski", "geschenk", "tasse", "schlittschuh", "stern", "hirte", "engel", "koenig", "santa", "fest"];
   // 20.–30. November: Alltagskostüme, schwierige Verstecke, nicht im Album
-  var PRE_ROTATION = ["astronaut", "holzfaeller", "postbote", "maler", "eichhoernchen", "angler", "schornsteinfeger", "detektiv", "bergmann", "imker", "igel"];
+  var PRE_ROTATION = ["astronaut", "bergmann", "postbote", "maler", "eichhoernchen", "angler", "schornsteinfeger", "detektiv", "holzfaeller", "imker", "igel"];
   var PRE_MSG = {
       "astronaut": "Hier unten ist die Schwerkraft ganz angenehm. Ich bleibe noch ein bisschen.",
       "holzfaeller": "Ich fälle nichts. Ich mag nur karierte Hemden und den Geruch von Holz.",
